@@ -1,49 +1,50 @@
 {
-  "name": "prompt-piper-cli",
-  "version": "1.0.0",
-  "description": "CLI tool for compressing AI prompts to reduce token usage",
-  "main": "index.js",
-  "bin": {
-    "prompt-piper": "./bin/prompt-piper.js",
-    "pp": "./bin/prompt-piper.js",
-    "ppi": "./bin/prompt-piper-interactive.js"
-  },
-  "scripts": {
-    "build": "tsc",
-    "start": "node dist/index.js",
-    "dev": "ts-node src/index.ts",
-    "interactive": "ts-node src/interactive.ts",
-    "interactive:dry": "ts-node src/interactive.ts --dry",
-    "interactive:claude": "ts-node src/interactive.ts --claude",
-    "test": "echo \"No tests yet\"",
-    "compress": "bun run dev compress"
-  },
-  "keywords": [
-    "ai",
-    "prompt",
-    "compression",
-    "tokens",
-    "cli",
-    "claude",
-    "cost-optimization"
-  ],
-  "author": "Prompt Piper Team",
-  "license": "MIT",
-  "dependencies": {
-    "chalk": "^4.1.2",
-    "commander": "^11.0.0",
-    "dotenv": "^16.0.0",
-    "ora": "^5.4.1",
-    "thirdweb": "^5.0.0"
-  },
-  "devDependencies": {
-    "@types/node": "^20.14.9",
-    "typescript": "^5.5.3",
-    "ts-node": "^10.9.1"
-  },
-  "files": [
-    "dist/**/*",
-    "bin/**/*",
-    "README.md"
-  ]
+    "name": "prompt-piper-cli",
+    "version": "1.0.0",
+    "description": "CLI tool for compressing AI prompts to reduce token usage",
+    "main": "index.js",
+    "bin": {
+        "prompt-piper": "./bin/prompt-piper.js",
+        "pp": "./bin/prompt-piper.js",
+        "ppi": "./bin/prompt-piper-interactive.js"
+    },
+    "scripts": {
+        "build": "tsc",
+        "start": "node dist/index.js",
+        "dev": "ts-node src/index.ts",
+        "interactive": "ts-node src/interactive.ts",
+        "interactive:dry": "ts-node src/interactive.ts --dry",
+        "interactive:claude": "ts-node src/interactive.ts --claude",
+        "test": "echo \"No tests yet\"",
+        "compress": "bun run dev compress",
+        "rules:list": "bun run dev rules:list",
+    },
+    "keywords": [
+        "ai",
+        "prompt",
+        "compression",
+        "tokens",
+        "cli",
+        "claude",
+        "cost-optimization"
+    ],
+    "author": "Prompt Piper Team",
+    "license": "MIT",
+    "dependencies": {
+        "chalk": "^4.1.2",
+        "commander": "^11.0.0",
+        "dotenv": "^16.0.0",
+        "ora": "^5.4.1",
+        "thirdweb": "^5.0.0"
+    },
+    "devDependencies": {
+        "@types/node": "^20.14.9",
+        "typescript": "^5.5.3",
+        "ts-node": "^10.9.1"
+    },
+    "files": [
+        "dist/**/*",
+        "bin/**/*",
+        "README.md"
+    ]
 }
