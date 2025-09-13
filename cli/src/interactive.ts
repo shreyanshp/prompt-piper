@@ -21,7 +21,6 @@ const EXAMPLES = [
 
 // Parse command line arguments
 const args = process.argv.slice(2);
-const isDryMode = args.includes('--dry');
 const isClaudeMode = args.includes('--claude');
 
 function clearScreen() {
@@ -37,12 +36,11 @@ function showWelcome() {
     console.log();
     console.log(chalk.bold.white('Welcome to PROMPT PIPER Interactive Mode'));
     console.log(chalk.gray('Compress your AI prompts in real-time and save on API costs'));
-    if (isDryMode) {
-        console.log(chalk.yellow('Running in DRY MODE - compression only, no execution'));
-    } else if (isClaudeMode) {
-        console.log(chalk.green('Running in CLAUDE MODE - prompts will be executed with real Claude CLI'));
+    if (isClaudeMode) {
+        console.log(chalk.green('Running in CLAUDE MODE - compressed prompts will be forwarded to Claude CLI'));
     } else {
-        console.log(chalk.blue('Running in DEMO MODE - prompts will use local AI responses'));
+        console.log(chalk.yellow('Running in COMPRESSION MODE - shows compression results only'));
+        console.log(chalk.gray('Use --claude flag to forward compressed prompts to Claude CLI'));
     }
     console.log();
     console.log(chalk.gray('═'.repeat(80)));
@@ -198,10 +196,7 @@ async function executeWithClaude(compressedPrompt: string): Promise<void> {
 
     if (isClaudeMode) {
         console.log(chalk.yellow('[>] Launching Claude with compressed prompt...'));
-        console.log(chalk.gray('Compressed prompt:', compressedPrompt));
         console.log();
-
-        let realClaudeWorked = false;
 
         try {
             console.log(chalk.cyan('Starting interactive Claude session...'));
@@ -223,36 +218,26 @@ async function executeWithClaude(compressedPrompt: string): Promise<void> {
 
             console.log();
             console.log(chalk.green('✓ Claude session completed'));
-            realClaudeWorked = true;
 
         } catch (error: any) {
             console.log();
-            console.log(chalk.yellow('Claude session failed, falling back to demo mode...'));
-        }
-
-        if (realClaudeWorked) {
+            console.log(chalk.red('✗ Failed to launch Claude CLI'));
+            console.log(chalk.gray('Make sure Claude CLI is installed and available in PATH'));
             console.log();
+            console.log(chalk.yellow('You can copy the compressed prompt below:'));
             console.log(chalk.cyan('─'.repeat(60)));
-            return;
+            console.log(chalk.white(compressedPrompt));
+            console.log(chalk.cyan('─'.repeat(60)));
         }
     } else {
-        console.log(chalk.yellow('[>] Executing with local AI...'));
-        console.log(chalk.gray('Compressed prompt:', compressedPrompt));
+        console.log(chalk.yellow('[>] Compressed prompt ready for use:'));
         console.log();
-        console.log(chalk.cyan('[Local AI Response]:'));
+        console.log(chalk.cyan('Copy this compressed prompt to your AI tool:'));
+        console.log(chalk.cyan('─'.repeat(60)));
+        console.log(chalk.white(compressedPrompt));
+        console.log(chalk.cyan('─'.repeat(60)));
         console.log();
-    }
-
-    // Generate and stream local AI response
-    if (!isClaudeMode) {
-        console.log();
-        await new Promise(resolve => setTimeout(resolve, 500)); // Brief pause for effect
-
-        const response = LocalAIResponder.generateResponse(compressedPrompt);
-        await LocalAIResponder.streamResponse(response);
-        
-        console.log();
-        console.log(chalk.green('✓ Local AI response completed'));
+        console.log(chalk.gray('Tip: Use --claude flag to forward directly to Claude CLI'));
     }
 
     console.log();
@@ -343,10 +328,8 @@ async function handleUserChoice(choice: string, rl: readline.Interface) {
                     console.log(chalk.magenta('    Comments removed, whitespace optimized, structure preserved.'));
                 }
 
-                // Execute with Claude only if not in dry mode
-                if (!isDryMode) {
-                    await executeWithClaude(result.compressedPrompt);
-                }
+                // Show compressed prompt or execute with Claude
+                await executeWithClaude(result.compressedPrompt);
             }
             break;
 
@@ -359,10 +342,8 @@ async function handleUserChoice(choice: string, rl: readline.Interface) {
                 totalSaved += customResult.savedTokens;
                 totalSavedCost += customResult.savedCost;
 
-                // Execute with Claude only if not in dry mode
-                if (!isDryMode) {
-                    await executeWithClaude(customResult.compressedPrompt);
-                }
+                // Show compressed prompt or execute with Claude
+                await executeWithClaude(customResult.compressedPrompt);
             } else {
                 console.log(chalk.red('[!] No prompt entered'));
             }
