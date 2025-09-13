@@ -4,7 +4,7 @@ import { program } from 'commander';
 import chalk from 'chalk';
 import ora from 'ora';
 import { readFileSync, writeFileSync } from 'fs';
-import { PromptCompressorV2 as PromptCompressor } from './compressor';
+import { PromptCompressorV3 as PromptCompressor } from './compressor';
 import { ASCII_ART } from './ascii-art';
 
 // Load environment variables from config file

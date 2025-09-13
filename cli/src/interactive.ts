@@ -3,10 +3,6 @@
 import * as readline from 'readline';
 import chalk from 'chalk';
 import { ASCII_ART } from './ascii-art';
-import {
-    simpleExamples,
-    codeExamples
-} from './compression-rules/example-prompts';
 
 const rl = readline.createInterface({
     input: process.stdin,
