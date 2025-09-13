@@ -54,37 +54,18 @@ let totalCompressed = 0;
 let totalSaved = 0;
 let totalSavedCost = 0;
 
+function showStats() {
+    console.log();
+    console.log(chalk.bold.blue('>>> STATISTICS'));
+    console.log(chalk.gray('═'.repeat(40)));
+    console.log();
 
-async function getCustomPrompt(mainRl: readline.Interface): Promise<string> {
-    return new Promise((resolve) => {
-        console.log();
-        console.log(chalk.bold.yellow('Enter your prompt:'));
-        console.log(chalk.gray('─'.repeat(60)));
+    // Display stats with ASCII art on the right
+    const asciiArt = ['Stats'];
 
-        const originalPrompt = mainRl.getPrompt();
 
-        // Remove all existing listeners temporarily
-        const existingListeners = mainRl.listeners('line') as Array<(...args: any[]) => void>;
-        mainRl.removeAllListeners('line');
-
-        mainRl.setPrompt(chalk.cyan('> '));
-
-        const collectLine = (line: string) => {
-            // Single line input - submit immediately
-            mainRl.removeListener('line', collectLine);
-
-            // Restore original listeners
-            existingListeners.forEach(listener => {
-                mainRl.on('line', listener);
-            });
-
-            mainRl.setPrompt(originalPrompt);
-            resolve(line);
-        };
-
-        mainRl.on('line', collectLine);
-        mainRl.prompt();
-    });
+    console.log();
+    console.log(chalk.gray('─'.repeat(60)));
 }
 
 async function handleUserChoice(choice: string, rl: readline.Interface) {
