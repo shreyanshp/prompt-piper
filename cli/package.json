@@ -15,9 +15,21 @@
         "interactive": "ts-node src/interactive.ts",
         "interactive:dry": "ts-node src/interactive.ts --dry",
         "interactive:claude": "ts-node src/interactive.ts --claude",
+        "interactive:openrouter": "ts-node src/interactive.ts --openrouter",
+        "interactive:bitcoincom": "ts-node src/interactive.ts --bitcoincom",
         "test": "echo \"No tests yet\"",
         "compress": "bun run dev compress",
-        "rules:list": "bun run dev rules:list"
+        "compress:file": "bun run dev compress -f example.txt",
+        "compress:claude": "bun run dev compress --claude",
+        "compress:openrouter": "bun run dev compress --openrouter",
+        "compress:bitcoincom": "bun run dev compress --bitcoincom",
+        "compress:bypass": "bun run dev compress --openrouter --bypass",
+        "analyze": "bun run dev analyze",
+        "analyze:file": "bun run dev analyze -f prompt.txt",
+        "rules:list": "bun run dev rules:list",
+        "example:simple": "echo 'Could you please help me understand how to implement a REST API?' | bun run dev compress",
+        "example:verbose": "echo 'I would really appreciate if you could help me understand how machine learning algorithms work' | bun run dev compress",
+        "example:stats": "echo 'Please provide a detailed step by step explanation' | bun run dev compress -s"
     },
     "keywords": [
         "ai",
