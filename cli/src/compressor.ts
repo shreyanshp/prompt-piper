@@ -1,5 +1,7 @@
 import { RuleSetRegistry } from './ipfs/rule-set-registry';
 import { CompressionRuleSet } from './ipfs/ipfs-manager';
+import { Tiktoken } from "js-tiktoken/lite";
+import { o200k_base } from './tiktoken-utils';
 
 export interface CompressionResult {
     originalPrompt: string;
@@ -22,6 +24,7 @@ export interface CompressionOptions {
 export class PromptCompressorV3 {
     private static readonly TOKEN_COST_PER_1K = 0.003; // Claude-3 pricing
     private static registry: RuleSetRegistry = RuleSetRegistry.getInstance();
+    private static tokenizer: Tiktoken = new Tiktoken(o200k_base);
 
     static compress(prompt: string, options: CompressionOptions = {}): string {
         let compressed = prompt;
@@ -393,14 +396,8 @@ export class PromptCompressorV3 {
     }
 
     static getTokenCount(text: string): number {
-        // More accurate token estimation
-        // Average English: ~4 chars/token
-        // Code: ~3 chars/token (more symbols)
-        const codeBlockCount = (text.match(/```[\s\S]*?```/g) || []).length;
-        const hasCode = codeBlockCount > 0 || text.includes('function') || text.includes('class') || text.includes('import');
-
-        const charsPerToken = hasCode ? 3.5 : 4;
-        return Math.ceil(text.length / charsPerToken);
+        // Use accurate tiktoken-based token counting
+        return this.tokenizer.encode(text).length;
     }
 
     static analyze(originalPrompt: string, options: CompressionOptions = {}): CompressionResult {

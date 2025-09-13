@@ -497,8 +497,8 @@ async function processPrompt(prompt: string, title: string) {
             apiResponse = await apiInstance.executePrompt(promptToSend, !bypassMode);
 
             // Create result object showing what was sent vs original
-            const originalTokens = Math.ceil(prompt.length / 4);
-            const sentTokens = Math.ceil(promptToSend.length / 4);
+            const originalTokens = PromptCompressor.getTokenCount(prompt);
+            const sentTokens = PromptCompressor.getTokenCount(promptToSend);
             const savedTokens = originalTokens - sentTokens;
             const compressionRatio = savedTokens > 0 ? (savedTokens / originalTokens) * 100 : 0;
             const savedCost = (savedTokens / 1000) * 0.003;

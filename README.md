@@ -23,11 +23,26 @@ Command-line interface for developers and power users.
 - Integration with Claude AI and other LLMs
 - Real-time compression analytics
 
-**Getting Started:**
+**Quick Commands:**
 ```bash
-cd cli
-bun install
-bun run interactive  # Launch interactive mode
+cd cli && bun install
+
+# Interactive mode
+bun run interactive                    # Launch terminal UI
+bun run interactive --claude           # Launch with Claude integration
+
+# Direct compression
+bun run compress "your prompt here"    # Compress text directly
+bun run compress --rules solidity      # Use language-specific rules
+bun run compress -f input.txt          # Compress from file
+
+# Analysis & comparison
+bun run analyze "your prompt"          # Show compression stats
+bun run compare -f prompt.txt          # Before/after comparison
+
+# IPFS rule sets
+bun run ipfs:browse                    # Browse available rule sets
+bun run ipfs:publish rules.json        # Share your rule set
 ```
 
 📖 **[Full CLI Documentation →](./cli/README.md)**
@@ -54,7 +69,7 @@ Browser-based interface for broader accessibility and team collaboration.
 
 ### 🎯 Smart Compression Engine
 - Advanced v3 algorithm with semantic preservation
-- Multiple rule set support for different use cases  
+- Multiple rule set support for different use cases
 - Language-specific optimizations
 - Real-time token counting and savings calculation
 
@@ -66,7 +81,7 @@ Browser-based interface for broader accessibility and team collaboration.
 
 ### 📊 Analytics & Insights
 - Token reduction metrics
-- Cost savings calculator  
+- Cost savings calculator
 - Compression effectiveness analysis
 - Before/after comparisons
 
@@ -94,8 +109,8 @@ Both CLI and web interfaces support:
 
 ```bash
 # Original (127 tokens)
-"Could you please provide a comprehensive analysis of the following Python code, 
-including detailed suggestions for performance optimizations, potential security 
+"Could you please provide a comprehensive analysis of the following Python code,
+including detailed suggestions for performance optimizations, potential security
 vulnerabilities, code style improvements, and best practices recommendations?"
 
 # Compressed (23 tokens - 82% reduction!)
@@ -107,7 +122,7 @@ vulnerabilities, code style improvements, and best practices recommendations?"
 ## Use Cases
 
 - **Software Development**: Compress code snippets, documentation, and technical requests
-- **Research & Analysis**: Fit more papers, data, and context into prompts  
+- **Research & Analysis**: Fit more papers, data, and context into prompts
 - **Content Creation**: Include extensive background and style guides
 - **Data Science**: Process larger datasets in single API calls
 - **Team Collaboration**: Share and optimize prompts across organizations
