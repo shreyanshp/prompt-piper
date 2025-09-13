@@ -2,6 +2,8 @@
 
 import * as readline from 'readline';
 import chalk from 'chalk';
+import { execSync } from 'child_process';
+import { PromptCompressorV2 as PromptCompressor } from './compressor';
 import { ASCII_ART } from './ascii-art';
 import {
     simpleExamples,
@@ -13,6 +15,11 @@ const rl = readline.createInterface({
     output: process.stdout,
     prompt: chalk.cyan('\nprompt-piper> ')
 });
+
+const EXAMPLES = [
+    ...simpleExamples,
+    ...codeExamples
+];
 
 // Parse command line arguments
 const args = process.argv.slice(2);
@@ -48,6 +55,38 @@ let totalSaved = 0;
 let totalSavedCost = 0;
 
 
+async function getCustomPrompt(mainRl: readline.Interface): Promise<string> {
+    return new Promise((resolve) => {
+        console.log();
+        console.log(chalk.bold.yellow('Enter your prompt:'));
+        console.log(chalk.gray('─'.repeat(60)));
+
+        const originalPrompt = mainRl.getPrompt();
+
+        // Remove all existing listeners temporarily
+        const existingListeners = mainRl.listeners('line') as Array<(...args: any[]) => void>;
+        mainRl.removeAllListeners('line');
+
+        mainRl.setPrompt(chalk.cyan('> '));
+
+        const collectLine = (line: string) => {
+            // Single line input - submit immediately
+            mainRl.removeListener('line', collectLine);
+
+            // Restore original listeners
+            existingListeners.forEach(listener => {
+                mainRl.on('line', listener);
+            });
+
+            mainRl.setPrompt(originalPrompt);
+            resolve(line);
+        };
+
+        mainRl.on('line', collectLine);
+        mainRl.prompt();
+    });
+}
+
 async function handleUserChoice(choice: string, rl: readline.Interface) {
     const input = choice.trim().toUpperCase();
 
@@ -57,12 +96,15 @@ async function handleUserChoice(choice: string, rl: readline.Interface) {
         case '3':
         case '4':
         case '5':
+        case '8':
+            showStats();
+            break;
         case 'C':
             showWelcome();
             break;
         case 'Q':
             console.log();
-            console.log(chalk.cyan('Bye!'));
+            console.log(chalk.cyan('Thank you for using Prompt Piper!'));
             if (totalCompressed > 0) {
                 console.log(chalk.gray(`You saved ${totalSaved} tokens ($${totalSavedCost.toFixed(4)}) this session.`));
             }
@@ -70,7 +112,7 @@ async function handleUserChoice(choice: string, rl: readline.Interface) {
             process.exit(0);
             break;
         default:
-            console.log(chalk.red('[!] Invalid option'));
+            console.log(chalk.red('[!] Invalid option. Please choose 1-8, H, C, or Q.'));
     }
 }
 

@@ -67,7 +67,7 @@ program
             }
 
             if (!prompt.trim()) {
-                console.error(chalk.red('[!] No input'));
+                console.error(chalk.red('[!] No prompt provided'));
                 process.exit(1);
             }
 
@@ -75,13 +75,13 @@ program
                 showBanner();
             }
 
-            const spinner = ora('Compressing...').start();
+            const spinner = ora('Compressing prompt...').start();
 
             // Simulate processing time for UX
             await new Promise(resolve => setTimeout(resolve, 300));
 
             const result = PromptCompressor.analyze(prompt);
-            spinner.succeed('Prompt compressed');
+            spinner.succeed('Prompt compressed successfully!');
 
             // Output based on options
             if (options.quiet) {
@@ -100,6 +100,9 @@ program
                     console.log(`${chalk.gray('Tokens saved:')} ${chalk.red(result.savedTokens)}`);
                     console.log(`${chalk.gray('Compression ratio:')} ${chalk.blue(result.compressionRatio.toFixed(1) + '%')}`);
                     console.log(`${chalk.gray('Cost savings:')} ${chalk.green('$' + result.savedCost.toFixed(4) + ' per request')}`);
+                } else {
+                    // Show compact stats
+                    console.log(`\n${chalk.gray('Stats:')} ${result.originalTokens} → ${chalk.green(result.compressedTokens)} tokens (${chalk.red('-' + result.savedTokens)} | ${chalk.blue(result.compressionRatio.toFixed(1) + '%')})`);
                 }
             }
 
@@ -139,7 +142,7 @@ program
 
             showBanner();
 
-            const spinner = ora('Analyzing...').start();
+            const spinner = ora('Analyzing prompt...').start();
             await new Promise(resolve => setTimeout(resolve, 200));
 
             const result = PromptCompressor.analyze(prompt);
@@ -150,8 +153,19 @@ program
 
             console.log(`${chalk.bold('[#] Current Stats:')}`);
             console.log(`${chalk.gray('Current tokens:')} ${chalk.white(result.originalTokens)}`);
+            console.log(`${chalk.gray('Estimated cost:')} ${chalk.white('$' + (result.originalTokens / 1000 * 0.003).toFixed(4) + ' per request')}`);
 
             console.log(`\n${chalk.bold('[*] Potential Savings:')}`);
+            console.log(`${chalk.gray('After compression:')} ${chalk.green(result.compressedTokens + ' tokens')}`);
+            console.log(`${chalk.gray('Tokens saved:')} ${chalk.red(result.savedTokens)}`);
+            console.log(`${chalk.gray('Compression ratio:')} ${chalk.blue(result.compressionRatio.toFixed(1) + '%')}`);
+            console.log(`${chalk.gray('Cost savings:')} ${chalk.green('$' + result.savedCost.toFixed(4) + ' per request')}`);
+
+            if (result.savedTokens > 0) {
+                console.log(`\n${chalk.green('[$] Run')} ${chalk.bold('prompt-piper compress')} ${chalk.green('to apply compression!')}`);
+            } else {
+                console.log(`\n${chalk.yellow('[i] This prompt is already quite efficient!')}`);
+            }
 
         } catch (error: any) {
             console.error(chalk.red('[!] Error:'), error.message);
