@@ -2,8 +2,6 @@
 
 import * as readline from 'readline';
 import chalk from 'chalk';
-import { execSync } from 'child_process';
-import { PromptCompressorV2 as PromptCompressor } from './compressor';
 import { ASCII_ART } from './ascii-art';
 import {
     simpleExamples,
@@ -15,11 +13,6 @@ const rl = readline.createInterface({
     output: process.stdout,
     prompt: chalk.cyan('\nprompt-piper> ')
 });
-
-const EXAMPLES = [
-    ...simpleExamples,
-    ...codeExamples
-];
 
 // Parse command line arguments
 const args = process.argv.slice(2);
@@ -61,7 +54,21 @@ function showStats() {
     console.log();
 
     // Display stats with ASCII art on the right
-    const asciiArt = ['Stats'];
+    const asciiArt = [
+        '⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠄',
+        '⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣄⡀⠀⠀⠀⠀⠀⠀⣀⣴⠟⠀',
+        '⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣠⣾⣿⣿⣷⣀⣀⣤⣶⡾⠟⠁⠀⠀',
+        '⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣴⣿⣿⣿⣿⣿⣿⣏⠉⠉⠀⠀⠀⠀⠀⠀',
+        '⠀⠀⠀⠀⠀⠀⠀⢀⣀⣄⠀⠺⣿⣿⣿⣿⡦⠀⠀⠀⠀⠀⠀⠀⠀⠀',
+        '⢀⣤⣤⣶⣾⣿⡿⢿⣿⣿⠀⠀⠉⣿⣿⡏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀',
+        '⠈⠛⠉⠉⢻⣿⣆⠈⢿⣿⣦⣠⣾⣿⣿⡟⠿⣶⣦⡀⠀⠀⠀⠀⠀⠀',
+        '⠀⠀⠀⠀⠀⠻⣿⣧⣤⣿⣿⣿⣿⣿⣿⡇⠀⠘⣿⣿⣆⠀⠀⠀⠀⠀',
+        '⠀⠀⠀⠀⠀⠀⠘⢿⣿⠿⠛⢹⣿⣿⣿⡇⠀⠀⣿⣿⣿⡆⠀⠀⠀⠀',
+        '⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿⣿⣇⠀⠀⢻⣿⣿⣿⡄⠀⠀⠀',
+        '⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿⣿⣿⣦⠀⠈⣿⣿⣿⣿⣄⠀⠀',
+        '⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿⣿⣿⣿⡷⠀⠘⣿⡿⠛⠁⠀⠀',
+        '⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠸⠿⠟⠛⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀'
+    ];
 
     // Stats content
     const stats = [
