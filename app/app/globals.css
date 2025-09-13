@@ -1,0 +1,320 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom CSS Variables for Theme Colors */
+:root {
+    --color-gray-100: theme('colors.gray.100');
+    --color-gray-200: theme('colors.gray.200');
+    --color-gray-300: theme('colors.gray.300');
+    --color-gray-400: theme('colors.gray.400');
+    --color-gray-500: theme('colors.gray.500');
+    --color-gray-600: theme('colors.gray.600');
+    --color-gray-700: theme('colors.gray.700');
+    --color-gray-800: theme('colors.gray.800');
+    --color-gray-900: theme('colors.gray.900');
+    --color-blue-500: theme('colors.blue.500');
+    --color-blue-600: theme('colors.blue.600');
+    --color-slate-200: theme('colors.slate.200');
+    --color-slate-300: theme('colors.slate.300');
+    --color-slate-700: theme('colors.slate.700');
+}
+
+/* Custom Font Variables */
+.font-title {
+    font-family: 'Saira', sans-serif;
+}
+
+.font-inter {
+    font-family: var(--font-inter), sans-serif;
+}
+
+/* Custom Button Styles */
+.btn {
+    @apply inline-flex items-center justify-center text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none;
+    @apply h-11 px-8 py-2 rounded-xl;
+}
+
+.btn-sm {
+    @apply h-9 px-4 py-2 text-xs rounded-lg;
+}
+
+/* Backdrop blur utilities */
+.backdrop-blur-xs {
+    backdrop-filter: blur(2px);
+}
+
+/* Custom Gradients */
+.bg-linear-to-t {
+    background: linear-gradient(to top, var(--tw-gradient-stops));
+}
+
+.bg-linear-to-tr {
+    background: linear-gradient(to top right, var(--tw-gradient-stops));
+}
+
+.bg-linear-to-r {
+    background: linear-gradient(to right, var(--tw-gradient-stops));
+}
+
+.bg-linear-to-b {
+    background: linear-gradient(to bottom, var(--tw-gradient-stops));
+}
+
+/* Terminal Animation Keyframes */
+@keyframes code-1 {
+
+    0%,
+    2.5% {
+        opacity: 1;
+    }
+
+    97.5%,
+    100% {
+        opacity: 0;
+    }
+}
+
+@keyframes code-2 {
+
+    0%,
+    5% {
+        opacity: 0;
+    }
+
+    5.1%,
+    7.5% {
+        opacity: 1;
+    }
+
+    97.5%,
+    100% {
+        opacity: 0;
+    }
+}
+
+@keyframes code-3 {
+
+    0%,
+    10% {
+        opacity: 0;
+    }
+
+    10.1%,
+    12.5% {
+        opacity: 1;
+    }
+
+    97.5%,
+    100% {
+        opacity: 0;
+    }
+}
+
+@keyframes code-4 {
+
+    0%,
+    15% {
+        opacity: 0;
+    }
+
+    15.1%,
+    17.5% {
+        opacity: 1;
+    }
+
+    97.5%,
+    100% {
+        opacity: 0;
+    }
+}
+
+@keyframes code-5 {
+
+    0%,
+    25% {
+        opacity: 0;
+    }
+
+    25.1%,
+    27.5% {
+        opacity: 1;
+    }
+
+    97.5%,
+    100% {
+        opacity: 0;
+    }
+}
+
+@keyframes code-6 {
+
+    0%,
+    30% {
+        opacity: 0;
+    }
+
+    30.1%,
+    32.5% {
+        opacity: 1;
+    }
+
+    97.5%,
+    100% {
+        opacity: 0;
+    }
+}
+
+/* Breathing Animation */
+@keyframes breath {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+/* Float Animation */
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+/* Line Animation */
+@keyframes line {
+    0% {
+        left: 0;
+        opacity: 0;
+    }
+
+    25% {
+        opacity: 1;
+    }
+
+    75% {
+        opacity: 1;
+    }
+
+    100% {
+        left: 100%;
+        opacity: 0;
+    }
+}
+
+/* Spin Animation */
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Pulse Animation */
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+}
+
+/* Zoom Y Out Animation (AOS replacement) */
+@keyframes zoom-y-out {
+    from {
+        opacity: 0;
+        transform: scale3d(0.8, 0.8, 0.8);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale3d(1, 1, 1);
+    }
+}
+
+/* Animation Classes */
+.animate-breath {
+    animation: breath 8s ease-in-out infinite both;
+}
+
+.animate-float {
+    animation: float 4s ease-in-out infinite both;
+}
+
+.animate-line {
+    animation: line 10s ease-in-out infinite both;
+}
+
+.animate-pulse-slow {
+    animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite both;
+}
+
+.animate-zoom-y-out {
+    animation: zoom-y-out 0.6s ease-out;
+}
+
+/* Animation Delays */
+.animation-delay-1s {
+    animation-delay: 1s;
+}
+
+.animation-delay-2s {
+    animation-delay: 2s;
+}
+
+.animation-delay-3s {
+    animation-delay: 3s;
+}
+
+.animation-delay-150ms {
+    animation-delay: 150ms;
+}
+
+.animation-delay-300ms {
+    animation-delay: 300ms;
+}
+
+.animation-delay-450ms {
+    animation-delay: 450ms;
+}
+
+.animation-delay-600ms {
+    animation-delay: 600ms;
+}
+
+/* Blur Utilities */
+.blur-xs {
+    filter: blur(2px);
+}
+
+/* Custom utilities */
+.will-change-filter {
+    will-change: filter;
+}
+
+/* Hide scrollbar but keep functionality */
+.scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}
