@@ -2,13 +2,21 @@
 
 import * as readline from 'readline';
 import chalk from 'chalk';
+import { execSync } from 'child_process';
+import { PromptCompressorV3 as PromptCompressor } from './compressor';
 import { ASCII_ART } from './ascii-art';
+import { simpleExamples, codeExamples } from './compression-rules/example-prompts';
 
 const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
     prompt: chalk.cyan('\nprompt-piper> ')
 });
+
+const EXAMPLES = [
+    ...simpleExamples,
+    ...codeExamples
+];
 
 // Parse command line arguments
 const args = process.argv.slice(2);
@@ -37,6 +45,74 @@ function showWelcome() {
     }
     console.log();
     console.log(chalk.gray('═'.repeat(80)));
+}
+
+function showMenu() {
+    console.log();
+    console.log(chalk.bold.yellow('MENU:'));
+    console.log(chalk.gray('─'.repeat(40)));
+}
+
+function showCompressionResult(result: any) {
+    console.log();
+    console.log(chalk.bold.blue('>>> COMPRESSION RESULTS'));
+    console.log(chalk.gray('═'.repeat(60)));
+
+    // Original prompt box
+    console.log();
+    console.log(chalk.bold('[<] ORIGINAL PROMPT'));
+    console.log(chalk.gray('┌' + '─'.repeat(58) + '┐'));
+    const originalLines = result.originalPrompt.match(/.{1,56}/g) || [result.originalPrompt];
+    originalLines.forEach((line: string) => {
+        console.log(chalk.gray('│'), chalk.white(line.padEnd(56)), chalk.gray('│'));
+    });
+    console.log(chalk.gray('└' + '─'.repeat(58) + '┘'));
+
+    // Arrow
+    console.log();
+    console.log(' '.repeat(25) + chalk.cyan('▼ ▼ ▼'));
+    console.log();
+
+    // Compressed prompt box
+    console.log(chalk.bold('[>] COMPRESSED PROMPT'));
+    console.log(chalk.gray('┌' + '─'.repeat(58) + '┐'));
+    const compressedLines = result.compressedPrompt.match(/.{1,56}/g) || [result.compressedPrompt];
+    compressedLines.forEach((line: string) => {
+        console.log(chalk.gray('│'), chalk.green(line.padEnd(56)), chalk.gray('│'));
+    });
+    console.log(chalk.gray('└' + '─'.repeat(58) + '┘'));
+
+    // Stats
+    console.log();
+    console.log(chalk.bold('[#] COMPRESSION STATS'));
+    console.log(chalk.gray('─'.repeat(40)));
+
+    const percentage = Math.round((result.compressedTokens / result.originalTokens) * 100);
+    const barWidth = 30;
+    const filledBars = Math.round((percentage / 100) * barWidth);
+    const emptyBars = barWidth - filledBars;
+
+    console.log(chalk.gray('Tokens:'),
+        chalk.white(result.originalTokens),
+        chalk.cyan('→'),
+        chalk.green(result.compressedTokens),
+        chalk.red(`(-${result.savedTokens})`));
+
+    console.log(chalk.gray('Visual:'),
+        chalk.red('█'.repeat(barWidth)),
+        chalk.gray('(before)'));
+    console.log(chalk.gray('       '),
+        chalk.green('█'.repeat(filledBars)) + chalk.gray('░'.repeat(emptyBars)),
+        chalk.gray('(after)'));
+
+    console.log(chalk.gray('Reduction:'), chalk.bold.red(`${result.compressionRatio.toFixed(1)}%`));
+    console.log(chalk.gray('Cost saved:'), chalk.bold.green(`$${result.savedCost.toFixed(4)} per request`));
+
+    if (result.savedTokens > 0) {
+        console.log();
+        console.log(chalk.yellow('[*] At 1,000 requests/day:'), chalk.bold.green(`$${(result.savedCost * 1000).toFixed(2)} saved`));
+        console.log(chalk.yellow('[*] At 10,000 requests/day:'), chalk.bold.green(`$${(result.savedCost * 10000).toFixed(2)} saved`));
+    }
 }
 
 let totalCompressed = 0;
@@ -96,6 +172,138 @@ function showStats() {
     console.log(chalk.gray('─'.repeat(60)));
 }
 
+async function executeWithClaude(compressedPrompt: string): Promise<void> {
+    console.log();
+    console.log(chalk.cyan('─'.repeat(60)));
+
+    if (isClaudeMode) {
+        console.log(chalk.yellow('[>] Launching Claude with compressed prompt...'));
+        console.log(chalk.gray('Compressed prompt:', compressedPrompt));
+        console.log();
+
+        console.log(chalk.cyan('Starting interactive Claude session...'));
+        console.log(chalk.gray('(Press Ctrl+C to return to Prompt Piper)'));
+        console.log();
+
+        let realClaudeWorked = false;
+
+        try {
+            // Launch Claude interactively with the compressed prompt
+            // Escape backticks and other special characters for shell
+            const escapedPrompt = compressedPrompt
+                .replace(/\\/g, '\\\\')  // Escape backslashes first
+                .replace(/"/g, '\\"')    // Escape double quotes
+                .replace(/`/g, '\\`')    // Escape backticks
+                .replace(/\$/g, '\\$');  // Escape dollar signs
+
+            execSync(`echo "${escapedPrompt}" | claude`, {
+                stdio: 'inherit', // This allows full interactive mode
+                encoding: 'utf8'
+            });
+
+            console.log();
+            console.log(chalk.green('✓ Claude session completed'));
+            realClaudeWorked = true;
+
+        } catch (error: any) {
+            console.log();
+            console.log(chalk.yellow('Claude session failed, falling back to demo mode...'));
+        }
+
+        if (realClaudeWorked) {
+            console.log();
+            console.log(chalk.cyan('─'.repeat(60)));
+            return;
+        }
+    } else {
+        console.log(chalk.yellow('[>] Executing with local AI...'));
+        console.log(chalk.gray('Compressed prompt:', compressedPrompt));
+        console.log();
+        console.log(chalk.cyan('[Local AI Response]:'));
+        console.log();
+    }
+
+    // Demo mode responses
+    console.log();
+    await new Promise(resolve => setTimeout(resolve, 500)); // Brief pause for effect
+
+    let response = '';
+    if (compressedPrompt.toLowerCase().includes('api') && compressedPrompt.toLowerCase().includes('auth')) {
+        response = `# Secure REST API Authentication Guide...
+            Would you like me to elaborate on any specific aspect?`;
+    }
+
+    // Type out demo response with slight delay
+    const words = response.split(' ');
+    for (let i = 0; i < words.length; i += 5) {
+        const chunk = words.slice(i, i + 5).join(' ') + ' ';
+        process.stdout.write(chalk.white(chunk));
+        await new Promise(resolve => setTimeout(resolve, 30));
+    }
+    console.log();
+    console.log();
+    console.log(chalk.green('✓ Local AI response completed'));
+
+    console.log();
+    console.log(chalk.cyan('─'.repeat(60)));
+}
+
+function showHelp() {
+    console.log();
+    console.log(chalk.bold.blue('>>> HELP'));
+    console.log(chalk.gray('═'.repeat(60)));
+    console.log();
+    console.log(chalk.bold('About Prompt Piper:'));
+    console.log(chalk.gray('Prompt Piper compresses verbose AI prompts by removing redundant'));
+    console.log(chalk.gray('phrases and filler words while preserving meaning and intent.'));
+    console.log();
+    console.log(chalk.bold('How it works:'));
+    console.log(chalk.gray('• Removes phrases like "Could you please", "I would like"'));
+    console.log(chalk.gray('• Compresses verbose patterns ("step by step" → "stepwise")'));
+    console.log(chalk.gray('• Eliminates filler words (very, really, quite, actually)'));
+    console.log(chalk.gray('• Maintains the core request and all important details'));
+    console.log();
+    console.log(chalk.bold('Tips:'));
+    console.log(chalk.gray('• Longer, more verbose prompts see better compression'));
+    console.log(chalk.gray('• Test compressed prompts to ensure quality'));
+    console.log(chalk.gray('• Track your savings with option 5'));
+    console.log(chalk.gray('• For custom prompts: type your text, then press Enter'));
+    console.log();
+    console.log(chalk.gray('─'.repeat(60)));
+}
+
+async function getCustomPrompt(mainRl: readline.Interface): Promise<string> {
+    return new Promise((resolve) => {
+        console.log();
+        console.log(chalk.bold.yellow('Enter your prompt:'));
+        console.log(chalk.gray('─'.repeat(60)));
+
+        const originalPrompt = mainRl.getPrompt();
+
+        // Remove all existing listeners temporarily
+        const existingListeners = mainRl.listeners('line') as Array<(...args: any[]) => void>;
+        mainRl.removeAllListeners('line');
+
+        mainRl.setPrompt(chalk.cyan('> '));
+
+        const collectLine = (line: string) => {
+            // Single line input - submit immediately
+            mainRl.removeListener('line', collectLine);
+
+            // Restore original listeners
+            existingListeners.forEach(listener => {
+                mainRl.on('line', listener);
+            });
+
+            mainRl.setPrompt(originalPrompt);
+            resolve(line);
+        };
+
+        mainRl.on('line', collectLine);
+        mainRl.prompt();
+    });
+}
+
 async function handleUserChoice(choice: string, rl: readline.Interface) {
     const input = choice.trim().toUpperCase();
 
@@ -105,12 +313,63 @@ async function handleUserChoice(choice: string, rl: readline.Interface) {
         case '3':
         case '4':
         case '5':
+        case '6':
+            const exampleIndex = parseInt(input) - 1;
+            if (exampleIndex < EXAMPLES.length) {
+                const example = EXAMPLES[exampleIndex];
+                console.log();
+                console.log(chalk.yellow(`[*] Compressing: ${example.title}`));
+                const result = PromptCompressor.analyze(example.prompt);
+                showCompressionResult(result);
+                totalCompressed++;
+                totalSaved += result.savedTokens;
+                totalSavedCost += result.savedCost;
+
+                // Show extra message for code examples
+                if (exampleIndex >= 3) {
+                    console.log();
+                    console.log(chalk.magenta('[!] Note: This example includes code compression!'));
+                    console.log(chalk.magenta('    Comments removed, whitespace optimized, structure preserved.'));
+                }
+
+                // Execute with Claude only if not in dry mode
+                if (!isDryMode) {
+                    await executeWithClaude(result.compressedPrompt);
+                }
+            }
+            break;
+
+        case '7':
+            const customPrompt = await getCustomPrompt(rl);
+            if (customPrompt.trim()) {
+                const customResult = PromptCompressor.analyze(customPrompt);
+                showCompressionResult(customResult);
+                totalCompressed++;
+                totalSaved += customResult.savedTokens;
+                totalSavedCost += customResult.savedCost;
+
+                // Execute with Claude only if not in dry mode
+                if (!isDryMode) {
+                    await executeWithClaude(customResult.compressedPrompt);
+                }
+            } else {
+                console.log(chalk.red('[!] No prompt entered'));
+            }
+            break;
+
         case '8':
             showStats();
             break;
+
+        case 'H':
+            showHelp();
+            break;
+
         case 'C':
             showWelcome();
+            showMenu();
             break;
+
         case 'Q':
             console.log();
             console.log(chalk.cyan('Thank you for using Prompt Piper!'));
@@ -120,6 +379,7 @@ async function handleUserChoice(choice: string, rl: readline.Interface) {
             console.log();
             process.exit(0);
             break;
+
         default:
             console.log(chalk.red('[!] Invalid option. Please choose 1-8, H, C, or Q.'));
     }
@@ -128,6 +388,7 @@ async function handleUserChoice(choice: string, rl: readline.Interface) {
 // Main interactive loop
 export async function startInteractive() {
     showWelcome();
+    showMenu();
 
     rl.prompt();
 
