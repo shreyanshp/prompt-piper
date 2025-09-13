@@ -13,40 +13,42 @@ Prompt Piper is an intelligent prompt compression platform that helps developers
 ## Project Architecture
 
 ### 🖥️ CLI Tool (`/cli`)
-A powerful command-line interface for developers and power users.
+Command-line interface for developers and power users.
 
-**Features:**
-- Direct prompt compression from terminal
+**Key Features:**
 - Interactive terminal UI with guided workflows
+- Direct command-line compression
 - IPFS-based rule set sharing and discovery
 - Language-specific compression rules (Solidity, Go, Rust, Python, etc.)
 - Integration with Claude AI and other LLMs
 - Real-time compression analytics
 
-**Quick Start:**
+**Getting Started:**
 ```bash
-# Install CLI tool
-npm install -g prompt-piper
-
-# Compress a prompt
-prompt-piper compress "Your verbose prompt here"
-
-# Launch interactive mode
-prompt-piper interactive
+cd cli
+bun install
+bun run interactive  # Launch interactive mode
 ```
 
 📖 **[Full CLI Documentation →](./cli/README.md)**
 
-### 🌐 Web Interface *(Coming Soon)*
-A user-friendly web application for broader accessibility.
+### 🌐 Web Application (`/app`) *(Coming Soon)*
+Browser-based interface for broader accessibility and team collaboration.
 
 **Planned Features:**
-- Browser-based prompt compression
 - Visual compression editor
-- Rule set marketplace
-- Team collaboration features
+- Rule set marketplace and browser
+- Team collaboration and sharing
 - API integration dashboard
 - Usage analytics and cost tracking
+- Real-time collaboration on prompts
+
+**Technology Stack:**
+- Modern web framework (React/Next.js)
+- Real-time compression engine
+- IPFS integration for decentralized rule sharing
+- Team management and permissions
+- API for third-party integrations
 
 ## Core Technology
 
@@ -70,28 +72,23 @@ A user-friendly web application for broader accessibility.
 
 ## Getting Started
 
-### For Developers (CLI)
+### Developers & Power Users
+Use the CLI tool for terminal-based workflows:
 ```bash
-# Install the CLI tool
-npm install -g prompt-piper
-
-# Start with interactive mode
-prompt-piper interactive
-
-# Or compress directly
-prompt-piper compress "Please analyze this code and provide detailed feedback"
+cd cli
+bun install
+bun run interactive
 ```
 
-### For Teams (Web Interface)
-*Coming soon - sign up for early access at [promptpiper.com](https://promptpiper.com)*
+### Teams & Organizations
+*Web application coming soon - designed for collaborative prompt engineering and team workflows*
 
-## Use Cases
-
-- **Software Development**: Compress code snippets, documentation, and technical requests
-- **Research & Analysis**: Fit more papers, data, and context into prompts  
-- **Content Creation**: Include extensive background and style guides
-- **Data Science**: Process larger datasets in single API calls
-- **Multi-language Projects**: Optimize prompts for specific programming languages
+### Integrations
+Both CLI and web interfaces support:
+- Claude AI integration
+- Custom LLM endpoints
+- API access for third-party tools
+- IPFS rule set ecosystem
 
 ## Example Compression
 
@@ -107,6 +104,14 @@ vulnerabilities, code style improvements, and best practices recommendations?"
 # Cost Savings: ~$0.002 per request with GPT-4
 ```
 
+## Use Cases
+
+- **Software Development**: Compress code snippets, documentation, and technical requests
+- **Research & Analysis**: Fit more papers, data, and context into prompts  
+- **Content Creation**: Include extensive background and style guides
+- **Data Science**: Process larger datasets in single API calls
+- **Team Collaboration**: Share and optimize prompts across organizations
+
 ## Documentation
 
 - 📖 **[CLI Tool Guide](./cli/README.md)** - Complete CLI documentation and usage
@@ -118,32 +123,41 @@ vulnerabilities, code style improvements, and best practices recommendations?"
 
 ### CLI Development
 ```bash
-# Clone and setup
-git clone https://github.com/yourusername/prompt-piper.git
-cd prompt-piper/cli
-
-# Install dependencies
+cd cli
 bun install
-
-# Run in development mode  
 bun run dev
-
-# Build for production
 bun run build
 ```
 
 ### Web App Development
-*Development setup coming soon*
+```bash
+cd app
+# Setup instructions coming soon
+```
 
-## Contributing
-
-We welcome contributions to all parts of the Prompt Piper ecosystem!
-
+### Contributing
+We welcome contributions to all parts of the Prompt Piper ecosystem:
 - 🐛 **Report Issues**: [GitHub Issues](https://github.com/yourusername/prompt-piper/issues)
-- 💡 **Feature Requests**: Share your ideas in our discussions
-- 🔧 **Code Contributions**: Submit PRs for CLI tool, web interface, or documentation
+- 💡 **Feature Requests**: Share your ideas in discussions
+- 🔧 **Code Contributions**: Submit PRs for CLI, web app, or documentation
 - 📝 **Rule Sets**: Contribute specialized compression rules via IPFS
-- 📖 **Documentation**: Help improve our guides and examples
+- 📖 **Documentation**: Help improve guides and examples
+
+## Roadmap
+
+**Current (CLI)**
+- ✅ Interactive terminal interface
+- ✅ Command-line compression tools
+- ✅ IPFS rule set sharing
+- ✅ Language-specific optimizations
+- ✅ Claude AI integration
+
+**Upcoming (Web App)**
+- 🚧 Browser-based compression interface
+- 🚧 Visual rule set editor
+- 🚧 Team collaboration features
+- 🚧 API management dashboard
+- 🚧 Enterprise deployment options
 
 ## Community & Support
 
@@ -151,16 +165,6 @@ We welcome contributions to all parts of the Prompt Piper ecosystem!
 - 💬 **Discord Community**: [discord.gg/promptpiper](https://discord.gg/promptpiper)
 - 📧 **Contact**: promptpiper@example.com
 - 🐦 **Twitter**: [@PromptPiper](https://twitter.com/PromptPiper)
-
-## Roadmap
-
-- ✅ CLI Tool with IPFS integration
-- ✅ Interactive terminal interface  
-- ✅ Language-specific rule sets
-- 🚧 Web interface and marketplace
-- 🚧 API for third-party integrations
-- 🚧 Team collaboration features
-- 🚧 Enterprise deployment options
 
 ## License
 
