@@ -8,6 +8,7 @@ import { PromptCompressorV3 as PromptCompressor } from './compressor';
 import { ASCII_ART } from './ascii-art';
 import { simpleExamples, codeExamples } from './compression-rules/example-prompts';
 import { execSync } from 'child_process';
+import { runClaudeNonInteractive } from './claude-launcher';
 
 // Create readline interface
 const rl = readline.createInterface({
@@ -136,10 +137,17 @@ function showWelcome() {
     console.log(chalk.bold.white('Welcome to PROMPT PIPER Interactive Mode'));
     console.log(chalk.gray('Compress your AI prompts in real-time and save on API costs'));
     
-    if (apiMode && currentApi) {
-        const apiName = currentApi === 'openrouter' ? 'OpenRouter' : 'Bitcoin.com AI';
+    if (apiMode && currentApi && currentApi !== 'claude') {
+        let apiName: string;
+        if (currentApi === 'openrouter') {
+            apiName = 'OpenRouter';
+        } else if (currentApi === 'bitcoincom') {
+            apiName = 'Bitcoin.com AI';
+        } else {
+            apiName = 'Unknown API';
+        }
         console.log(chalk.green(`Running in API MODE - compressed prompts will be sent to ${apiName}`));
-    } else if (isClaudeMode) {
+    } else if (isClaudeMode || currentApi === 'claude') {
         console.log(chalk.green('Running in CLAUDE MODE - compressed prompts will be forwarded to Claude CLI'));
     } else {
         console.log(chalk.yellow('Running in COMPRESSION MODE - shows compression results only'));
@@ -182,10 +190,19 @@ function showMenu() {
     console.log();
     console.log(chalk.gray('─'.repeat(60)));
 
-    if (apiMode) {
-        const apiName = currentApi === 'openrouter' ? 'OpenRouter' : 'Bitcoin.com AI';
+    if (apiMode && currentApi !== 'claude') {
+        let apiName: string;
+        if (currentApi === 'openrouter') {
+            apiName = 'OpenRouter';
+        } else if (currentApi === 'bitcoincom') {
+            apiName = 'Bitcoin.com AI';
+        } else {
+            apiName = 'Unknown API';
+        }
         console.log(chalk.cyan(`[API Mode Active: ${apiName}]`),
             bypassMode ? chalk.yellow('Bypass ON - sending original prompts') : chalk.green('Compressing before sending'));
+    } else if (currentApi === 'claude') {
+        console.log(chalk.cyan('[Claude Mode Active]'), chalk.green('Compressing then launching interactive Claude'));
     }
 }
 
@@ -438,7 +455,7 @@ async function getCustomPrompt(mainRl: readline.Interface): Promise<string> {
 }
 
 async function processPrompt(prompt: string, title: string) {
-    if (apiMode && !((currentApi === 'openrouter' && openRouterApi.hasApiKey()) || 
+    if (apiMode && currentApi !== 'claude' && !((currentApi === 'openrouter' && openRouterApi.hasApiKey()) || 
                      (currentApi === 'bitcoincom' && bitcoincomApi.hasApiKey()))) {
         const apiName = currentApi === 'openrouter' ? 'OpenRouter' : 'Bitcoin.com AI';
         const envVar = currentApi === 'openrouter' ? 'OPENROUTER_API_KEY' : 'BITCOINCOM_API_KEY';
@@ -448,22 +465,36 @@ async function processPrompt(prompt: string, title: string) {
 
     let result;
 
-    if (apiMode) {
-        const apiName = currentApi === 'openrouter' ? 'OpenRouter' : 'Bitcoin.com AI';
-        const spinnerText = bypassMode ? `Sending original prompt to ${apiName}...` : `Compressing and sending to ${apiName}...`;
+    if (apiMode && currentApi !== 'claude') {
+        let apiName: string;
+        let spinnerText: string;
+        
+        if (currentApi === 'openrouter') {
+            apiName = 'OpenRouter';
+            spinnerText = bypassMode ? `Sending original prompt to ${apiName}...` : `Compressing and sending to ${apiName}...`;
+        } else if (currentApi === 'bitcoincom') {
+            apiName = 'Bitcoin.com AI';
+            spinnerText = bypassMode ? `Sending original prompt to ${apiName}...` : `Compressing and sending to ${apiName}...`;
+        } else {
+            apiName = 'Unknown API';
+            spinnerText = 'Processing...';
+        }
+        
         const spinner = ora(spinnerText).start();
 
         try {
-            const apiInstance = currentApi === 'openrouter' ? openRouterApi : bitcoincomApi;
             let promptToSend = prompt;
+            let apiResponse: string;
 
+            // Apply compression
             if (!bypassMode) {
-                // Apply rule-based compression first
                 const ruleBasedResult = PromptCompressor.analyze(prompt);
                 promptToSend = ruleBasedResult.compressedPrompt;
             }
 
-            const apiResponse = await apiInstance.executePrompt(promptToSend, !bypassMode);
+            // Use API instances for OpenRouter/Bitcoin.com
+            const apiInstance = currentApi === 'openrouter' ? openRouterApi : bitcoincomApi;
+            apiResponse = await apiInstance.executePrompt(promptToSend, !bypassMode);
 
             // Create result object showing what was sent vs original
             const originalTokens = Math.ceil(prompt.length / 4);
@@ -502,8 +533,10 @@ async function processPrompt(prompt: string, title: string) {
     totalSaved += result.savedTokens;
     totalSavedCost += result.savedCost;
 
-    // Show extra message for code examples
-    if (title.includes('Example') && !apiMode && !isClaudeMode) {
+    // Show compressed prompt or execute with Claude
+    if (currentApi === 'claude' || isClaudeMode) {
+        await executeWithClaude(result.compressedPrompt);
+    } else if (title.includes('Example') && !apiMode) {
         await executeWithClaude(result.compressedPrompt);
     }
 }
@@ -624,6 +657,7 @@ export async function startInteractive() {
     const interactiveApi = process.env.INTERACTIVE_API;
     const hasOpenRouterArg = args.includes('--openrouter');
     const hasBitcoinComArg = args.includes('--bitcoincom');
+    const hasClaudeArg = args.includes('--claude');
     
     if (hasOpenRouterArg || interactiveApi === 'openrouter') {
         apiMode = true;
@@ -631,6 +665,9 @@ export async function startInteractive() {
     } else if (hasBitcoinComArg || interactiveApi === 'bitcoincom') {
         apiMode = true;
         currentApi = 'bitcoincom';
+    } else if (hasClaudeArg || interactiveApi === 'claude') {
+        apiMode = true;
+        currentApi = 'claude';
     }
     
     showWelcome();

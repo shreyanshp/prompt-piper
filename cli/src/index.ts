@@ -7,6 +7,7 @@ import { readFileSync, writeFileSync } from 'fs';
 import { PromptCompressorV3 as PromptCompressor, CompressionResult } from './compressor';
 import { ASCII_ART } from './ascii-art';
 import { startInteractive } from './interactive';
+import { runClaudeNonInteractive } from './claude-launcher';
 import fetch from 'node-fetch';
 
 interface ApiCompressionResult extends CompressionResult {
@@ -131,6 +132,7 @@ program
     .version(packageInfo.version)
     .option('--openrouter', 'Use OpenRouter API to execute compressed prompts')
     .option('--bitcoincom', 'Use Bitcoin.com AI API to execute compressed prompts')
+    .option('--claude', 'Use Claude CLI to execute compressed prompts')
     .option('--key <apikey>', 'API key for the selected service');
 
 // Main compress command
@@ -148,14 +150,17 @@ program
         try {
             // Check for conflicting API options
             const programOptions = program.opts();
-            if (programOptions.openrouter && programOptions.bitcoincom) {
-                console.error(chalk.red('[!] Cannot use both --openrouter and --bitcoincom at the same time'));
+            const apiOptions = [programOptions.openrouter, programOptions.bitcoincom, programOptions.claude];
+            const enabledCount = apiOptions.filter(Boolean).length;
+            
+            if (enabledCount > 1) {
+                console.error(chalk.red('[!] Cannot use multiple API options at the same time. Choose one: --openrouter, --bitcoincom, or --claude'));
                 process.exit(1);
             }
 
             // Validate --bypass flag
             if (options.bypass && !programOptions.openrouter && !programOptions.bitcoincom) {
-                console.error(chalk.red('[!] --bypass flag can only be used with --openrouter or --bitcoincom'));
+                console.error(chalk.red('[!] --bypass flag can only be used with --openrouter or --bitcoincom (not with --claude)'));
                 process.exit(1);
             }
 
@@ -231,6 +236,12 @@ program
                     console.error(chalk.red('[!] API Error:'), error.message);
                     process.exit(1);
                 }
+            } else if (programOptions.claude) {
+                // Handle Claude mode like the original implementation
+                const spinner = ora('Compressing prompt...').start();
+                await new Promise(resolve => setTimeout(resolve, 300));
+                result = PromptCompressor.analyze(prompt);
+                spinner.succeed('Prompt compressed successfully!');
             } else {
                 const spinner = ora('Compressing prompt...').start();
                 // Simulate processing time for UX
@@ -274,6 +285,46 @@ program
                     console.log(chalk.gray('─'.repeat(50)));
                     console.log(chalk.cyan(result.apiResponse));
                     console.log(chalk.gray('─'.repeat(50)));
+                }
+                
+                // Launch Claude CLI if --claude option was used
+                if (programOptions.claude) {
+                    console.log('\n' + chalk.cyan('─'.repeat(60)));
+                    console.log(chalk.yellow('[>] Launching Claude with compressed prompt...'));
+                    console.log();
+
+                    try {
+                        console.log(chalk.cyan('Starting interactive Claude session...'));
+                        console.log(chalk.gray('(Press Ctrl+C to return to shell)'));
+                        console.log();
+
+                        // Launch Claude interactively with the compressed prompt
+                        const escapedPrompt = result.compressedPrompt
+                            .replace(/\\/g, '\\\\')
+                            .replace(/"/g, '\\"')
+                            .replace(/`/g, '\\`')
+                            .replace(/\$/g, '\\$');
+
+                        const { execSync } = require('child_process');
+                        execSync(`echo "${escapedPrompt}" | claude`, {
+                            stdio: 'inherit',
+                            encoding: 'utf8'
+                        });
+
+                        console.log();
+                        console.log(chalk.green('✓ Claude session completed'));
+                    } catch (error: any) {
+                        console.log();
+                        console.log(chalk.red('✗ Failed to launch Claude CLI'));
+                        console.log(chalk.gray('Make sure Claude CLI is installed and available in PATH'));
+                        console.log();
+                        console.log(chalk.yellow('You can copy the compressed prompt below:'));
+                        console.log(chalk.cyan('─'.repeat(60)));
+                        console.log(chalk.white(result.compressedPrompt));
+                        console.log(chalk.cyan('─'.repeat(60)));
+                    }
+                    console.log();
+                    console.log(chalk.cyan('─'.repeat(60)));
                 }
             }
 
@@ -351,11 +402,15 @@ program
     .description('Start interactive mode with menu-driven interface')
     .option('--openrouter', 'Use OpenRouter API in interactive mode')
     .option('--bitcoincom', 'Use Bitcoin.com AI API in interactive mode')
+    .option('--claude', 'Use Claude CLI in interactive mode')
     .option('--key <apikey>', 'API key for the selected service')
     .action((options) => {
         // Check for conflicting API options
-        if (options.openrouter && options.bitcoincom) {
-            console.error(chalk.red('[!] Cannot use both --openrouter and --bitcoincom at the same time'));
+        const apiOptions = [options.openrouter, options.bitcoincom, options.claude];
+        const enabledCount = apiOptions.filter(Boolean).length;
+        
+        if (enabledCount > 1) {
+            console.error(chalk.red('[!] Cannot use multiple API options at the same time. Choose one: --openrouter, --bitcoincom, or --claude'));
             process.exit(1);
         }
         
@@ -366,6 +421,8 @@ program
         } else if (options.bitcoincom) {
             process.env.INTERACTIVE_API = 'bitcoincom';
             if (options.key) process.env.BITCOINCOM_API_KEY = options.key;
+        } else if (options.claude) {
+            process.env.INTERACTIVE_API = 'claude';
         }
         
         startInteractive();
