@@ -17,7 +17,7 @@
         "interactive:claude": "ts-node src/interactive.ts --claude",
         "test": "echo \"No tests yet\"",
         "compress": "bun run dev compress",
-        "rules:list": "bun run dev rules:list",
+        "rules:list": "bun run dev rules:list"
     },
     "keywords": [
         "ai",
