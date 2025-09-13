@@ -1,6 +1,7 @@
 import chalk from 'chalk';
 import { IPFSManager, CompressionRuleSet } from './ipfs-manager';
 import { RuleSetRegistry } from './rule-set-registry';
+import { SpecializedRuleSets } from './specialized-rules';
 
 export class IPFSCommands {
     private ipfsManager: IPFSManager;
@@ -17,6 +18,14 @@ export class IPFSCommands {
 
     async initialize(): Promise<void> {
         await this.ipfsManager.connect();
+        this.loadSpecializedRuleSets();
+    }
+
+    private loadSpecializedRuleSets(): void {
+        const specializedSets = SpecializedRuleSets.getAllSpecializedRuleSets();
+        specializedSets.forEach(ruleSet => {
+            this.registry.registerRuleSet(ruleSet);
+        });
     }
 
     async storeRuleSet(ruleSetId: string): Promise<string> {
@@ -28,17 +37,24 @@ export class IPFSCommands {
         const ipfsAddress = await this.ipfsManager.storeRuleSet(ruleSet);
 
         // Track the IPFS address in the registry
-        this.registry.setIPFSAddress(ruleSetId, ipfsAddress);
+        this.registry.setIPFSAddress(
+            ruleSetId,
+            ipfsAddress
+        );
 
         return ipfsAddress;
     }
 
     async loadRuleSet(cid: string): Promise<CompressionRuleSet> {
+
         const ruleSet = await this.ipfsManager.loadRuleSet(cid);
         this.registry.registerRuleSet(ruleSet);
 
         // Track the IPFS address for the loaded rule set
-        this.registry.setIPFSAddress(ruleSet.id, cid);
+        this.registry.setIPFSAddress(
+            ruleSet.id,
+            cid
+        );
 
         return ruleSet;
     }
@@ -67,7 +83,7 @@ export class IPFSCommands {
             console.log();
             console.log(chalk.white(`${index + 1}.`), chalk.bold.cyan(pin.cid));
             if (pin.name) {
-                console.log(chalk.gray(`   Name: ${pin.name}`));
+                console.log(chalk.gray(`Name: ${pin.name}`));
             }
         });
     }
@@ -80,7 +96,7 @@ export class IPFSCommands {
         console.log(chalk.gray('═'.repeat(60)));
 
         if (allRuleSets.length === 0) {
-            console.log(chalk.yellow('No rule sets available'));
+            console.log(chalk.yellow('No rule sets available!'));
             return;
         }
 
