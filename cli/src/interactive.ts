@@ -49,8 +49,27 @@ function showWelcome() {
 
 function showMenu() {
     console.log();
-    console.log(chalk.bold.yellow('MENU:'));
-    console.log(chalk.gray('─'.repeat(40)));
+    console.log(chalk.bold.yellow('MAIN MENU'));
+    console.log(chalk.gray('─'.repeat(60)));
+    console.log();
+    console.log(chalk.bold.cyan('Simple Examples:'));
+    console.log(chalk.white('1)'), chalk.bold('Example:'), chalk.gray(EXAMPLES[0].title));
+    console.log(chalk.white('2)'), chalk.bold('Example:'), chalk.gray(EXAMPLES[1].title));
+    console.log(chalk.white('3)'), chalk.bold('Example:'), chalk.gray(EXAMPLES[2].title));
+    console.log();
+    console.log(chalk.bold.cyan('Code Examples (Dramatic Results):'));
+    console.log(chalk.white('4)'), chalk.bold('Example:'), chalk.gray(EXAMPLES[3].title));
+    console.log(chalk.white('5)'), chalk.bold('Example:'), chalk.gray(EXAMPLES[4].title));
+    console.log(chalk.white('6)'), chalk.bold('Example:'), chalk.gray(EXAMPLES[5].title));
+    console.log();
+    console.log(chalk.white('7)'), chalk.bold('Enter Custom Prompt'));
+    console.log(chalk.white('8)'), chalk.bold('View Compression Stats'));
+    console.log();
+    console.log(chalk.white('H)'), chalk.gray('Help'));
+    console.log(chalk.white('C)'), chalk.gray('Clear Screen'));
+    console.log(chalk.white('Q)'), chalk.gray('Quit'));
+    console.log();
+    console.log(chalk.gray('─'.repeat(60)));
 }
 
 function showCompressionResult(result: any) {
