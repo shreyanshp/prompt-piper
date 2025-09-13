@@ -1,0 +1,27 @@
+# Simplified Bun-only Dockerfile
+FROM oven/bun:1-alpine
+
+WORKDIR /app
+
+# Copy package files
+COPY package.json ./
+COPY tsconfig.json* ./
+
+# Install dependencies
+RUN bun install --frozen-lockfile
+
+# Copy application code
+COPY . .
+
+# Build if needed
+RUN if [ -f "tsconfig.json" ]; then bun run build || true; fi
+
+# Create necessary directories
+RUN mkdir -p logs prompts output
+
+# Set terminal colors
+ENV TERM=xterm-256color
+ENV FORCE_COLOR=1
+
+# Direct command execution without entrypoint script
+CMD ["bun", "run", "interactive"]
