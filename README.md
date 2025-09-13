@@ -1,174 +1,177 @@
-# prompt-piper
+# Prompt Piper
 
 Prompt Piper プロンプト　パイパー | Compress LLM prompts to 4x your context window. Reduce API costs, slash latency, and unlock more powerful AI applications.
 
-## Overview
+## What is Prompt Piper?
 
-Prompt Piper is a powerful CLI tool that intelligently compresses AI prompts, allowing you to:
+Prompt Piper is an intelligent prompt compression platform that helps developers and AI enthusiasts maximize their LLM interactions by:
 - **4x your effective context window** - Fit more information into every API call
 - **Reduce API costs** - Pay for fewer tokens while maintaining semantic meaning
 - **Decrease latency** - Shorter prompts mean faster responses
-- **Share compression rules** - Leverage community-optimized rule sets via IPFS
+- **Share compression expertise** - Leverage community-optimized rule sets
 
-## Key Features
+## Project Architecture
 
-### 🎯 Smart Compression
-- Advanced v3 compression algorithm with multiple rule set support
-- Language-specific optimizations for Solidity, Go, Rust, Python, and more
-- Preserves semantic meaning while reducing token count
-- Real-time compression statistics and savings reports
+### 🖥️ CLI Tool (`/cli`)
+A powerful command-line interface for developers and power users.
 
-### 🌐 Decentralized Rule Sharing (IPFS)
-- Publish and share compression rule sets with the community
-- Browse and download specialized rule sets for your use case
-- Version control and updates for rule sets
-- No central authority - fully decentralized
+**Features:**
+- Direct prompt compression from terminal
+- Interactive terminal UI with guided workflows
+- IPFS-based rule set sharing and discovery
+- Language-specific compression rules (Solidity, Go, Rust, Python, etc.)
+- Integration with Claude AI and other LLMs
+- Real-time compression analytics
 
-### 🚀 Multiple Usage Modes
-- **Command Mode**: Direct integration into your workflow
-- **Interactive Mode**: User-friendly terminal UI with guided options
-- **Claude Launcher**: One-click integration with Claude AI
-- **API Integration**: Use as a library in your own applications
-
-### 📊 Real-time Analytics
-- Token count reduction metrics
-- Cost savings calculator
-- Compression ratio analysis
-- Before/after comparisons
-
-## Quick Start
-
-### Installation
-
+**Quick Start:**
 ```bash
-# Using npm
+# Install CLI tool
 npm install -g prompt-piper
 
-# Using yarn
-yarn global add prompt-piper
+# Compress a prompt
+prompt-piper compress "Your verbose prompt here"
 
-# Using bun
-bun install -g prompt-piper
+# Launch interactive mode
+prompt-piper interactive
 ```
 
-### Basic Usage
+📖 **[Full CLI Documentation →](./cli/README.md)**
 
-#### Command Mode (Direct Compression)
+### 🌐 Web Interface *(Coming Soon)*
+A user-friendly web application for broader accessibility.
 
+**Planned Features:**
+- Browser-based prompt compression
+- Visual compression editor
+- Rule set marketplace
+- Team collaboration features
+- API integration dashboard
+- Usage analytics and cost tracking
+
+## Core Technology
+
+### 🎯 Smart Compression Engine
+- Advanced v3 algorithm with semantic preservation
+- Multiple rule set support for different use cases  
+- Language-specific optimizations
+- Real-time token counting and savings calculation
+
+### 🌐 Decentralized Rule Sharing (IPFS)
+- Publish and discover compression rule sets
+- Community-driven optimization patterns
+- Version control for rule sets
+- No central authority or vendor lock-in
+
+### 📊 Analytics & Insights
+- Token reduction metrics
+- Cost savings calculator  
+- Compression effectiveness analysis
+- Before/after comparisons
+
+## Getting Started
+
+### For Developers (CLI)
 ```bash
-# Compress a single prompt
-prompt-piper compress "Please analyze the following code and provide detailed feedback on performance optimizations"
-# Output: "analyze code: feedback on perf optimizations"
+# Install the CLI tool
+npm install -g prompt-piper
 
-# Compress from a file
-prompt-piper compress -f long-prompt.txt -o compressed.txt
-
-# Pipe input for compression
-echo "Could you please help me understand this concept in detail?" | prompt-piper compress
-# Output: "help understand concept"
-
-# Analyze token savings without compressing
-prompt-piper analyze "Your verbose prompt here"
-
-# Compare before/after side-by-side
-prompt-piper compare -f prompt.txt
-
-# Use specific compression rules
-prompt-piper compress "Your Solidity code review request" --rules solidity
-
-# Quiet mode (only output compressed text)
-prompt-piper compress -q "Please kindly assist me with this task"
-# Output: assist with task
-```
-
-#### Interactive Mode (Terminal UI)
-
-```bash
-# Launch interactive terminal interface
+# Start with interactive mode
 prompt-piper interactive
 
-# Or use the shortcut
-ppi
+# Or compress directly
+prompt-piper compress "Please analyze this code and provide detailed feedback"
 ```
 
-#### Claude Integration
+### For Teams (Web Interface)
+*Coming soon - sign up for early access at [promptpiper.com](https://promptpiper.com)*
+
+## Use Cases
+
+- **Software Development**: Compress code snippets, documentation, and technical requests
+- **Research & Analysis**: Fit more papers, data, and context into prompts  
+- **Content Creation**: Include extensive background and style guides
+- **Data Science**: Process larger datasets in single API calls
+- **Multi-language Projects**: Optimize prompts for specific programming languages
+
+## Example Compression
 
 ```bash
-# Compress and launch with Claude
-prompt-piper claude "Your prompt"
-```
+# Original (127 tokens)
+"Could you please provide a comprehensive analysis of the following Python code, 
+including detailed suggestions for performance optimizations, potential security 
+vulnerabilities, code style improvements, and best practices recommendations?"
 
-### IPFS Rule Sets
+# Compressed (23 tokens - 82% reduction!)
+"analyze Python code: performance, security, style, best practices"
 
-```bash
-# Browse available rule sets
-prompt-piper ipfs browse
-
-# Download a rule set
-prompt-piper ipfs get <CID>
-
-# Publish your rule set
-prompt-piper ipfs publish ./my-rules.json
+# Cost Savings: ~$0.002 per request with GPT-4
 ```
 
 ## Documentation
 
-- 📖 [CLI Documentation](./cli/README.md) - Comprehensive guide for all CLI features
-- 🌐 [IPFS Rules Guide](./cli/IPFS_RULES_README.md) - Learn about decentralized rule sharing
-- 🔧 [IPFS Setup](./cli/src/ipfs/README.md) - Installation and configuration for IPFS
+- 📖 **[CLI Tool Guide](./cli/README.md)** - Complete CLI documentation and usage
+- 🌐 **[IPFS Rules System](./cli/IPFS_RULES_README.md)** - Decentralized rule sharing
+- 🔧 **[IPFS Setup Guide](./cli/src/ipfs/README.md)** - Installation and configuration
+- 📊 **[Compression Examples](./cli/examples/)** - Real-world use cases and demos
 
-## Example
+## Development
 
+### CLI Development
 ```bash
-# Original prompt (150 tokens)
-$ prompt-piper compress "Please analyze the following code and provide detailed feedback on performance optimizations, potential bugs, and best practices..."
-
-# Compressed output (38 tokens - 75% reduction!)
-"analyze code: feedback on perf optimization, bugs, best practices..."
-
-# Savings: $0.0015 per request
-```
-
-## Use Cases
-
-- **Development**: Compress code snippets and technical documentation
-- **Research**: Fit more papers and references into context
-- **Creative Writing**: Include more backstory and world-building
-- **Data Analysis**: Process larger datasets in single prompts
-- **Multi-language**: Optimize prompts for specific programming languages
-
-## Contributing
-
-We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
-
-### Development Setup
-
-```bash
-# Clone the repository
+# Clone and setup
 git clone https://github.com/yourusername/prompt-piper.git
-cd prompt-piper
+cd prompt-piper/cli
 
 # Install dependencies
 bun install
 
-# Run in development mode
+# Run in development mode  
 bun run dev
+
+# Build for production
+bun run build
 ```
 
-## Community
+### Web App Development
+*Development setup coming soon*
 
-- 🌟 Star us on [GitHub](https://github.com/yourusername/prompt-piper)
-- 🐛 Report issues in our [Issue Tracker](https://github.com/yourusername/prompt-piper/issues)
-- 💬 Join our [Discord](https://discord.gg/promptpiper) for discussions
-- 📧 Contact: promptpiper@example.com
+## Contributing
+
+We welcome contributions to all parts of the Prompt Piper ecosystem!
+
+- 🐛 **Report Issues**: [GitHub Issues](https://github.com/yourusername/prompt-piper/issues)
+- 💡 **Feature Requests**: Share your ideas in our discussions
+- 🔧 **Code Contributions**: Submit PRs for CLI tool, web interface, or documentation
+- 📝 **Rule Sets**: Contribute specialized compression rules via IPFS
+- 📖 **Documentation**: Help improve our guides and examples
+
+## Community & Support
+
+- 🌟 **Star us on GitHub**: Help others discover Prompt Piper
+- 💬 **Discord Community**: [discord.gg/promptpiper](https://discord.gg/promptpiper)
+- 📧 **Contact**: promptpiper@example.com
+- 🐦 **Twitter**: [@PromptPiper](https://twitter.com/PromptPiper)
+
+## Roadmap
+
+- ✅ CLI Tool with IPFS integration
+- ✅ Interactive terminal interface  
+- ✅ Language-specific rule sets
+- 🚧 Web interface and marketplace
+- 🚧 API for third-party integrations
+- 🚧 Team collaboration features
+- 🚧 Enterprise deployment options
 
 ## License
 
-MIT License - see [LICENSE](LICENSE) for details
+MIT License - see [LICENSE](LICENSE) for details.
 
 ## Acknowledgments
 
-Built with ❤️ by the Prompt Piper community. Special thanks to all contributors and rule set authors.
+Built with ❤️ by the Prompt Piper community. Special thanks to:
+- All contributors and rule set authors
+- The IPFS community for decentralized infrastructure
+- Claude AI and other LLM providers for inspiring better prompt engineering
 
 ---
 
