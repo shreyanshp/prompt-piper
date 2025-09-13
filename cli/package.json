@@ -34,11 +34,13 @@
         "chalk": "^4.1.2",
         "commander": "^11.0.0",
         "dotenv": "^16.0.0",
+        "node-fetch": "^2.6.7",
         "ora": "^5.4.1",
         "thirdweb": "^5.0.0"
     },
     "devDependencies": {
         "@types/node": "^20.14.9",
+        "@types/node-fetch": "^2.6.4",
         "typescript": "^5.5.3",
         "ts-node": "^10.9.1"
     },

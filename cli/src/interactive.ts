@@ -2,6 +2,8 @@
 
 import * as readline from 'readline';
 import chalk from 'chalk';
+import ora from 'ora';
+import fetch from 'node-fetch';
 import { PromptCompressorV3 as PromptCompressor } from './compressor';
 import { ASCII_ART } from './ascii-art';
 import { simpleExamples, codeExamples } from './compression-rules/example-prompts';
@@ -14,14 +16,111 @@ const rl = readline.createInterface({
     prompt: chalk.cyan('\nprompt-piper> ')
 });
 
+// OpenRouter API integration
+class OpenRouterAPI {
+    private apiKey: string;
+    private baseURL = 'https://openrouter.ai/api/v1';
+
+    constructor(apiKey?: string) {
+        this.apiKey = apiKey || process.env.OPENROUTER_API_KEY || '';
+    }
+
+    hasApiKey(): boolean {
+        return !!this.apiKey;
+    }
+
+    async executePrompt(prompt: string, isCompressed: boolean = false): Promise<string> {
+        const response = await fetch(`${this.baseURL}/chat/completions`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${this.apiKey}`,
+                'Content-Type': 'application/json',
+                'HTTP-Referer': 'https://github.com/prompt-piper/cli',
+                'X-Title': 'Prompt Piper CLI'
+            },
+            body: JSON.stringify({
+                model: 'anthropic/claude-3.5-sonnet',
+                messages: [
+                    {
+                        role: 'user',
+                        content: prompt
+                    }
+                ],
+                max_tokens: isCompressed ? 790 : 960,
+                temperature: 0.1
+            })
+        });
+
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(`OpenRouter API error: ${error.error?.message || response.statusText}`);
+        }
+
+        const data = await response.json();
+        return data.choices[0]?.message?.content?.trim() || prompt;
+    }
+}
+
+// Bitcoin.com AI API integration
+class BitcoinComAPI {
+    private apiKey: string;
+    private baseURL = 'https://ai.bitcoin.com/api/v1';
+
+    constructor(apiKey?: string) {
+        this.apiKey = apiKey || process.env.BITCOINCOM_API_KEY || '';
+    }
+
+    hasApiKey(): boolean {
+        return !!this.apiKey;
+    }
+
+    async executePrompt(prompt: string, isCompressed: boolean = false): Promise<string> {
+        const response = await fetch(`${this.baseURL}/chat/completions`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${this.apiKey}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                model: 'chatgpt-4o-latest',
+                messages: [
+                    {
+                        role: 'user',
+                        content: prompt
+                    }
+                ],
+                max_tokens: isCompressed ? 790 : 960,
+                temperature: 0.1
+            })
+        });
+
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(`Bitcoin.com AI API error: ${error.error?.message || response.statusText}`);
+        }
+
+        const data = await response.json();
+        return data.choices[0]?.message?.content?.trim() || prompt;
+    }
+}
+
 const EXAMPLES = [
     ...simpleExamples,
     ...codeExamples
 ];
 
-// Parse command line arguments
+// Parse command line arguments and environment
 const args = process.argv.slice(2);
 const isClaudeMode = args.includes('--claude');
+
+// Global API instances
+const openRouterApi = new OpenRouterAPI();
+const bitcoincomApi = new BitcoinComAPI();
+
+// Global state for API mode - will be initialized in startInteractive
+let apiMode = false;
+let bypassMode = false;
+let currentApi: string | undefined;
 
 function clearScreen() {
     console.clear();
@@ -36,12 +135,17 @@ function showWelcome() {
     console.log();
     console.log(chalk.bold.white('Welcome to PROMPT PIPER Interactive Mode'));
     console.log(chalk.gray('Compress your AI prompts in real-time and save on API costs'));
-    if (isClaudeMode) {
+    
+    if (apiMode && currentApi) {
+        const apiName = currentApi === 'openrouter' ? 'OpenRouter' : 'Bitcoin.com AI';
+        console.log(chalk.green(`Running in API MODE - compressed prompts will be sent to ${apiName}`));
+    } else if (isClaudeMode) {
         console.log(chalk.green('Running in CLAUDE MODE - compressed prompts will be forwarded to Claude CLI'));
     } else {
         console.log(chalk.yellow('Running in COMPRESSION MODE - shows compression results only'));
-        console.log(chalk.gray('Use --claude flag to forward compressed prompts to Claude CLI'));
+        console.log(chalk.gray('Use --openrouter, --bitcoincom, or --claude flag to forward compressed prompts'));
     }
+    
     console.log();
     console.log(chalk.gray('═'.repeat(80)));
 }
@@ -64,11 +168,25 @@ function showMenu() {
     console.log(chalk.white('7)'), chalk.bold('Enter Custom Prompt'));
     console.log(chalk.white('8)'), chalk.bold('View Compression Stats'));
     console.log();
+    console.log(chalk.white('A)'), chalk.bold('Toggle API Mode'),
+        apiMode ? chalk.green('(ON)') : chalk.gray('(OFF)'));
+    console.log(chalk.white('B)'), chalk.bold('Toggle Bypass Mode'),
+        bypassMode ? chalk.green('(ON)') : chalk.gray('(OFF)'),
+        chalk.gray('(requires API mode)'));
+    console.log(chalk.white('S)'), chalk.bold('Switch API Service'),
+        currentApi ? chalk.cyan(`(${currentApi})`) : chalk.gray('(none)'));
+    console.log();
     console.log(chalk.white('H)'), chalk.gray('Help'));
     console.log(chalk.white('C)'), chalk.gray('Clear Screen'));
     console.log(chalk.white('Q)'), chalk.gray('Quit'));
     console.log();
     console.log(chalk.gray('─'.repeat(60)));
+
+    if (apiMode) {
+        const apiName = currentApi === 'openrouter' ? 'OpenRouter' : 'Bitcoin.com AI';
+        console.log(chalk.cyan(`[API Mode Active: ${apiName}]`),
+            bypassMode ? chalk.yellow('Bypass ON - sending original prompts') : chalk.green('Compressing before sending'));
+    }
 }
 
 function showCompressionResult(result: any) {
@@ -130,6 +248,18 @@ function showCompressionResult(result: any) {
         console.log();
         console.log(chalk.yellow('[*] At 1,000 requests/day:'), chalk.bold.green(`$${(result.savedCost * 1000).toFixed(2)} saved`));
         console.log(chalk.yellow('[*] At 10,000 requests/day:'), chalk.bold.green(`$${(result.savedCost * 10000).toFixed(2)} saved`));
+    }
+
+    // Show API response if available
+    if (result.apiResponse) {
+        const apiName = currentApi === 'openrouter' ? 'OpenRouter' : 'Bitcoin.com AI';
+        console.log();
+        console.log(chalk.bold(`[🤖] ${apiName} RESPONSE`));
+        console.log(chalk.gray('═'.repeat(60)));
+        console.log();
+        console.log(chalk.cyan(result.apiResponse));
+        console.log();
+        console.log(chalk.gray('═'.repeat(60)));
     }
 }
 
@@ -262,8 +392,15 @@ function showHelp() {
     console.log(chalk.bold('Tips:'));
     console.log(chalk.gray('• Longer, more verbose prompts see better compression'));
     console.log(chalk.gray('• Test compressed prompts to ensure quality'));
-    console.log(chalk.gray('• Track your savings with option 5'));
+    console.log(chalk.gray('• Track your savings with option 8'));
     console.log(chalk.gray('• For custom prompts: type your text, then press Enter'));
+    console.log();
+    console.log(chalk.bold('API Mode:'));
+    console.log(chalk.gray('• Press A to toggle API mode'));
+    console.log(chalk.gray('• Press S to switch between OpenRouter and Bitcoin.com AI'));
+    console.log(chalk.gray('• Press B to toggle bypass mode (skips compression)'));
+    console.log(chalk.gray('• API mode sends prompts to external services and shows responses'));
+    console.log(chalk.gray('• Requires OPENROUTER_API_KEY or BITCOINCOM_API_KEY environment variable'));
     console.log();
     console.log(chalk.gray('─'.repeat(60)));
 }
@@ -300,6 +437,77 @@ async function getCustomPrompt(mainRl: readline.Interface): Promise<string> {
     });
 }
 
+async function processPrompt(prompt: string, title: string) {
+    if (apiMode && !((currentApi === 'openrouter' && openRouterApi.hasApiKey()) || 
+                     (currentApi === 'bitcoincom' && bitcoincomApi.hasApiKey()))) {
+        const apiName = currentApi === 'openrouter' ? 'OpenRouter' : 'Bitcoin.com AI';
+        const envVar = currentApi === 'openrouter' ? 'OPENROUTER_API_KEY' : 'BITCOINCOM_API_KEY';
+        console.log(chalk.red(`[!] ${apiName} API key required. Set ${envVar} environment variable.`));
+        return;
+    }
+
+    let result;
+
+    if (apiMode) {
+        const apiName = currentApi === 'openrouter' ? 'OpenRouter' : 'Bitcoin.com AI';
+        const spinnerText = bypassMode ? `Sending original prompt to ${apiName}...` : `Compressing and sending to ${apiName}...`;
+        const spinner = ora(spinnerText).start();
+
+        try {
+            const apiInstance = currentApi === 'openrouter' ? openRouterApi : bitcoincomApi;
+            let promptToSend = prompt;
+
+            if (!bypassMode) {
+                // Apply rule-based compression first
+                const ruleBasedResult = PromptCompressor.analyze(prompt);
+                promptToSend = ruleBasedResult.compressedPrompt;
+            }
+
+            const apiResponse = await apiInstance.executePrompt(promptToSend, !bypassMode);
+
+            // Create result object showing what was sent vs original
+            const originalTokens = Math.ceil(prompt.length / 4);
+            const sentTokens = Math.ceil(promptToSend.length / 4);
+            const savedTokens = originalTokens - sentTokens;
+            const compressionRatio = savedTokens > 0 ? (savedTokens / originalTokens) * 100 : 0;
+            const savedCost = (savedTokens / 1000) * 0.003;
+
+            result = {
+                originalPrompt: prompt,
+                compressedPrompt: promptToSend,
+                originalTokens,
+                compressedTokens: sentTokens,
+                savedTokens,
+                compressionRatio,
+                savedCost,
+                apiResponse
+            };
+
+            const successText = bypassMode ? `Original prompt sent to ${apiName}!` : `Compressed prompt sent to ${apiName}!`;
+            spinner.succeed(successText);
+        } catch (error: any) {
+            spinner.fail('API request failed');
+            console.error(chalk.red('[!] API Error:'), error.message);
+            return;
+        }
+    } else {
+        // Local compression only
+        console.log();
+        console.log(chalk.yellow(`[*] Compressing: ${title}`));
+        result = PromptCompressor.analyze(prompt);
+    }
+
+    showCompressionResult(result);
+    totalCompressed++;
+    totalSaved += result.savedTokens;
+    totalSavedCost += result.savedCost;
+
+    // Show extra message for code examples
+    if (title.includes('Example') && !apiMode && !isClaudeMode) {
+        await executeWithClaude(result.compressedPrompt);
+    }
+}
+
 async function handleUserChoice(choice: string, rl: readline.Interface) {
     const input = choice.trim().toUpperCase();
 
@@ -313,37 +521,21 @@ async function handleUserChoice(choice: string, rl: readline.Interface) {
             const exampleIndex = parseInt(input) - 1;
             if (exampleIndex < EXAMPLES.length) {
                 const example = EXAMPLES[exampleIndex];
-                console.log();
-                console.log(chalk.yellow(`[*] Compressing: ${example.title}`));
-                const result = PromptCompressor.analyze(example.prompt);
-                showCompressionResult(result);
-                totalCompressed++;
-                totalSaved += result.savedTokens;
-                totalSavedCost += result.savedCost;
-
+                await processPrompt(example.prompt, example.title);
+                
                 // Show extra message for code examples
                 if (exampleIndex >= 3) {
                     console.log();
                     console.log(chalk.magenta('[!] Note: This example includes code compression!'));
                     console.log(chalk.magenta('    Comments removed, whitespace optimized, structure preserved.'));
                 }
-
-                // Show compressed prompt or execute with Claude
-                await executeWithClaude(result.compressedPrompt);
             }
             break;
 
         case '7':
             const customPrompt = await getCustomPrompt(rl);
             if (customPrompt.trim()) {
-                const customResult = PromptCompressor.analyze(customPrompt);
-                showCompressionResult(customResult);
-                totalCompressed++;
-                totalSaved += customResult.savedTokens;
-                totalSavedCost += customResult.savedCost;
-
-                // Show compressed prompt or execute with Claude
-                await executeWithClaude(customResult.compressedPrompt);
+                await processPrompt(customPrompt, 'Custom Prompt');
             } else {
                 console.log(chalk.red('[!] No prompt entered'));
             }
@@ -351,6 +543,55 @@ async function handleUserChoice(choice: string, rl: readline.Interface) {
 
         case '8':
             showStats();
+            break;
+
+        case 'A':
+            // Only enable API mode if we have at least one API key configured
+            const hasOpenRouterKey = openRouterApi.hasApiKey();
+            const hasBitcoinComKey = bitcoincomApi.hasApiKey();
+            
+            if (!hasOpenRouterKey && !hasBitcoinComKey) {
+                console.log(chalk.red('[!] No API keys configured. Set OPENROUTER_API_KEY or BITCOINCOM_API_KEY environment variable.'));
+            } else {
+                apiMode = !apiMode;
+                if (apiMode && !currentApi) {
+                    // Set default API if none selected
+                    currentApi = hasOpenRouterKey ? 'openrouter' : 'bitcoincom';
+                }
+                if (!apiMode) bypassMode = false; // Turn off bypass when API mode is off
+                console.log(chalk.cyan(`[*] API Mode ${apiMode ? 'enabled' : 'disabled'}`));
+                showMenu();
+            }
+            break;
+
+        case 'B':
+            if (!apiMode) {
+                console.log(chalk.red('[!] Bypass mode requires API mode to be enabled first'));
+            } else {
+                bypassMode = !bypassMode;
+                console.log(chalk.cyan(`[*] Bypass Mode ${bypassMode ? 'enabled' : 'disabled'}`));
+                showMenu();
+            }
+            break;
+
+        case 'S':
+            if (!apiMode) {
+                console.log(chalk.red('[!] API switching requires API mode to be enabled first'));
+            } else {
+                const hasOpenRouterKey = openRouterApi.hasApiKey();
+                const hasBitcoinComKey = bitcoincomApi.hasApiKey();
+                
+                if (currentApi === 'openrouter' && hasBitcoinComKey) {
+                    currentApi = 'bitcoincom';
+                    console.log(chalk.cyan('[*] Switched to Bitcoin.com AI'));
+                } else if (currentApi === 'bitcoincom' && hasOpenRouterKey) {
+                    currentApi = 'openrouter';
+                    console.log(chalk.cyan('[*] Switched to OpenRouter'));
+                } else {
+                    console.log(chalk.yellow('[!] No other API services available with configured keys'));
+                }
+                showMenu();
+            }
             break;
 
         case 'H':
@@ -373,12 +614,25 @@ async function handleUserChoice(choice: string, rl: readline.Interface) {
             break;
 
         default:
-            console.log(chalk.red('[!] Invalid option. Please choose 1-8, H, C, or Q.'));
+            console.log(chalk.red('[!] Invalid option. Please choose 1-8, A, B, S, H, C, or Q.'));
     }
 }
 
 // Main interactive loop
 export async function startInteractive() {
+    // Initialize API mode from command line arguments or environment variables
+    const interactiveApi = process.env.INTERACTIVE_API;
+    const hasOpenRouterArg = args.includes('--openrouter');
+    const hasBitcoinComArg = args.includes('--bitcoincom');
+    
+    if (hasOpenRouterArg || interactiveApi === 'openrouter') {
+        apiMode = true;
+        currentApi = 'openrouter';
+    } else if (hasBitcoinComArg || interactiveApi === 'bitcoincom') {
+        apiMode = true;
+        currentApi = 'bitcoincom';
+    }
+    
     showWelcome();
     showMenu();
 
