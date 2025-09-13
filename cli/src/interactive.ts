@@ -56,13 +56,38 @@ let totalSavedCost = 0;
 
 function showStats() {
     console.log();
-    console.log(chalk.bold.blue('>>> STATISTICS'));
-    console.log(chalk.gray('═'.repeat(40)));
+    console.log(chalk.bold.blue('>>> SESSION STATISTICS'));
+    console.log(chalk.gray('═'.repeat(60)));
     console.log();
 
     // Display stats with ASCII art on the right
     const asciiArt = ['Stats'];
 
+    // Stats content
+    const stats = [
+        `${chalk.gray('Prompts compressed:')} ${chalk.white(totalCompressed)}`,
+        `${chalk.gray('Total tokens saved:')} ${chalk.green(totalSaved)}`,
+        `${chalk.gray('Total cost saved:')} ${chalk.green(`$${totalSavedCost.toFixed(4)}`)}`,
+        '',
+        totalSaved > 0 ? chalk.yellow('💡 Keep compressing to save more!') : chalk.gray('Start compressing to see savings!')
+    ];
+
+    // Display stats and ASCII art side by side
+    for (let i = 0; i < Math.max(stats.length, asciiArt.length); i++) {
+        const statLine = i < stats.length ? stats[i] : '';
+        const artLine = i < asciiArt.length ? asciiArt[i] : '';
+
+        // Strip ANSI color codes to get actual length for padding
+        const stripAnsi = (str: string) => str.replace(/\x1B\[[0-9;]*m/g, '');
+        const statLength = stripAnsi(statLine).length;
+
+        // Pad stat line to 40 characters
+        const padding = Math.max(0, 40 - statLength);
+        const paddedStat = statLine + ' '.repeat(padding);
+
+        // Combine stat and art on same line
+        console.log(paddedStat + chalk.cyan(artLine));
+    }
 
     console.log();
     console.log(chalk.gray('─'.repeat(60)));
