@@ -243,26 +243,17 @@ async function executeWithClaude(compressedPrompt: string): Promise<void> {
         console.log();
     }
 
-    // Demo mode responses
-    console.log();
-    await new Promise(resolve => setTimeout(resolve, 500)); // Brief pause for effect
+    // Generate and stream local AI response
+    if (!isClaudeMode) {
+        console.log();
+        await new Promise(resolve => setTimeout(resolve, 500)); // Brief pause for effect
 
-    let response = '';
-    if (compressedPrompt.toLowerCase().includes('api') && compressedPrompt.toLowerCase().includes('auth')) {
-        response = `# Secure REST API Authentication Guide...
-            Would you like me to elaborate on any specific aspect?`;
+        const response = LocalAIResponder.generateResponse(compressedPrompt);
+        await LocalAIResponder.streamResponse(response);
+        
+        console.log();
+        console.log(chalk.green('✓ Local AI response completed'));
     }
-
-    // Type out demo response with slight delay
-    const words = response.split(' ');
-    for (let i = 0; i < words.length; i += 5) {
-        const chunk = words.slice(i, i + 5).join(' ') + ' ';
-        process.stdout.write(chalk.white(chunk));
-        await new Promise(resolve => setTimeout(resolve, 30));
-    }
-    console.log();
-    console.log();
-    console.log(chalk.green('✓ Local AI response completed'));
 
     console.log();
     console.log(chalk.cyan('─'.repeat(60)));
