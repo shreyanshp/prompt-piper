@@ -2,11 +2,12 @@
 
 import * as readline from 'readline';
 import chalk from 'chalk';
-import { execSync } from 'child_process';
 import { PromptCompressorV3 as PromptCompressor } from './compressor';
 import { ASCII_ART } from './ascii-art';
 import { simpleExamples, codeExamples } from './compression-rules/example-prompts';
+import { execSync } from 'child_process';
 
+// Create readline interface
 const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
@@ -200,13 +201,13 @@ async function executeWithClaude(compressedPrompt: string): Promise<void> {
         console.log(chalk.gray('Compressed prompt:', compressedPrompt));
         console.log();
 
-        console.log(chalk.cyan('Starting interactive Claude session...'));
-        console.log(chalk.gray('(Press Ctrl+C to return to Prompt Piper)'));
-        console.log();
-
         let realClaudeWorked = false;
 
         try {
+            console.log(chalk.cyan('Starting interactive Claude session...'));
+            console.log(chalk.gray('(Press Ctrl+C to return to Prompt Piper)'));
+            console.log();
+
             // Launch Claude interactively with the compressed prompt
             // Escape backticks and other special characters for shell
             const escapedPrompt = compressedPrompt
