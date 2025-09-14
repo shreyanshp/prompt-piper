@@ -11,9 +11,10 @@ interface ModalProps {
     image?: string
     imageAlt?: string
     children: React.ReactNode
+    fullScreenImage?: boolean
 }
 
-export default function Modal({ isOpen, onClose, title, image, imageAlt, children }: ModalProps) {
+export default function Modal({ isOpen, onClose, title, image, imageAlt, children, fullScreenImage = false }: ModalProps) {
     // Handle escape key
     useEffect(() => {
         const handleEscape = (e: KeyboardEvent) => {
@@ -44,7 +45,11 @@ export default function Modal({ isOpen, onClose, title, image, imageAlt, childre
             />
             
             {/* Modal */}
-            <div className="relative bg-white dark:bg-gray-900 rounded-2xl shadow-2xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-hidden">
+            <div className={`relative bg-white dark:bg-gray-900 rounded-2xl shadow-2xl overflow-hidden ${
+                fullScreenImage 
+                    ? 'w-[90vw] h-[90vh]' 
+                    : 'max-w-2xl w-full mx-4 max-h-[90vh]'
+            }`}>
                 {/* Header */}
                 <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
                     <h2 className="text-2xl font-bold text-gray-900 dark:text-white font-title">
@@ -60,9 +65,9 @@ export default function Modal({ isOpen, onClose, title, image, imageAlt, childre
                 </div>
 
                 {/* Content */}
-                <div className="p-6 overflow-y-auto max-h-[calc(90vh-120px)]">
+                <div className={fullScreenImage ? "relative h-[calc(90vh-120px)]" : "p-6 overflow-y-auto max-h-[calc(90vh-120px)]"}>
                     {/* Image - only show if provided */}
-                    {image && (
+                    {image && !fullScreenImage && (
                         <div className="mb-6 text-center">
                             <Image
                                 src={image}
@@ -75,9 +80,18 @@ export default function Modal({ isOpen, onClose, title, image, imageAlt, childre
                     )}
 
                     {/* Text content */}
-                    <div className="prose prose-gray dark:prose-invert max-w-none">
-                        {children}
-                    </div>
+                    {!fullScreenImage && (
+                        <div className="prose prose-gray dark:prose-invert max-w-none">
+                            {children}
+                        </div>
+                    )}
+
+                    {/* Full screen image content */}
+                    {fullScreenImage && (
+                        <div className="w-full h-full">
+                            {children}
+                        </div>
+                    )}
                 </div>
             </div>
         </div>

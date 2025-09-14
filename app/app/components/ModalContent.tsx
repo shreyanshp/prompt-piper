@@ -163,3 +163,19 @@ export function StatsModalContent() {
         </>
     )
 }
+
+// Meme Modal Content
+export function MemeModalContent() {
+    return (
+        <>
+            <div className="w-full h-full">
+                <Image
+                    src="/images/meme.avif"
+                    alt="Compression Achievement Meme"
+                    fill
+                    className="object-cover"
+                />
+            </div>
+        </>
+    )
+}

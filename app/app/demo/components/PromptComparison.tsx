@@ -1,13 +1,15 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { Copy, Zap, BarChart3, Settings, Database, Brain, ChevronDown, ChevronRight, ToggleLeft, ToggleRight } from 'lucide-react';
+import { Copy, Zap, BarChart3, Settings, Database, Brain, ChevronDown, ChevronRight, ToggleLeft, ToggleRight, Smile } from 'lucide-react';
 import { PromptCompressor } from '../../lib/compression';
 import { LLMLinguaCompressor, LLMLinguaCompressionResult, LLMLinguaCompressorOptions } from '../../lib/llmlingua-compressor';
 import { configureONNXRuntime } from '../../lib/onnx-runtime-config';
 import AITestPanel from './AITestPanel';
 import ExamplePromptsAccordion from './ExamplePromptsAccordion';
 import TokenCountBar from './TokenCountBar';
+import Modal from '../../components/Modal';
+import { MemeModalContent } from '../../components/ModalContent';
 
 type CompressionMode = 'regular' | 'llmlingua-downloaded' | 'llmlingua-ipfs';
 type AnyCompressionResult = {
@@ -34,6 +36,7 @@ export default function PromptComparison() {
     const [copiedCompressed, setCopiedCompressed] = useState(false);
     const [isResultsExpanded, setIsResultsExpanded] = useState(false);
     const [autoCompress, setAutoCompress] = useState(false);
+    const [isMemeModalOpen, setIsMemeModalOpen] = useState(false);
     const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const sliderTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -324,7 +327,7 @@ export default function PromptComparison() {
                             step="0.1"
                             value={llmlinguaOptions.rate}
                             onChange={(e) => handleSliderChange(parseFloat(e.target.value))}
-                            className="w-full"
+                            className="w-full slider"
                         />
                         {compressionMode === 'regular' && (
                             <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
@@ -421,12 +424,23 @@ export default function PromptComparison() {
                             <h3 className="font-bold text-lg font-title text-gray-900 dark:text-white">Compressed Prompt</h3>
                             <p className="text-sm text-green-600 dark:text-green-400">{result?.compressedTokens || 0} tokens</p>
                         </div>
-                        <button
-                            onClick={() => result && copyToClipboard(result.compressedPrompt, 'compressed')}
-                            className="btn-sm bg-green-600 text-white hover:bg-green-700 px-3 py-1 rounded text-sm"
-                        >
-                            {copiedCompressed ? 'Copied!' : 'Copy'}
-                        </button>
+                        <div className="flex items-center gap-2">
+                            {result && Math.round(llmlinguaOptions.rate! * 100) === 90 && (
+                                <button
+                                    onClick={() => setIsMemeModalOpen(true)}
+                                    className="btn-sm bg-purple-600 text-white hover:bg-purple-700 px-3 py-1 rounded text-sm flex items-center gap-1"
+                                >
+                                    <Smile size={14} />
+                                    Meme
+                                </button>
+                            )}
+                            <button
+                                onClick={() => result && copyToClipboard(result.compressedPrompt, 'compressed')}
+                                className="btn-sm bg-green-600 text-white hover:bg-green-700 px-3 py-1 rounded text-sm"
+                            >
+                                {copiedCompressed ? 'Copied!' : 'Copy'}
+                            </button>
+                        </div>
                     </div>
                     <div className="p-4">
                         {result && (
@@ -531,6 +545,16 @@ export default function PromptComparison() {
                     <p className="text-gray-600 dark:text-gray-300 text-sm">Shorter prompts mean faster AI response times</p>
                 </div>
             </div>
+
+            {/* Meme Modal */}
+            <Modal
+                isOpen={isMemeModalOpen}
+                onClose={() => setIsMemeModalOpen(false)}
+                title="🎉 90% Compression Achievement!"
+                fullScreenImage={true}
+            >
+                <MemeModalContent />
+            </Modal>
         </div>
     );
 }
