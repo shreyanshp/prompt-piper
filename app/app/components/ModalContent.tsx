@@ -7,16 +7,17 @@ export function PrincipalModalContent() {
     return (
         <>
             <div className="mb-3">
-                <div className="mb-3">
+                <div className="mb-3 mt-0">
                     <Image
+                        style={{ marginTop: "-30px" }}
                         src="/images/mizakaru.jpg"
                         alt="Three Wise Monkeys - Mizaru, Kikazaru, Iwazaru (See no Evil, Hear no Evil, Speak no Evil), c. 1910"
                         width={600}
                         height={400}
                         className="w-full rounded-lg shadow-lg"
                     />
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-0 text-center">
-                        Mizaru, Kikazaru, Iwazaru, c. 1910<br/>
+                    <p style={{ marginTop: "-20px" }} className="text-xs text-gray-500 dark:text-gray-400 mt-0 text-center">
+                        Mizaru, Kikazaru, Iwazaru, (Shizaru) c. 1910<br/>
                         <a
                             href="https://www.oldtokyo.com/mizaru-kikizaru-iwazaru-c-1910/"
                             target="_blank"
@@ -28,7 +29,7 @@ export function PrincipalModalContent() {
                     </p>
                 </div>
                 <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
-                    <h4 className="text-lg font-semibold text-blue-800 dark:text-blue-200 mb-3">Philosophical Foundation</h4>
+                    <h4 className="text-lg font-semibold text-blue-800 dark:text-blue-200 mb-3" style={{ marginTop: "0px" }}>Philosophical Foundation</h4>
                     <p className="text-sm text-blue-700 dark:text-blue-300 mb-3">
                         Inspired by the ancient Japanese wisdom of the Three Wise Monkeys: <strong>Mizaru</strong> (See no Evil),
                         <strong> Kikazaru</strong> (Hear no Evil), and <strong>Iwazaru</strong> (Speak no Evil), we draw from
