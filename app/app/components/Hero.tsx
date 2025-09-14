@@ -58,7 +58,7 @@ export default function Hero() {
                                     </Link>
                                     <Link
                                         className="btn text-gray-800 bg-white hover:bg-gray-50 shadow-sm w-full sm:w-auto sm:ml-4"
-                                        href="/cli"
+                                        href="https://www.npmjs.com/package/prompt-piper-cli"
                                     >
                                         Download CLI
                                     </Link>
@@ -76,12 +76,18 @@ export default function Hero() {
                                 <span className="text-white font-medium text-[13px]">prompt-piper</span>
                             </div>
                             <div className="text-gray-500 text-sm font-mono [&_span]:opacity-0">
-                                <span className="text-gray-200 animate-[code-1_10s_infinite]">bun run prompt-piper interactive</span>{' '}
-                                <span className="animate-[code-2_10s_infinite]">--claude</span><br />
-                                <span className="animate-[code-3_10s_infinite]">--scope=@phanatic</span>{' '}
-                                <span className="animate-[code-4_10s_infinite]">Successfully logged-in.</span><br /><br />
-                                <span className="text-gray-200 animate-[code-5_10s_infinite]">bun run compress --rules solidity</span><br />
-                                <span className="animate-[code-6_10s_infinite]">Package published.</span>
+                                <span className="text-gray-200 animate-[code-1_10s_infinite]">$ cat large_context.txt</span>{' '}
+                                <span className="animate-[code-2_10s_infinite]">| prompt-piper compress --model claude-3</span><br />
+                                <span className="animate-[code-3_10s_infinite]">✓ Loading IPFS model: QmX7k9...</span><br />
+                                <span className="animate-[code-4_10s_infinite]">✓ Tokenizing input: 12,847 tokens detected</span><br />
+                                <span className="animate-[code-5_10s_infinite]">✓ Applying semantic compression...</span><br />
+                                <span className="text-green-400 animate-[code-6_10s_infinite]">✓ Output: 4,931 tokens (62% reduction)</span><br /><br />
+                                <span className="text-gray-200 animate-[code-7_10s_infinite]">$ prompt-piper analyze</span>{' '}
+                                <span className="animate-[code-8_10s_infinite]">--cost-estimate</span><br />
+                                <span className="animate-[code-9_10s_infinite]">📊 Compression Stats:</span><br />
+                                <span className="animate-[code-10_10s_infinite]">   • Original cost: $0.385 | Compressed: $0.148</span><br />
+                                <span className="text-blue-400 animate-[code-11_10s_infinite]">   • Monthly savings (1000 calls): $237.00</span><br />
+                                <span className="animate-[code-12_10s_infinite]">   • Context window usage: 38% → 15%</span>
                             </div>
                         </div>
                     </div>
