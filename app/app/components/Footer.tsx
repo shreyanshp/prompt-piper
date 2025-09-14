@@ -12,7 +12,7 @@ const mainLinks = [
 
 export default function Footer() {
     return (
-        <footer>
+        <footer className="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700">
             <div className="max-w-6xl mx-auto px-4 sm:px-6">
                 {/* Footer content */}
                 <div className="py-8 md:py-12">
@@ -24,7 +24,7 @@ export default function Footer() {
                             <Link className="inline-flex" href="/" aria-label="Prompt Piper">
                                 <Image src="/images/logo.svg" width={28} height={28} alt="Prompt Piper Logo" />
                             </Link>
-                            <div className="text-sm text-gray-600">
+                            <div className="text-sm text-gray-600 dark:text-gray-400">
                                 &copy; promptpiper.xyz - All rights reserved.
                             </div>
                         </div>
@@ -34,7 +34,7 @@ export default function Footer() {
                             {mainLinks.map((link, index) => (
                                 <Link
                                     key={index}
-                                    className="text-sm font-bold text-gray-900 hover:text-gray-600 transition"
+                                    className="text-sm font-bold text-gray-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 transition"
                                     href={link.href}
                                 >
                                     {link.label}

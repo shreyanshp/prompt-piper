@@ -40,13 +40,13 @@ export default function FeaturesTwo() {
             </div>
 
             <div className="max-w-6xl mx-auto px-4 sm:px-6">
-                <div className="py-12 md:py-20">
+                <div className="py-12 md:py-20 pb-0 md:pb-0">
                     {/* Section header */}
                     <div className="max-w-3xl mx-auto text-center pb-24 md:pb-28">
                         <h2 className="text-3xl md:text-4xl font-bold mb-4 font-title">
                             Expand Context Window
                         </h2>
-                        <p className="text-lg text-gray-700">
+                        <p className="text-lg text-gray-700 dark:text-white">
                             Maximize your LLM's potential by compressing prompts efficiently. Fit more context, preserve meaning, and reduce API costs with intelligent compression.
                         </p>
                     </div>
@@ -80,7 +80,7 @@ export default function FeaturesTwo() {
                                     {feature.icon}
                                     <span>{feature.title}</span>
                                 </h3>
-                                <p className="text-[15px] text-gray-700">
+                                <p className="text-[15px] text-gray-700 dark:text-white">
                                     {feature.description}
                                 </p>
                             </article>

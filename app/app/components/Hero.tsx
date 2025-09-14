@@ -40,7 +40,7 @@ export default function Hero() {
                         </h1>
                         <div className="max-w-3xl mx-auto">
                             <p
-                                className="text-lg text-gray-700 mb-8 animate-zoom-y-out animation-delay-300ms"
+                                className="text-lg text-gray-700 dark:text-white mb-8 animate-zoom-y-out animation-delay-300ms"
                             >
                                 Prompt Compression for LLMs, Reduce Token Usage, Save Costs, Build Faster
                             </p>
