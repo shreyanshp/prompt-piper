@@ -5,10 +5,6 @@ import Image from 'next/image'
 
 const companyLinks = [
     { href: '/about', label: 'About us' },
-    { href: '/diversity', label: 'Diversity & Inclusion' },
-    { href: '/blog', label: 'Blog' },
-    { href: '/careers', label: 'Careers' },
-    { href: '/financial', label: 'Financial statements' }
 ];
 
 const resourceLinks = [
@@ -41,23 +37,6 @@ export default function Footer() {
                         <h3 className="text-sm font-medium font-title">Company</h3>
                         <ul className="text-sm space-y-2">
                             {companyLinks.map((link, index) => (
-                                <li key={index}>
-                                    <Link
-                                        className="text-gray-600 hover:text-gray-900 transition"
-                                        href={link.href}
-                                    >
-                                        {link.label}
-                                    </Link>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-
-                    {/* 4th block */}
-                    <div className="sm:col-span-6 md:col-span-3 lg:col-span-2 space-y-2">
-                        <h3 className="text-sm font-medium font-title">Resources</h3>
-                        <ul className="text-sm space-y-2">
-                            {resourceLinks.map((link, index) => (
                                 <li key={index}>
                                     <Link
                                         className="text-gray-600 hover:text-gray-900 transition"

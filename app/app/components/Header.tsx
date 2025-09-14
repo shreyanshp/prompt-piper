@@ -34,59 +34,13 @@ export default function Header() {
                                     Demo
                                 </Link>
                             </li>
-                            <li className="px-3 py-1">
-                                <Link className="text-gray-700 hover:text-gray-900 flex items-center transition" href="/pricing">
-                                    Principal
-                                </Link>
-                            </li>
-                            <li className="px-3 py-1">
-                                <Link className="text-gray-700 hover:text-gray-900 flex items-center transition" href="/documentation">
-                                    Docs
-                                </Link>
-                            </li>
-
-                            {/* Dropdown menu */}
-                            <li
-                                className="relative flex items-center gap-0.5 px-3 py-1"
-                                onMouseEnter={() => setDropdownOpen(true)}
-                                onMouseLeave={() => setDropdownOpen(false)}
-                            >
-                                <span className="text-gray-700 hover:text-gray-900 flex items-center cursor-pointer transition">
-                                    Extra
-                                </span>
-                                <button
-                                    className="shrink-0 p-1"
-                                    onClick={() => setDropdownOpen(!dropdownOpen)}
-                                >
-                                    <span className="sr-only">Show submenu for "Extra"</span>
-                                    <svg className="fill-gray-400" xmlns="http://www.w3.org/2000/svg" width="10" height="6">
-                                        <path d="m1.06.19 3.5 3.5 3.5-3.5 1.061 1.06-4.56 4.56L0 1.25 1.06.19Z" />
-                                    </svg>
-                                </button>
-
-                                {/* Dropdown */}
-                                {dropdownOpen && (
-                                    <ul className="origin-top-left absolute top-full left-0 w-36 bg-white p-2 rounded-xl shadow-lg shadow-black/[0.03] border border-gray-100">
-                                        <li>
-                                            <Link className="text-sm text-gray-700 hover:bg-gray-100 flex py-1.5 px-2 rounded-lg" href="/support">
-                                                Support center
-                                            </Link>
-                                        </li>
-                                        <li>
-                                            <Link className="text-sm text-gray-700 hover:bg-gray-100 flex py-1.5 px-2 rounded-lg" href="/apps">
-                                                Apps
-                                            </Link>
-                                        </li>
-                                    </ul>
-                                )}
-                            </li>
                         </ul>
                     </nav>
 
                     {/* Desktop sign in links */}
                     <ul className="flex-1 flex justify-end items-center gap-3">
                         <li>
-                            <Link className="btn-sm text-gray-200 bg-gray-800 hover:bg-gray-900 shadow-sm" href="/signup">
+                            <Link className="btn-sm text-gray-200 bg-gray-800 hover:bg-gray-900 shadow-sm" href="https://github.com/vm06007/prompt-piper">
                                 GitHub
                             </Link>
                         </li>
@@ -143,31 +97,6 @@ export default function Header() {
                                     <li>
                                         <Link className="flex text-gray-700 hover:bg-gray-100 rounded-lg py-1.5 px-2" href="/demo">
                                             Demo
-                                        </Link>
-                                    </li>
-                                    <li>
-                                        <Link className="flex text-gray-700 hover:bg-gray-100 rounded-lg py-1.5 px-2" href="/">
-                                            Pricing
-                                        </Link>
-                                    </li>
-                                    <li>
-                                        <Link className="flex text-gray-700 hover:bg-gray-100 rounded-lg py-1.5 px-2" href="/customers">
-                                            Customers
-                                        </Link>
-                                    </li>
-                                    <li>
-                                        <Link className="flex text-gray-700 hover:bg-gray-100 rounded-lg py-1.5 px-2" href="/documentation">
-                                            Docs
-                                        </Link>
-                                    </li>
-                                    <li>
-                                        <Link className="flex text-gray-700 hover:bg-gray-100 rounded-lg py-1.5 px-2" href="/support">
-                                            Support center
-                                        </Link>
-                                    </li>
-                                    <li>
-                                        <Link className="flex text-gray-700 hover:bg-gray-100 rounded-lg py-1.5 px-2" href="/apps">
-                                            Apps
                                         </Link>
                                     </li>
                                 </ul>
