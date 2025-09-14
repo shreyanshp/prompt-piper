@@ -6,7 +6,12 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "pages:build": "bunx @cloudflare/next-on-pages",
+    "pages:dev": "bunx wrangler pages dev .vercel/output/static",
+    "pages:deploy": "bun run build && bun run pages:build && bunx wrangler pages deploy .vercel/output/static --project-name=prompt-piper-app",
+    "deploy:preview": "bun run pages:deploy -- --branch=preview",
+    "deploy:production": "bun run pages:deploy -- --branch=main"
   },
   "dependencies": {
     "react": "^18.3.1",
@@ -27,6 +32,9 @@
     "autoprefixer": "^10.4.19",
     "postcss": "^8.4.39",
     "eslint": "^8.57.0",
-    "eslint-config-next": "14.2.5"
+    "eslint-config-next": "14.2.5",
+    "@cloudflare/next-on-pages": "^1.11.0",
+    "wrangler": "^3.57.0",
+    "vercel": "^34.2.0"
   }
 }
