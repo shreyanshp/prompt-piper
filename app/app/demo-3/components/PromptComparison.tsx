@@ -1,13 +1,15 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Copy, Zap, BarChart3, Settings } from 'lucide-react';
+import { Copy, Zap, BarChart3, Settings, Database, Brain } from 'lucide-react';
 import { PromptCompressor } from '../../lib/compression';
 import { LLMLinguaCompressor, LLMLinguaCompressionResult, LLMLinguaCompressorOptions } from '../../lib/llmlingua-compressor';
 import { configureONNXRuntime } from '../../lib/onnx-runtime-config';
 import AITestPanel from './AITestPanel';
+import ExamplePromptsAccordion from './ExamplePromptsAccordion';
+import TokenCountBar from '../../demo/components/TokenCountBar';
 
-type CompressionMode = 'regular' | 'llmlingua-2-real';
+type CompressionMode = 'regular' | 'llmlingua-downloaded' | 'llmlingua-ipfs';
 type AnyCompressionResult = {
     originalPrompt: string;
     compressedPrompt: string;
@@ -22,12 +24,14 @@ export default function PromptComparison() {
     const [inputPrompt, setInputPrompt] = useState('');
     const [result, setResult] = useState<AnyCompressionResult | null>(null);
     const [isProcessing, setIsProcessing] = useState(false);
-    const [compressionMode, setCompressionMode] = useState<CompressionMode>('llmlingua-2-real');
+    const [compressionMode, setCompressionMode] = useState<CompressionMode>('llmlingua-downloaded');
     const [llmlinguaOptions, setLlmlinguaOptions] = useState<LLMLinguaCompressorOptions>({
         modelName: 'TINYBERT',
         rate: 0.7,
     });
     const [isClient, setIsClient] = useState(false);
+    const [copiedOriginal, setCopiedOriginal] = useState(false);
+    const [copiedCompressed, setCopiedCompressed] = useState(false);
 
     useEffect(() => {
         setIsClient(true);
@@ -59,7 +63,7 @@ export default function PromptComparison() {
                 const compressor = new PromptCompressor();
                 const compressedPrompt = await compressor.compress(inputPrompt);
                 const stats = compressor.getCompressionStats(inputPrompt, compressedPrompt);
-                
+
                 compressionResult = {
                     originalPrompt: inputPrompt,
                     compressedPrompt,
@@ -78,10 +82,10 @@ export default function PromptComparison() {
             setResult(compressionResult);
         } catch (error) {
             console.error('Compression error:', error);
-            
+
             // Provide more specific error messages
             let errorMessage = 'Error during compression. Please check the console for details.';
-            
+
             if (error instanceof Error) {
                 if (error.message.includes('Failed to fetch')) {
                     errorMessage = 'Network error: Failed to download the AI model. Please check your internet connection and try again.';
@@ -91,15 +95,26 @@ export default function PromptComparison() {
                     errorMessage = 'Memory error: The model is too large for your device. Try using the TinyBERT model instead.';
                 }
             }
-            
+
             alert(errorMessage);
         } finally {
             setIsProcessing(false);
         }
     };
 
-    const copyToClipboard = (text: string) => {
-        navigator.clipboard.writeText(text);
+    const copyToClipboard = async (text: string, type: 'original' | 'compressed') => {
+        try {
+            await navigator.clipboard.writeText(text);
+            if (type === 'original') {
+                setCopiedOriginal(true);
+                setTimeout(() => setCopiedOriginal(false), 2000);
+            } else {
+                setCopiedCompressed(true);
+                setTimeout(() => setCopiedCompressed(false), 2000);
+            }
+        } catch (err) {
+            console.error('Failed to copy text: ', err);
+        }
     };
 
     const examplePrompts = [
@@ -110,67 +125,84 @@ export default function PromptComparison() {
 
     return (
         <div className="max-w-6xl mx-auto">
-
-            {/* Compression Mode Toggle */}
+            {/* Compression Mode Selection */}
             <div className="mb-6 bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
-                <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2 font-title">
-                        <Settings size={20} />
-                        Compression Settings
-                    </h3>
+                <div className="flex items-center justify-between mb-6">
+                    <h2 className="text-2xl font-bold font-title">Compression Settings</h2>
+                    <div className="flex items-center space-x-2 text-sm text-gray-600">
+                        <Settings className="w-4 h-4" />
+                        <span>Settings Always Visible</span>
+                    </div>
                 </div>
-                
-                <div className="space-y-4">
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Compression Mode
-                        </label>
-                        <div className="flex flex-col gap-3">
-                            <label className="flex items-center">
-                                <input
-                                    type="radio"
-                                    name="compressionMode"
-                                    value="regular"
-                                    checked={compressionMode === 'regular'}
-                                    onChange={(e) => setCompressionMode(e.target.value as CompressionMode)}
-                                    className="mr-2"
-                                />
-                                <span className="text-sm">Regular (IPFS Rule-based)</span>
-                            </label>
-                            <label className="flex items-center">
-                                <input
-                                    type="radio"
-                                    name="compressionMode"
-                                    value="llmlingua-2-real"
-                                    checked={compressionMode === 'llmlingua-2-real'}
-                                    onChange={(e) => setCompressionMode(e.target.value as CompressionMode)}
-                                    className="mr-2"
-                                />
-                                <span className="text-sm">LLMLingua-2 (AI-powered)</span>
-                            </label>
+
+                {/* Mode Selection */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <div
+                        onClick={() => setCompressionMode('regular')}
+                        className={`p-4 rounded-xl border-2 cursor-pointer transition-all ${
+                            compressionMode === 'regular'
+                                ? 'border-blue-500 bg-blue-50'
+                                : 'border-gray-200 hover:border-gray-300'
+                        }`}
+                    >
+                        <div className="flex items-center space-x-3">
+                            <Database className="w-6 h-6 text-blue-600" />
+                            <div>
+                                <h3 className="font-semibold">Regular (IPFS Rules)</h3>
+                                <p className="text-sm text-gray-600">Instant, rule-based compression</p>
+                            </div>
                         </div>
                     </div>
 
-                    {compressionMode === 'llmlingua-2-real' && (
-                        <div className="mt-4 p-4 bg-gray-50 rounded-lg space-y-3">
+                    <div
+                        onClick={() => setCompressionMode('llmlingua-downloaded')}
+                        className={`p-4 rounded-xl border-2 cursor-pointer transition-all ${
+                            compressionMode === 'llmlingua-downloaded'
+                                ? 'border-purple-500 bg-purple-50'
+                                : 'border-gray-200 hover:border-gray-300'
+                        }`}
+                    >
+                        <div className="flex items-center space-x-3">
+                            <Brain className="w-6 h-6 text-purple-600" />
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">
-                                    Model Selection
+                                <h3 className="font-semibold">LLMLingua (Hugging Face)</h3>
+                                <p className="text-sm text-gray-600">Real AI models from Hugging Face</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div
+                        className="p-4 rounded-xl border-2 border-gray-200 bg-gray-50 opacity-60 cursor-not-allowed"
+                    >
+                        <div className="flex items-center space-x-3">
+                            <Zap className="w-6 h-6 text-gray-400" />
+                            <div>
+                                <h3 className="font-semibold text-gray-500">LLMLingua (IPFS)</h3>
+                                <p className="text-sm text-gray-500">Coming Soon</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Advanced Settings - Always Visible */}
+                <div className="border-t pt-6 space-y-4">
+                    {compressionMode === 'llmlingua-downloaded' && (
+                        <>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    Model
                                 </label>
                                 <select
                                     value={llmlinguaOptions.modelName}
-                                    onChange={(e) => setLlmlinguaOptions({
-                                        ...llmlinguaOptions,
-                                        modelName: e.target.value as any
-                                    })}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    onChange={(e) => setLlmlinguaOptions(prev => ({ ...prev, modelName: e.target.value as any }))}
+                                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                 >
-                                    <option value="TINYBERT">TinyBERT (57MB - Fastest)</option>
-                                    <option value="BERT">BERT (710MB - Better accuracy)</option>
-                                    <option value="ROBERTA">XLM-RoBERTa (2.2GB - Best accuracy)</option>
+                                    <option value="TINYBERT">TinyBERT</option>
+                                    <option value="BERT">BERT</option>
+                                    <option value="XLM_ROBERTA">XLM-RoBERTa</option>
                                 </select>
                             </div>
-                            
+
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">
                                     Compression Rate: {Math.round((1 - llmlinguaOptions.rate!) * 100)}%
@@ -181,96 +213,111 @@ export default function PromptComparison() {
                                     max="0.9"
                                     step="0.1"
                                     value={llmlinguaOptions.rate}
-                                    onChange={(e) => setLlmlinguaOptions({
-                                        ...llmlinguaOptions,
-                                        rate: parseFloat(e.target.value)
-                                    })}
+                                    onChange={(e) => setLlmlinguaOptions(prev => ({ ...prev, rate: parseFloat(e.target.value) }))}
                                     className="w-full"
                                 />
-                                <div className="flex justify-between text-xs text-gray-500">
-                                    <span>90% reduction</span>
-                                    <span>10% reduction</span>
-                                </div>
                             </div>
-                            
-                            <p className="text-xs text-gray-600 italic">
-                                Note: First compression with a model will download it (~{
-                                    llmlinguaOptions.modelName === 'TINYBERT' ? '57MB' :
-                                    llmlinguaOptions.modelName === 'BERT' ? '710MB' : '2.2GB'
-                                }). Subsequent compressions will be faster.
-                            </p>
-                        </div>
+                        </>
                     )}
                 </div>
             </div>
 
+            {/* Example Prompts Accordion */}
+            <ExamplePromptsAccordion onSelectExample={setInputPrompt} />
+
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 {/* Input Section */}
-                <div className="space-y-4">
-                    <div className="flex items-center gap-2 mb-4">
-                        <h2 className="text-2xl font-semibold text-gray-800 font-title">Original Prompt</h2>
-                    </div>
-
-                    <textarea
-                        value={inputPrompt}
-                        onChange={(e) => setInputPrompt(e.target.value)}
-                        placeholder="Paste your verbose prompt here..."
-                        className="w-full h-64 p-4 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    />
-
-                    <div className="flex flex-col gap-2">
-                        <button
-                            onClick={handleCompress}
-                            disabled={!inputPrompt.trim() || isProcessing}
-                            className="flex items-center justify-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                        >
-                            <Zap size={20} />
-                            {isProcessing ? (
-                                compressionMode.includes('llmlingua-2') ? 'AI Compressing...' : 'Compressing...'
-                            ) : (
-                                compressionMode.includes('llmlingua-2') ? 'AI Compress Prompt' : 'Compress Prompt'
-                            )}
-                        </button>
-
-                        <div className="text-sm text-gray-500">
-                            Or try an example:
+                <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+                    <div className="p-4 bg-gray-50 border-b border-gray-100 flex items-center justify-between">
+                        <div>
+                            <h3 className="font-bold text-lg font-title">Original Prompt</h3>
+                            <p className="text-sm text-gray-600">{PromptCompressor.getTokenCount(inputPrompt)} tokens</p>
                         </div>
-                        <div className="flex flex-wrap gap-2">
-                            {examplePrompts.map((example, idx) => (
-                                <button
-                                    key={idx}
-                                    onClick={() => setInputPrompt(example)}
-                                    className="text-xs bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded text-gray-700 transition-colors"
-                                >
-                                    Example {idx + 1}
-                                </button>
-                            ))}
+                        <button
+                            onClick={() => copyToClipboard(inputPrompt, 'original')}
+                            className="btn-sm bg-gray-800 text-white hover:bg-gray-900 px-3 py-1 rounded text-sm"
+                        >
+                            {copiedOriginal ? 'Copied!' : 'Copy'}
+                        </button>
+                    </div>
+                    <div className="p-4">
+                        {result && (
+                            <TokenCountBar
+                                tokens={result.originalTokens}
+                                maxTokens={Math.max(result.originalTokens, result.compressedTokens)}
+                                color="red"
+                            />
+                        )}
+                        <div className={result ? "mt-4" : ""}>
+                            <textarea
+                                value={inputPrompt}
+                                onChange={(e) => setInputPrompt(e.target.value)}
+                                placeholder="Paste your verbose prompt here..."
+                                className="w-full h-64 p-4 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent mt-0"
+                            />
+                        </div>
+                        <div className="flex flex-col gap-2 mt-4">
+                            <button
+                                onClick={handleCompress}
+                                disabled={!inputPrompt.trim() || isProcessing}
+                                className="flex items-center justify-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                            >
+                                <Zap size={20} />
+                                {isProcessing ? (
+                                    compressionMode.includes('llmlingua-2') ? 'AI Compressing...' : 'Compressing...'
+                                ) : (
+                                    compressionMode.includes('llmlingua-2') ? 'AI Compress Prompt' : 'Compress Prompt'
+                                )}
+                            </button>
+
+                            <div className="text-sm text-gray-500 text-center">
+                                Or try an example:
+                            </div>
+                            <div className="flex gap-2">
+                                {examplePrompts.map((example, idx) => (
+                                    <button
+                                        key={idx}
+                                        onClick={() => setInputPrompt(example)}
+                                        className="flex-1 px-3 py-2 text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors"
+                                    >
+                                        Example {idx + 1}
+                                    </button>
+                                ))}
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 {/* Output Section */}
-                <div className="space-y-4">
-                    <div className="flex items-center gap-2 mb-4">
-                        <h2 className="text-2xl font-semibold text-gray-800 font-title">Compressed Prompt</h2>
+                <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+                    <div className="p-4 bg-green-50 border-b border-green-100 flex items-center justify-between">
+                        <div>
+                            <h3 className="font-bold text-lg font-title">Compressed Prompt</h3>
+                            <p className="text-sm text-green-600">{result?.compressedTokens || 0} tokens</p>
+                        </div>
+                        <button
+                            onClick={() => result && copyToClipboard(result.compressedPrompt, 'compressed')}
+                            className="btn-sm bg-green-600 text-white hover:bg-green-700 px-3 py-1 rounded text-sm"
+                        >
+                            {copiedCompressed ? 'Copied!' : 'Copy'}
+                        </button>
                     </div>
-
-                    <div className="relative">
-                        <textarea
-                            value={result?.compressedPrompt || ''}
-                            readOnly
-                            placeholder="Compressed prompt will appear here..."
-                            className="w-full h-64 p-4 border border-gray-300 rounded-lg resize-none bg-gray-50"
-                        />
+                    <div className="p-4">
                         {result && (
-                            <button
-                                onClick={() => copyToClipboard(result.compressedPrompt)}
-                                className="absolute top-3 right-3 p-2 bg-white border border-gray-300 rounded hover:bg-gray-50"
-                                title="Copy compressed prompt"
-                            >
-                                <Copy size={16} />
-                            </button>
+                            <TokenCountBar
+                                tokens={result.compressedTokens}
+                                maxTokens={Math.max(result.originalTokens, result.compressedTokens)}
+                                color="green"
+                            />
                         )}
+                        <div className="mt-4">
+                            <textarea
+                                value={result?.compressedPrompt || ''}
+                                readOnly
+                                placeholder="Compressed prompt will appear here..."
+                                className="w-full h-64 p-4 border border-gray-300 rounded-lg resize-none bg-green-50"
+                            />
+                        </div>
                     </div>
                 </div>
             </div>
