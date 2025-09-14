@@ -127,12 +127,8 @@ export default function PromptComparison() {
         <div className="max-w-6xl mx-auto">
             {/* Compression Mode Selection */}
             <div className="mb-6 bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
-                <div className="flex items-center justify-between mb-6">
+                <div className="mb-6">
                     <h2 className="text-2xl font-bold font-title">Compression Settings</h2>
-                    <div className="flex items-center space-x-2 text-sm text-gray-600">
-                        <Settings className="w-4 h-4" />
-                        <span>Settings Always Visible</span>
-                    </div>
                 </div>
 
                 {/* Mode Selection */}
@@ -310,7 +306,7 @@ export default function PromptComparison() {
                                 color="green"
                             />
                         )}
-                        <div className="mt-4">
+                        <div>
                             <textarea
                                 value={result?.compressedPrompt || ''}
                                 readOnly
