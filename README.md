@@ -74,7 +74,7 @@ bun run build                  # Build for production
 bun run pages:deploy          # Deploy to Cloudflare Pages
 ```
 
-🌐 **[Try the Live Demo →](./app/app/demo)**
+🌐 **[Try the Live Demo →](https://promptpiper.xyz/)**
 
 ## 🎨 Web Application Features
 
@@ -135,7 +135,7 @@ cd app
 bun install
 bun run dev
 ```
-Then visit `http://localhost:3000/demo` for the interactive compression tool.
+Then visit `http://localhost:3000/demo` for the interactive compression tool, or try the live demo at [https://promptpiper.xyz/](https://promptpiper.xyz/).
 
 ### 🖥️ CLI Tool (For Developers & Power Users)
 Use the command-line interface for terminal-based workflows:
@@ -146,7 +146,7 @@ bun run interactive
 ```
 
 ### 🚀 Quick Demo
-1. **Web App**: Visit the demo page and try compressing a prompt
+1. **Web App**: Visit [https://promptpiper.xyz/](https://promptpiper.xyz/) and try compressing a prompt
 2. **CLI**: Run `bun run interactive` and select example prompts
 3. **Compare**: See token reduction and cost savings in real-time
 
@@ -251,13 +251,6 @@ We welcome contributions to all parts of the Prompt Piper ecosystem:
 - Advanced prompt templates
 - Integration with popular development tools
 - Community-driven rule set marketplace
-
-## Community & Support
-
-- 🌟 **Star us on GitHub**: Help others discover Prompt Piper
-- 💬 **Discord Community**: [discord.gg/promptpiper](https://discord.gg/promptpiper)
-- 📧 **Contact**: promptpiper@example.com
-- 🐦 **Twitter**: [@PromptPiper](https://twitter.com/PromptPiper)
 
 ## License
 
