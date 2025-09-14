@@ -73,8 +73,7 @@ export default function Footer() {
             <Modal
                 isOpen={modalOpen === 'principal'}
                 onClose={closeModal}
-                title="Principal"
-                image="/images/principal.png"
+                title="Our Principal: Prompt No Evil 🙈🙊🙉"
                 imageAlt="Principal"
             >
                 <PrincipalModalContent />
