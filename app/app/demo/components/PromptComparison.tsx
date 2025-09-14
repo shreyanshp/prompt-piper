@@ -7,7 +7,7 @@ import { LLMLinguaCompressor, LLMLinguaCompressionResult, LLMLinguaCompressorOpt
 import { configureONNXRuntime } from '../../lib/onnx-runtime-config';
 import AITestPanel from './AITestPanel';
 import ExamplePromptsAccordion from './ExamplePromptsAccordion';
-import TokenCountBar from '../../demo/components/TokenCountBar';
+import TokenCountBar from './TokenCountBar';
 
 type CompressionMode = 'regular' | 'llmlingua-downloaded' | 'llmlingua-ipfs';
 type AnyCompressionResult = {

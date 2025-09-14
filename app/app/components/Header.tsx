@@ -35,16 +35,6 @@ export default function Header() {
                                 </Link>
                             </li>
                             <li className="px-3 py-1">
-                                <Link className="text-gray-700 hover:text-gray-900 flex items-center transition" href="/demo-2">
-                                    Demo 2
-                                </Link>
-                            </li>
-                            <li className="px-3 py-1">
-                                <Link className="text-gray-700 hover:text-gray-900 flex items-center transition" href="/demo-3">
-                                    Demo 3
-                                </Link>
-                            </li>
-                            <li className="px-3 py-1">
                                 <Link className="text-gray-700 hover:text-gray-900 flex items-center transition" href="/pricing">
                                     Principal
                                 </Link>
@@ -153,16 +143,6 @@ export default function Header() {
                                     <li>
                                         <Link className="flex text-gray-700 hover:bg-gray-100 rounded-lg py-1.5 px-2" href="/demo">
                                             Demo
-                                        </Link>
-                                    </li>
-                                    <li>
-                                        <Link className="flex text-gray-700 hover:bg-gray-100 rounded-lg py-1.5 px-2" href="/demo-2">
-                                            Demo 2
-                                        </Link>
-                                    </li>
-                                    <li>
-                                        <Link className="flex text-gray-700 hover:bg-gray-100 rounded-lg py-1.5 px-2" href="/demo-3">
-                                            Demo 3
                                         </Link>
                                     </li>
                                     <li>

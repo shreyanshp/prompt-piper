@@ -1,11 +1,10 @@
 'use client'
 
-import { useState, useEffect } from 'react'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
-import CompressionDemo from './components/CompressionDemo'
+import PromptComparison from './components/PromptComparison'
 
-export default function DemoPage() {
+export default function Demo3Page() {
     return (
         <>
             <Header />
@@ -16,10 +15,10 @@ export default function DemoPage() {
                             Compression Demo
                         </h1>
                         <p className="text-lg text-gray-700 max-w-3xl mx-auto">
-                            Try our prompt compression engine live. See how much you can reduce token usage and save costs.
+                            Try our prompt compression engine live. See how much you can reduce token usage and save costs and also expanding maximum context window
                         </p>
                     </div>
-                    <CompressionDemo />
+                    <PromptComparison />
                 </div>
             </main>
             <Footer />
