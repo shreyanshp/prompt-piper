@@ -109,20 +109,12 @@ export default function PromptComparison() {
     ];
 
     return (
-        <div className="max-w-6xl mx-auto p-6">
-            <div className="text-center mb-8">
-                <h1 className="text-4xl font-bold text-gray-900 mb-2">
-                    Prompt Piper 🎵
-                </h1>
-                <p className="text-xl text-gray-600 mb-6">
-                    Compress your AI prompts and save tokens without losing meaning
-                </p>
-            </div>
+        <div className="max-w-6xl mx-auto">
 
             {/* Compression Mode Toggle */}
             <div className="mb-6 bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
                 <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
+                    <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2 font-title">
                         <Settings size={20} />
                         Compression Settings
                     </h3>
@@ -216,7 +208,7 @@ export default function PromptComparison() {
                 {/* Input Section */}
                 <div className="space-y-4">
                     <div className="flex items-center gap-2 mb-4">
-                        <h2 className="text-2xl font-semibold text-gray-800">Original Prompt</h2>
+                        <h2 className="text-2xl font-semibold text-gray-800 font-title">Original Prompt</h2>
                     </div>
 
                     <textarea
@@ -260,7 +252,7 @@ export default function PromptComparison() {
                 {/* Output Section */}
                 <div className="space-y-4">
                     <div className="flex items-center gap-2 mb-4">
-                        <h2 className="text-2xl font-semibold text-gray-800">Compressed Prompt</h2>
+                        <h2 className="text-2xl font-semibold text-gray-800 font-title">Compressed Prompt</h2>
                     </div>
 
                     <div className="relative">
@@ -289,7 +281,7 @@ export default function PromptComparison() {
                     <div className="flex items-center justify-between mb-4">
                         <div className="flex items-center gap-2">
                             <BarChart3 className="text-green-600" size={24} />
-                            <h3 className="text-xl font-semibold text-gray-800">Compression Results</h3>
+                            <h3 className="text-xl font-semibold text-gray-800 font-title">Compression Results</h3>
                         </div>
                         <span className="text-sm text-gray-600 bg-white px-3 py-1 rounded-full border border-gray-300">
                             {compressionMode === 'regular' ? 'Regular IPFS' : 'LLMLingua-2 AI'} Compression
@@ -336,17 +328,17 @@ export default function PromptComparison() {
             <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="text-center p-6 bg-white rounded-lg border border-gray-200 shadow-sm">
                     <div className="text-3xl mb-3">🚀</div>
-                    <h3 className="text-lg font-semibold mb-2">Intelligent Compression</h3>
+                    <h3 className="text-lg font-semibold mb-2 font-title">Intelligent Compression</h3>
                     <p className="text-gray-600 text-sm">Removes redundancy while preserving meaning and intent</p>
                 </div>
                 <div className="text-center p-6 bg-white rounded-lg border border-gray-200 shadow-sm">
                     <div className="text-3xl mb-3">💰</div>
-                    <h3 className="text-lg font-semibold mb-2">Cost Reduction</h3>
+                    <h3 className="text-lg font-semibold mb-2 font-title">Cost Reduction</h3>
                     <p className="text-gray-600 text-sm">Save money on API calls by reducing input token count</p>
                 </div>
                 <div className="text-center p-6 bg-white rounded-lg border border-gray-200 shadow-sm">
                     <div className="text-3xl mb-3">⚡</div>
-                    <h3 className="text-lg font-semibold mb-2">Faster Processing</h3>
+                    <h3 className="text-lg font-semibold mb-2 font-title">Faster Processing</h3>
                     <p className="text-gray-600 text-sm">Shorter prompts mean faster AI response times</p>
                 </div>
             </div>

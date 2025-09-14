@@ -74,7 +74,7 @@ export default function AITestPanel({ originalPrompt, compressedPrompt }: AITest
         <div className="mt-8 bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
             <div className="flex items-center gap-2 mb-6">
                 <Bot className="text-purple-600" size={24} />
-                <h3 className="text-xl font-semibold text-gray-800">AI Response Comparison</h3>
+                <h3 className="text-xl font-semibold text-gray-800 font-title">AI Response Comparison</h3>
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4 mb-6">
