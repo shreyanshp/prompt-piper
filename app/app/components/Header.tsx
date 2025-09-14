@@ -14,7 +14,7 @@ export default function Header() {
     useEffect(() => {
         const savedTheme = localStorage.getItem('theme')
         const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-        
+
         if (savedTheme === 'dark' || (!savedTheme && systemPrefersDark)) {
             setIsDarkMode(true)
             document.documentElement.classList.add('dark')
@@ -27,7 +27,7 @@ export default function Header() {
     const toggleDarkMode = () => {
         const newDarkMode = !isDarkMode
         setIsDarkMode(newDarkMode)
-        
+
         if (newDarkMode) {
             document.documentElement.classList.add('dark')
             localStorage.setItem('theme', 'dark')
@@ -54,22 +54,22 @@ export default function Header() {
                     <nav className="hidden md:flex md:grow">
                         <ul className="text-sm flex grow justify-center flex-wrap items-center gap-4 lg:gap-8">
                             <li className="px-3 py-1">
-                                <Link className="text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white flex items-center transition" href="/">
+                                <Link className="text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white flex items-center transition font-semibold" href="/">
                                     Home
                                 </Link>
                             </li>
                             <li className="px-3 py-1">
-                                <Link className="text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white flex items-center transition" href="/demo">
+                                <Link className="text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white flex items-center transition font-semibold" href="/demo">
                                     Demo
                                 </Link>
                             </li>
                             <li className="px-3 py-1">
-                                <Link className="text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white flex items-center transition" href="/pricing">
+                                <Link className="text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white flex items-center transition font-semibold" href="/pricing">
                                     Principal
                                 </Link>
                             </li>
                             <li className="px-3 py-1">
-                                <Link className="text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white flex items-center transition" href="/about">
+                                <Link className="text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white flex items-center transition font-semibold" href="/about">
                                     Team
                                 </Link>
                             </li>
@@ -88,7 +88,8 @@ export default function Header() {
                             </button>
                         </li>
                         <li>
-                            <Link className="btn-sm text-gray-200 bg-gray-800 hover:bg-gray-900 shadow-sm" href="https://github.com/vm06007/prompt-piper">
+                            <Link className="btn-sm text-gray-200 bg-gray-800 hover:bg-gray-900 shadow-sm font-semibold flex items-center gap-2" href="https://github.com/vm06007/prompt-piper">
+                                <Image src="/images/github.png" width={16} height={16} alt="GitHub" className="invert" />
                                 GitHub
                             </Link>
                         </li>
@@ -143,22 +144,22 @@ export default function Header() {
                             >
                                 <ul className="text-sm p-2">
                                     <li>
-                                        <Link className="flex text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800 rounded-lg py-1.5 px-2" href="/">
+                                        <Link className="flex text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800 rounded-lg py-1.5 px-2 font-semibold" href="/">
                                             Home
                                         </Link>
                                     </li>
                                     <li>
-                                        <Link className="flex text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800 rounded-lg py-1.5 px-2" href="/demo">
+                                        <Link className="flex text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800 rounded-lg py-1.5 px-2 font-semibold" href="/demo">
                                             Demo
                                         </Link>
                                     </li>
                                     <li>
-                                        <Link className="flex text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800 rounded-lg py-1.5 px-2" href="/pricing">
+                                        <Link className="flex text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800 rounded-lg py-1.5 px-2 font-semibold" href="/pricing">
                                             Principal
                                         </Link>
                                     </li>
                                     <li>
-                                        <Link className="flex text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800 rounded-lg py-1.5 px-2" href="/about">
+                                        <Link className="flex text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800 rounded-lg py-1.5 px-2 font-semibold" href="/about">
                                             Team
                                         </Link>
                                     </li>
