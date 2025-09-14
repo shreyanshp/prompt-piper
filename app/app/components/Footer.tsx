@@ -92,6 +92,7 @@ export default function Footer() {
                 isOpen={modalOpen === 'stats'}
                 onClose={closeModal}
                 title="Hackathon Stats"
+                wide={true}
             >
                 <StatsModalContent />
             </Modal>

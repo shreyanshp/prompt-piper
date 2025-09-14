@@ -12,9 +12,10 @@ interface ModalProps {
     imageAlt?: string
     children: React.ReactNode
     fullScreenImage?: boolean
+    wide?: boolean
 }
 
-export default function Modal({ isOpen, onClose, title, image, imageAlt, children, fullScreenImage = false }: ModalProps) {
+export default function Modal({ isOpen, onClose, title, image, imageAlt, children, fullScreenImage = false, wide = false }: ModalProps) {
     // Handle escape key
     useEffect(() => {
         const handleEscape = (e: KeyboardEvent) => {
@@ -48,6 +49,8 @@ export default function Modal({ isOpen, onClose, title, image, imageAlt, childre
             <div className={`relative bg-white dark:bg-gray-900 rounded-2xl shadow-2xl overflow-hidden ${
                 fullScreenImage 
                     ? 'w-[90vw] h-[90vh]' 
+                    : wide
+                    ? 'w-[77vw] max-w-[72rem] mx-4 max-h-[90vh]'
                     : 'max-w-2xl w-full mx-4 max-h-[90vh]'
             }`}>
                 {/* Header */}

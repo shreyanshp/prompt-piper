@@ -233,6 +233,7 @@ export default function Header() {
                 isOpen={modalOpen === 'stats'}
                 onClose={closeModal}
                 title="Hackathon Stats"
+                wide={true}
             >
                 <StatsModalContent />
             </Modal>
