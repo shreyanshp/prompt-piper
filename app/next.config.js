@@ -23,32 +23,43 @@ const nextConfig = {
   trailingSlash: true,
   
   // Custom webpack configuration for Hugging Face Transformers
-  webpack: (config, { dev, isServer }) => {
-    if (!isServer) {
-      // Resolve fallbacks for browser builds
-      config.resolve.fallback = {
-        ...config.resolve.fallback,
-        fs: false,
-        path: false,
-        crypto: false,
-        stream: false,
-        buffer: false,
-        util: false,
-        assert: false,
-        http: false,
-        https: false,
-        os: false,
-        url: false,
-        zlib: false,
-      };
+  webpack: (config, { isServer }) => {
+    // Fix for @tensorflow/tfjs and @huggingface/transformers
+    config.resolve.fallback = {
+      ...config.resolve.fallback,
+      fs: false,
+      path: false,
+      crypto: false,
+      stream: false,
+      buffer: false,
+    };
 
-      // Ignore node-specific modules from @huggingface/transformers
-      config.externals = config.externals || [];
-      config.externals.push({
-        'sharp': 'commonjs sharp',
-        'onnxruntime-node': 'commonjs onnxruntime-node',
-      });
+    // Handle native modules
+    config.module.rules.push({
+      test: /\.node$/,
+      loader: 'ignore-loader',
+    });
+
+    // Ignore transformers backend issues for server-side
+    if (isServer) {
+      config.externals = [...(config.externals || []), '@tensorflow/tfjs', '@huggingface/transformers'];
     }
+
+    // Ignore ONNX runtime for client-side builds
+    if (!isServer) {
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        'onnxruntime-node': false,
+        'onnxruntime-web': 'onnxruntime-web',
+      };
+    }
+
+    // Ignore specific warnings
+    config.ignoreWarnings = [
+      { module: /node_modules\/@tensorflow\/tfjs/ },
+      { module: /node_modules\/@huggingface\/transformers/ },
+      { module: /node_modules\/onnxruntime/ },
+    ];
 
     return config;
   },
@@ -57,6 +68,8 @@ const nextConfig = {
   env: {
     NEXT_PUBLIC_APP_NAME: 'Prompt Piper App',
     NEXT_PUBLIC_APP_VERSION: '0.1.0',
+    // Suppress ONNX runtime warnings
+    ORT_LOGGING_LEVEL: '3', // Error level only
   },
 }
 
