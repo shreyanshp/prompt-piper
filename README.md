@@ -23,13 +23,16 @@ Command-line interface for developers and power users.
 - Integration with Claude AI and other LLMs
 - Real-time compression analytics
 
+**Claude Integration:**
+The interactive mode supports direct Claude AI integration when run with the `--claude` flag. If Claude is available in your command line environment, compressed prompts will be automatically forwarded to Claude for processing, allowing you to see the AI's response to both original and compressed prompts side-by-side.
+
 **Quick Commands:**
 ```bash
 cd cli && bun install
 
 # Interactive mode
 bun run interactive                    # Launch terminal UI
-bun run interactive --claude           # Launch with Claude integration
+bun run interactive --claude           # Launch with Claude integration (forwards prompts to Claude CLI)
 
 # Direct compression
 bun run compress "your prompt here"    # Compress text directly
@@ -97,26 +100,26 @@ bun run pages:deploy          # Deploy to Cloudflare Pages
 
 ## Core Technology
 
-### 🎯 Advanced Compression Engine
+### 🎯 Advanced Compression Engine 高度な圧縮エンジン
 - **LLMLingua2.js Integration** - State-of-the-art prompt compression using transformer models
 - **Multiple Model Support** - Choose between speed (TinyBERT) and accuracy (XLM-RoBERTa)
 - **Client-side Processing** - No data leaves your browser, ensuring privacy
 - **Real-time Token Counting** - Accurate token analysis using Tiktoken
 - **Semantic Preservation** - Maintains meaning while reducing token count
 
-### 🌐 Decentralized Rule Sharing (IPFS)
+### 🌐 Decentralized Rule Sharing (IPFS) 分散型ルール共有
 - Publish and discover compression rule sets
 - Community-driven optimization patterns
 - Version control for rule sets
 - No central authority or vendor lock-in
 
-### 📊 Analytics & Insights
+### 📊 Analytics & Insights 分析とインサイト
 - **Real-time Token Metrics** - Live token counting and compression ratios
 - **Cost Savings Calculator** - Estimate API cost reductions
 - **Visual Comparisons** - Side-by-side before/after analysis
 - **Performance Analytics** - Compression speed and effectiveness metrics
 
-### 🤖 Compression Models
+### 🤖 Compression Models 圧縮モデル
 
 | Model | Size | Speed | Accuracy | Use Case |
 |-------|------|-------|----------|----------|
