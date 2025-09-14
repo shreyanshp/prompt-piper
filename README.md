@@ -47,31 +47,62 @@ bun run ipfs:publish rules.json        # Share your rule set
 
 📖 **[Full CLI Documentation →](./cli/README.md)**
 
-### 🌐 Web Application (`/app`) *(Coming Soon)*
-Browser-based interface for broader accessibility and team collaboration.
+### 🌐 Web Application (`/app`) ✅ **LIVE & FUNCTIONAL**
+Modern web interface with live compression demo and AI integration.
 
-**Planned Features:**
-- Visual compression editor
-- Rule set marketplace and browser
-- Team collaboration and sharing
-- API integration dashboard
-- Usage analytics and cost tracking
-- Real-time collaboration on prompts
+**Built Features:**
+- **Live Compression Demo** - Interactive prompt compression with real-time token counting
+- **AI Test Panel** - Direct integration with Claude AI and other LLMs
+- **Visual Token Analytics** - Before/after comparison with cost savings
+- **Multiple Compression Models** - TinyBERT (57MB), BERT (710MB), XLM-RoBERTa (2.2GB)
+- **Responsive Design** - Beautiful, modern UI built with Next.js and Tailwind CSS
+- **Real-time Processing** - Client-side compression using LLMLingua2.js
 
 **Technology Stack:**
-- Modern web framework (React/Next.js)
-- Real-time compression engine
-- IPFS integration for decentralized rule sharing
-- Team management and permissions
-- API for third-party integrations
+- **Frontend**: Next.js 15, React 18, TypeScript
+- **Styling**: Tailwind CSS, Framer Motion animations
+- **Compression Engine**: LLMLingua2.js with ONNX Runtime
+- **AI Integration**: Anthropic Claude, OpenAI, OpenRouter APIs
+- **Deployment**: Cloudflare Pages with automatic builds
+- **Token Counting**: Tiktoken for accurate token analysis
+
+**Live Demo:**
+```bash
+cd app && bun install
+bun run dev                    # Start development server
+bun run build                  # Build for production
+bun run pages:deploy          # Deploy to Cloudflare Pages
+```
+
+🌐 **[Try the Live Demo →](./app/app/demo)**
+
+## 🎨 Web Application Features
+
+### Live Compression Demo
+- **Interactive Interface**: Real-time prompt compression with instant results
+- **Multiple Models**: Choose between TinyBERT (fast), BERT (balanced), or XLM-RoBERTa (accurate)
+- **Token Analytics**: Visual token counting with before/after comparisons
+- **Cost Calculator**: Real-time API cost savings estimation
+
+### AI Integration Panel
+- **Direct LLM Testing**: Send compressed prompts directly to Claude AI, OpenAI, or OpenRouter
+- **Response Comparison**: Compare AI responses from original vs compressed prompts
+- **API Management**: Configure and test multiple AI provider endpoints
+
+### Modern UI/UX
+- **Responsive Design**: Works seamlessly on desktop, tablet, and mobile
+- **Beautiful Animations**: Smooth transitions powered by Framer Motion
+- **Dark/Light Mode**: Adaptive theming for comfortable viewing
+- **Accessibility**: Built with accessibility best practices
 
 ## Core Technology
 
-### 🎯 Smart Compression Engine
-- Advanced v3 algorithm with semantic preservation
-- Multiple rule set support for different use cases
-- Language-specific optimizations
-- Real-time token counting and savings calculation
+### 🎯 Advanced Compression Engine
+- **LLMLingua2.js Integration** - State-of-the-art prompt compression using transformer models
+- **Multiple Model Support** - Choose between speed (TinyBERT) and accuracy (XLM-RoBERTa)
+- **Client-side Processing** - No data leaves your browser, ensuring privacy
+- **Real-time Token Counting** - Accurate token analysis using Tiktoken
+- **Semantic Preservation** - Maintains meaning while reducing token count
 
 ### 🌐 Decentralized Rule Sharing (IPFS)
 - Publish and discover compression rule sets
@@ -80,30 +111,51 @@ Browser-based interface for broader accessibility and team collaboration.
 - No central authority or vendor lock-in
 
 ### 📊 Analytics & Insights
-- Token reduction metrics
-- Cost savings calculator
-- Compression effectiveness analysis
-- Before/after comparisons
+- **Real-time Token Metrics** - Live token counting and compression ratios
+- **Cost Savings Calculator** - Estimate API cost reductions
+- **Visual Comparisons** - Side-by-side before/after analysis
+- **Performance Analytics** - Compression speed and effectiveness metrics
+
+### 🤖 Compression Models
+
+| Model | Size | Speed | Accuracy | Use Case |
+|-------|------|-------|----------|----------|
+| **TinyBERT** | 57MB | ⚡ Fast | ⭐ Good | Quick compression, real-time demos |
+| **BERT** | 710MB | 🚀 Balanced | ⭐⭐ Better | Production use, balanced performance |
+| **XLM-RoBERTa** | 2.2GB | 🐌 Slower | ⭐⭐⭐ Best | Maximum accuracy, research |
+
+All models run client-side using ONNX Runtime for optimal performance and privacy.
 
 ## Getting Started
 
-### Developers & Power Users
-Use the CLI tool for terminal-based workflows:
+### 🌐 Web Application (Recommended for Most Users)
+Try the live compression demo in your browser:
+```bash
+cd app
+bun install
+bun run dev
+```
+Then visit `http://localhost:3000/demo` for the interactive compression tool.
+
+### 🖥️ CLI Tool (For Developers & Power Users)
+Use the command-line interface for terminal-based workflows:
 ```bash
 cd cli
 bun install
 bun run interactive
 ```
 
-### Teams & Organizations
-*Web application coming soon - designed for collaborative prompt engineering and team workflows*
+### 🚀 Quick Demo
+1. **Web App**: Visit the demo page and try compressing a prompt
+2. **CLI**: Run `bun run interactive` and select example prompts
+3. **Compare**: See token reduction and cost savings in real-time
 
 ### Integrations
 Both CLI and web interfaces support:
-- Claude AI integration
-- Custom LLM endpoints
-- API access for third-party tools
-- IPFS rule set ecosystem
+- **Claude AI integration** - Direct API calls with compressed prompts
+- **OpenAI/OpenRouter** - Multiple LLM provider support
+- **Custom endpoints** - Use with any LLM API
+- **IPFS rule sets** - Community-driven compression patterns
 
 ## Example Compression
 
@@ -147,7 +199,26 @@ bun run build
 ### Web App Development
 ```bash
 cd app
-# Setup instructions coming soon
+bun install
+bun run dev          # Start development server
+bun run build        # Build for production
+bun run pages:deploy # Deploy to Cloudflare Pages
+```
+
+### Project Structure
+```
+prompt-piper-v/
+├── app/                 # Next.js web application
+│   ├── app/
+│   │   ├── components/  # React components
+│   │   ├── demo/       # Live compression demo
+│   │   └── lib/        # Compression engine & utilities
+│   └── public/         # Static assets
+├── cli/                # Command-line interface
+│   ├── src/            # TypeScript source
+│   ├── bin/            # Executable scripts
+│   └── dist/           # Compiled output
+└── llmlingua-2-js-main/ # LLMLingua2.js integration
 ```
 
 ### Contributing
@@ -160,19 +231,26 @@ We welcome contributions to all parts of the Prompt Piper ecosystem:
 
 ## Roadmap
 
-**Current (CLI)**
-- ✅ Interactive terminal interface
-- ✅ Command-line compression tools
-- ✅ IPFS rule set sharing
-- ✅ Language-specific optimizations
-- ✅ Claude AI integration
+**✅ Completed Features**
+- **CLI Tool**: Interactive terminal interface, command-line compression, IPFS rule sharing
+- **Web Application**: Live compression demo, AI integration, responsive design
+- **Compression Engine**: LLMLingua2.js integration with multiple model support
+- **AI Integration**: Claude AI, OpenAI, OpenRouter API support
+- **Deployment**: Cloudflare Pages deployment with automatic builds
 
-**Upcoming (Web App)**
-- 🚧 Browser-based compression interface
-- 🚧 Visual rule set editor
-- 🚧 Team collaboration features
-- 🚧 API management dashboard
-- 🚧 Enterprise deployment options
+**🚧 In Development**
+- Enhanced rule set marketplace and browser
+- Team collaboration and sharing features
+- Advanced analytics dashboard
+- API rate limiting and usage tracking
+- Mobile-responsive optimizations
+
+**🔮 Future Plans**
+- Enterprise deployment options
+- Custom model training interface
+- Advanced prompt templates
+- Integration with popular development tools
+- Community-driven rule set marketplace
 
 ## Community & Support
 
