@@ -86,7 +86,7 @@ export default function PromptComparison() {
         return (
             <div className="flex items-center justify-center min-h-screen">
                 <div className="text-center">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
                     <p className="text-gray-600">Loading Prompt Piper...</p>
                 </div>
             </div>
@@ -224,12 +224,12 @@ export default function PromptComparison() {
                         onClick={() => setCompressionMode('regular')}
                         className={`p-4 rounded-xl border-2 cursor-pointer transition-all ${
                             compressionMode === 'regular'
-                                ? 'border-blue-500 bg-blue-50'
+                                ? 'border-green-500 bg-green-50'
                                 : 'border-gray-200 hover:border-gray-300'
                         }`}
                     >
                         <div className="flex items-center space-x-3">
-                            <Database className="w-6 h-6 text-blue-600" />
+                            <Database className="w-6 h-6 text-green-600" />
                             <div>
                                 <h3 className="font-semibold">Regular (IPFS Rules)</h3>
                                 <p className="text-sm text-gray-600">Instant, rule-based compression</p>
@@ -277,12 +277,12 @@ export default function PromptComparison() {
                                     Compression Rate
                                 </label>
                                 {autoCompress && (
-                                    <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full">
+                                    <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">
                                         Auto
                                     </span>
                                 )}
                             </div>
-                            <span className="text-md font-bold text-blue-600">
+                            <span className="text-md font-bold text-green-600">
                                 {Math.round((1 - llmlinguaOptions.rate!) * 100)}% reduction
                             </span>
                         </div>
@@ -311,7 +311,7 @@ export default function PromptComparison() {
                             <select
                                 value={llmlinguaOptions.modelName}
                                 onChange={(e) => setLlmlinguaOptions(prev => ({ ...prev, modelName: e.target.value as any }))}
-                                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
                             >
                                 <option value="TINYBERT">TinyBERT (57MB - Fastest)</option>
                                 <option value="BERT">BERT (710MB - Better accuracy)</option>
@@ -346,7 +346,7 @@ export default function PromptComparison() {
                                 onClick={() => setAutoCompress(!autoCompress)}
                                 className={`btn-sm flex items-center gap-1 text-sm transition-colors ${
                                     autoCompress
-                                        ? 'bg-blue-600 text-white hover:bg-blue-700'
+                                        ? 'bg-green-600 text-white hover:bg-green-700'
                                         : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                                 }`}
                             >
@@ -374,14 +374,14 @@ export default function PromptComparison() {
                                 value={inputPrompt}
                                 onChange={(e) => setInputPrompt(e.target.value)}
                                 placeholder="Paste your verbose prompt here..."
-                                className="w-full h-64 p-4 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent mt-0"
+                                className="w-full h-64 p-4 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-green-500 focus:border-transparent mt-0"
                             />
                         </div>
                         <div className="flex flex-col gap-2 mt-4">
                             <button
                                 onClick={handleCompress}
                                 disabled={!inputPrompt.trim() || isProcessing}
-                                className="flex items-center justify-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                className="flex items-center justify-center gap-2 bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                             >
                                 <Zap size={20} />
                                 {isProcessing ? (
@@ -445,7 +445,7 @@ export default function PromptComparison() {
 
             {/* Stats Section */}
             {result && (
-                <div className="mt-8 bg-gradient-to-r from-green-50 to-blue-50 rounded-lg border border-green-200 overflow-hidden">
+                <div className="mt-8 bg-gradient-to-r from-green-50 to-green-100 rounded-lg border border-green-200 overflow-hidden">
                     <div
                         className="p-6 cursor-pointer hover:bg-green-100/50 transition-colors"
                         onClick={() => setIsResultsExpanded(!isResultsExpanded)}
@@ -484,7 +484,7 @@ export default function PromptComparison() {
                                     <div className="text-sm text-gray-600">Tokens Saved</div>
                                 </div>
                                 <div className="text-center">
-                                    <div className="text-2xl font-bold text-blue-600">{result.compressionRatio.toFixed(1)}%</div>
+                                    <div className="text-2xl font-bold text-green-600">{result.compressionRatio.toFixed(1)}%</div>
                                     <div className="text-sm text-gray-600">Reduction</div>
                                 </div>
                             </div>
