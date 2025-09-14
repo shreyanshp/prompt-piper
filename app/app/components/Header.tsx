@@ -1,23 +1,52 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
+import { Sun, Moon } from 'lucide-react'
 
 export default function Header() {
     const [mobileNavOpen, setMobileNavOpen] = useState(false)
     const [dropdownOpen, setDropdownOpen] = useState(false)
+    const [isDarkMode, setIsDarkMode] = useState(false)
+
+    // Initialize dark mode from localStorage or system preference
+    useEffect(() => {
+        const savedTheme = localStorage.getItem('theme')
+        const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+        
+        if (savedTheme === 'dark' || (!savedTheme && systemPrefersDark)) {
+            setIsDarkMode(true)
+            document.documentElement.classList.add('dark')
+        } else {
+            setIsDarkMode(false)
+            document.documentElement.classList.remove('dark')
+        }
+    }, [])
+
+    const toggleDarkMode = () => {
+        const newDarkMode = !isDarkMode
+        setIsDarkMode(newDarkMode)
+        
+        if (newDarkMode) {
+            document.documentElement.classList.add('dark')
+            localStorage.setItem('theme', 'dark')
+        } else {
+            document.documentElement.classList.remove('dark')
+            localStorage.setItem('theme', 'light')
+        }
+    }
 
     return (
         <header className="fixed top-2 md:top-6 w-full z-30">
             <div className="max-w-6xl mx-auto px-4 sm:px-6">
-                <div className="relative flex items-center justify-between gap-3 h-14 rounded-2xl px-3 backdrop-blur-xs bg-white/90 shadow-lg shadow-black/[0.03] before:absolute before:inset-0 before:rounded-[inherit] before:border before:border-transparent before:[background:linear-gradient(var(--color-gray-100),var(--color-gray-200))_border-box] before:[mask:linear-gradient(white_0_0)_padding-box,_linear-gradient(white_0_0)] before:[mask-composite:exclude_!important] before:pointer-events-none">
+                <div className="relative flex items-center justify-between gap-3 h-14 rounded-2xl px-3 backdrop-blur-xs bg-white/90 dark:bg-gray-900/90 shadow-lg shadow-black/[0.03] dark:shadow-white/[0.03] before:absolute before:inset-0 before:rounded-[inherit] before:border before:border-transparent before:[background:linear-gradient(var(--color-gray-100),var(--color-gray-200))_border-box] dark:before:[background:linear-gradient(var(--color-gray-800),var(--color-gray-700))_border-box] before:[mask:linear-gradient(white_0_0)_padding-box,_linear-gradient(white_0_0)] before:[mask-composite:exclude_!important] before:pointer-events-none">
 
                     {/* Site branding */}
                     <div className="flex-1 flex items-center">
                         <Link className="inline-flex items-center gap-2" href="/" aria-label="Prompt Piper">
                             <Image src="/images/logo.svg" width={28} height={28} alt="Prompt Piper Logo" />
-                            <span className="text-xl font-semibold text-gray-900 font-title">Prompt Piper</span>
+                            <span className="text-xl font-semibold text-gray-900 dark:text-white font-title">Prompt Piper</span>
                         </Link>
                     </div>
 
@@ -25,22 +54,22 @@ export default function Header() {
                     <nav className="hidden md:flex md:grow">
                         <ul className="text-sm flex grow justify-center flex-wrap items-center gap-4 lg:gap-8">
                             <li className="px-3 py-1">
-                                <Link className="text-gray-700 hover:text-gray-900 flex items-center transition" href="/">
+                                <Link className="text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white flex items-center transition" href="/">
                                     Home
                                 </Link>
                             </li>
                             <li className="px-3 py-1">
-                                <Link className="text-gray-700 hover:text-gray-900 flex items-center transition" href="/demo">
+                                <Link className="text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white flex items-center transition" href="/demo">
                                     Demo
                                 </Link>
                             </li>
                             <li className="px-3 py-1">
-                                <Link className="text-gray-700 hover:text-gray-900 flex items-center transition" href="/pricing">
+                                <Link className="text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white flex items-center transition" href="/pricing">
                                     Principal
                                 </Link>
                             </li>
                             <li className="px-3 py-1">
-                                <Link className="text-gray-700 hover:text-gray-900 flex items-center transition" href="/about">
+                                <Link className="text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white flex items-center transition" href="/about">
                                     Team
                                 </Link>
                             </li>
@@ -49,6 +78,15 @@ export default function Header() {
 
                     {/* Desktop sign in links */}
                     <ul className="flex-1 flex justify-end items-center gap-3">
+                        <li>
+                            <button
+                                onClick={toggleDarkMode}
+                                className="btn-sm text-gray-700 bg-gray-200 hover:bg-gray-300 dark:text-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 shadow-sm transition-colors"
+                                aria-label="Toggle dark mode"
+                            >
+                                {isDarkMode ? <Sun size={16} /> : <Moon size={16} />}
+                            </button>
+                        </li>
                         <li>
                             <Link className="btn-sm text-gray-200 bg-gray-800 hover:bg-gray-900 shadow-sm" href="https://github.com/vm06007/prompt-piper">
                                 GitHub
@@ -59,7 +97,7 @@ export default function Header() {
                     {/* Mobile menu */}
                     <div className="flex md:hidden">
                         <button
-                            className="group inline-flex w-8 h-8 text-gray-800 bg-white text-center items-center justify-center transition"
+                            className="group inline-flex w-8 h-8 text-gray-800 dark:text-gray-200 bg-white dark:bg-gray-800 text-center items-center justify-center transition"
                             aria-controls="mobile-nav"
                             aria-expanded={mobileNavOpen}
                             onClick={() => setMobileNavOpen(!mobileNavOpen)}
@@ -101,26 +139,26 @@ export default function Header() {
                         {mobileNavOpen && (
                             <nav
                                 id="mobile-nav"
-                                className="absolute top-full z-20 left-0 w-full bg-white rounded-xl shadow-lg shadow-black/[0.03] before:absolute before:inset-0 before:rounded-[inherit] before:border before:border-transparent before:[background:linear-gradient(var(--color-gray-100),var(--color-gray-200))_border-box] before:[mask:linear-gradient(white_0_0)_padding-box,_linear-gradient(white_0_0)] before:[mask-composite:exclude_!important] before:pointer-events-none"
+                                className="absolute top-full z-20 left-0 w-full bg-white dark:bg-gray-900 rounded-xl shadow-lg shadow-black/[0.03] dark:shadow-white/[0.03] before:absolute before:inset-0 before:rounded-[inherit] before:border before:border-transparent before:[background:linear-gradient(var(--color-gray-100),var(--color-gray-200))_border-box] dark:before:[background:linear-gradient(var(--color-gray-800),var(--color-gray-700))_border-box] before:[mask:linear-gradient(white_0_0)_padding-box,_linear-gradient(white_0_0)] before:[mask-composite:exclude_!important] before:pointer-events-none"
                             >
                                 <ul className="text-sm p-2">
                                     <li>
-                                        <Link className="flex text-gray-700 hover:bg-gray-100 rounded-lg py-1.5 px-2" href="/">
+                                        <Link className="flex text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800 rounded-lg py-1.5 px-2" href="/">
                                             Home
                                         </Link>
                                     </li>
                                     <li>
-                                        <Link className="flex text-gray-700 hover:bg-gray-100 rounded-lg py-1.5 px-2" href="/demo">
+                                        <Link className="flex text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800 rounded-lg py-1.5 px-2" href="/demo">
                                             Demo
                                         </Link>
                                     </li>
                                     <li>
-                                        <Link className="flex text-gray-700 hover:bg-gray-100 rounded-lg py-1.5 px-2" href="/pricing">
+                                        <Link className="flex text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800 rounded-lg py-1.5 px-2" href="/pricing">
                                             Principal
                                         </Link>
                                     </li>
                                     <li>
-                                        <Link className="flex text-gray-700 hover:bg-gray-100 rounded-lg py-1.5 px-2" href="/about">
+                                        <Link className="flex text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800 rounded-lg py-1.5 px-2" href="/about">
                                             Team
                                         </Link>
                                     </li>
