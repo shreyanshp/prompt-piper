@@ -2,13 +2,21 @@
 
 import { useState, useEffect } from 'react';
 import { Copy, Zap, BarChart3, Settings } from 'lucide-react';
-import { PromptCompressor, CompressionResult } from '../../lib/prompt-compressor';
+import { PromptCompressor } from '../../lib/compression';
 import { LLMLinguaCompressor, LLMLinguaCompressionResult, LLMLinguaCompressorOptions } from '../../lib/llmlingua-compressor';
 import { configureONNXRuntime } from '../../lib/onnx-runtime-config';
 import AITestPanel from './AITestPanel';
 
 type CompressionMode = 'regular' | 'llmlingua-2-real';
-type AnyCompressionResult = CompressionResult | LLMLinguaCompressionResult;
+type AnyCompressionResult = {
+    originalPrompt: string;
+    compressedPrompt: string;
+    originalTokens: number;
+    compressedTokens: number;
+    compressionRatio: number;
+    savedTokens: number;
+    compressionMethod: string;
+} | LLMLinguaCompressionResult;
 
 export default function PromptComparison() {
     const [inputPrompt, setInputPrompt] = useState('');
@@ -47,9 +55,20 @@ export default function PromptComparison() {
             let compressionResult: AnyCompressionResult;
 
             if (compressionMode === 'regular') {
-                // Simulate processing time for demo effect
-                await new Promise(resolve => setTimeout(resolve, 500));
-                compressionResult = PromptCompressor.analyze(inputPrompt);
+                // Use advanced IPFS rule-based compression
+                const compressor = new PromptCompressor();
+                const compressedPrompt = await compressor.compress(inputPrompt);
+                const stats = compressor.getCompressionStats(inputPrompt, compressedPrompt);
+                
+                compressionResult = {
+                    originalPrompt: inputPrompt,
+                    compressedPrompt,
+                    originalTokens: stats.originalTokens,
+                    compressedTokens: stats.compressedTokens,
+                    compressionRatio: stats.compressionRatio,
+                    savedTokens: stats.savedTokens,
+                    compressionMethod: 'IPFS Rule-based'
+                };
             } else {
                 // LLMLingua-2 real AI compression
                 const llmlinguaCompressor = LLMLinguaCompressor.getInstance();
