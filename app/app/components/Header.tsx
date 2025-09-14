@@ -4,11 +4,13 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Sun, Moon } from 'lucide-react'
+import Modal from './Modal'
 
 export default function Header() {
     const [mobileNavOpen, setMobileNavOpen] = useState(false)
     const [dropdownOpen, setDropdownOpen] = useState(false)
     const [isDarkMode, setIsDarkMode] = useState(false)
+    const [modalOpen, setModalOpen] = useState<'principal' | 'team' | 'stats' | null>(null)
 
     // Initialize dark mode from localStorage or system preference
     useEffect(() => {
@@ -27,7 +29,7 @@ export default function Header() {
     const toggleDarkMode = () => {
         const newDarkMode = !isDarkMode
         setIsDarkMode(newDarkMode)
-
+        
         if (newDarkMode) {
             document.documentElement.classList.add('dark')
             localStorage.setItem('theme', 'dark')
@@ -35,6 +37,15 @@ export default function Header() {
             document.documentElement.classList.remove('dark')
             localStorage.setItem('theme', 'light')
         }
+    }
+
+    const openModal = (modal: 'principal' | 'team' | 'stats') => {
+        setModalOpen(modal)
+        setMobileNavOpen(false) // Close mobile nav when opening modal
+    }
+
+    const closeModal = () => {
+        setModalOpen(null)
     }
 
     return (
@@ -64,14 +75,28 @@ export default function Header() {
                                 </Link>
                             </li>
                             <li className="px-3 py-1">
-                                <Link className="text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white flex items-center transition font-semibold" href="/pricing">
+                                <button 
+                                    onClick={() => openModal('principal')}
+                                    className="text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white flex items-center transition font-semibold"
+                                >
                                     Principal
-                                </Link>
+                                </button>
                             </li>
                             <li className="px-3 py-1">
-                                <Link className="text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white flex items-center transition font-semibold" href="/about">
+                                <button 
+                                    onClick={() => openModal('team')}
+                                    className="text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white flex items-center transition font-semibold"
+                                >
                                     Team
-                                </Link>
+                                </button>
+                            </li>
+                            <li className="px-3 py-1">
+                                <button 
+                                    onClick={() => openModal('stats')}
+                                    className="text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white flex items-center transition font-semibold"
+                                >
+                                    Stats
+                                </button>
                             </li>
                         </ul>
                     </nav>
@@ -154,14 +179,28 @@ export default function Header() {
                                         </Link>
                                     </li>
                                     <li>
-                                        <Link className="flex text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800 rounded-lg py-1.5 px-2 font-semibold" href="/pricing">
+                                        <button 
+                                            onClick={() => openModal('principal')}
+                                            className="flex text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800 rounded-lg py-1.5 px-2 font-semibold w-full text-left"
+                                        >
                                             Principal
-                                        </Link>
+                                        </button>
                                     </li>
                                     <li>
-                                        <Link className="flex text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800 rounded-lg py-1.5 px-2 font-semibold" href="/about">
+                                        <button 
+                                            onClick={() => openModal('team')}
+                                            className="flex text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800 rounded-lg py-1.5 px-2 font-semibold w-full text-left"
+                                        >
                                             Team
-                                        </Link>
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <button 
+                                            onClick={() => openModal('stats')}
+                                            className="flex text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800 rounded-lg py-1.5 px-2 font-semibold w-full text-left"
+                                        >
+                                            Stats
+                                        </button>
                                     </li>
                                 </ul>
                             </nav>

@@ -8,6 +8,7 @@ const mainLinks = [
     { href: '/demo', label: 'Demo' },
     { href: '/pricing', label: 'Principal' },
     { href: '/about', label: 'Team' },
+    { href: '/stats', label: 'Stats' },
 ];
 
 export default function Footer() {
