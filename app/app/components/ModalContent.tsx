@@ -42,65 +42,65 @@ export function TeamModalContent() {
                 {' '}who are dedicated to solving the challenges of AI accessibility and cost optimization.
             </p>
 
-            <div className="grid md:grid-cols-2 gap-6">
-                {/* Team Member 1 */}
-                <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg">
-                    <div className="flex items-center mb-4">
-                        <Image
-                            src="/images/avatar-01.jpg"
-                            alt="Team Member 1"
-                            width={60}
-                            height={60}
-                            className="rounded-full mr-4"
-                        />
-                        <div>
-                            <h4 className="text-lg font-semibold text-gray-900 dark:text-white">Alex Chen</h4>
-                            <p className="text-sm text-gray-600 dark:text-gray-400 -mt-1">Lead Developer</p>
-                        </div>
-                    </div>
-                    <p className="text-sm text-gray-700 dark:text-gray-300 mb-3">
-                        Blockchain architect with 8+ years of experience in distributed systems and AI optimization.
-                        Passionate about making AI accessible to everyone.
-                    </p>
-                    <a
-                        href="https://github.com/alexchen"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-green-600 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300 text-sm font-medium"
-                    >
-                        View GitHub →
-                    </a>
-                </div>
+                   <div className="grid md:grid-cols-2 gap-6">
+                       {/* Team Member 1 */}
+                       <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg">
+                           <div className="flex items-center mb-4">
+                               <Image
+                                   src="/images/avatar-01.jpg"
+                                   alt="Vitalik Marincenko"
+                                   width={60}
+                                   height={60}
+                                   className="rounded-full mr-4"
+                               />
+                               <div>
+                                   <h4 className="text-lg font-semibold text-gray-900 dark:text-white">Vitalik Marincenko</h4>
+                                   <p className="text-sm text-gray-600 dark:text-gray-400 -mt-1">Lead Developer</p>
+                               </div>
+                           </div>
+                           <p className="text-sm text-gray-700 dark:text-gray-300 mb-3">
+                               Decentralized Builder and Solidity/Web3 expert at Bitcoin.com.
+                               Passionate about making AI accessible through blockchain technology and compression optimization.
+                           </p>
+                           <a
+                               href="https://github.com/vm06007"
+                               target="_blank"
+                               rel="noopener noreferrer"
+                               className="text-green-600 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300 text-sm font-medium"
+                           >
+                               @vm06007 →
+                           </a>
+                       </div>
 
-                {/* Team Member 2 */}
-                <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg">
-                    <div className="flex items-center mb-4">
-                        <Image
-                            src="/images/avatar-02.jpg"
-                            alt="Team Member 2"
-                            width={60}
-                            height={60}
-                            className="rounded-full mr-4"
-                        />
-                        <div>
-                            <h4 className="text-lg font-semibold text-gray-900 dark:text-white">Sarah Kim</h4>
-                            <p className="text-sm text-gray-600 dark:text-gray-400 -mt-1">AI Research Lead</p>
-                        </div>
-                    </div>
-                    <p className="text-sm text-gray-700 dark:text-gray-300 mb-3">
-                        Machine learning expert specializing in prompt optimization and token compression.
-                        Former researcher at leading AI labs with focus on efficiency.
-                    </p>
-                    <a
-                        href="https://github.com/sarahkim"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-green-600 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300 text-sm font-medium"
-                    >
-                        View GitHub →
-                    </a>
-                </div>
-            </div>
+                       {/* Team Member 2 */}
+                       <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg">
+                           <div className="flex items-center mb-4">
+                               <Image
+                                   src="/images/avatar-02.jpg"
+                                   alt="Shreyansh Pandey"
+                                   width={60}
+                                   height={60}
+                                   className="rounded-full mr-4"
+                               />
+                               <div>
+                                   <h4 className="text-lg font-semibold text-gray-900 dark:text-white">Shreyansh Pandey</h4>
+                                   <p className="text-sm text-gray-600 dark:text-gray-400 -mt-1">AI Research Lead</p>
+                               </div>
+                           </div>
+                           <p className="text-sm text-gray-700 dark:text-gray-300 mb-3">
+                               Machine learning expert specializing in prompt optimization and token compression.
+                               Developer Program Member with focus on AI efficiency and real-time applications.
+                           </p>
+                           <a
+                               href="https://github.com/shreyanshp"
+                               target="_blank"
+                               rel="noopener noreferrer"
+                               className="text-green-600 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300 text-sm font-medium"
+                           >
+                               @shreyanshp →
+                           </a>
+                       </div>
+                   </div>
         </>
     )
 }
