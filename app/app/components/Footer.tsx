@@ -7,17 +7,18 @@ const mainLinks = [
     { href: '/', label: 'Home' },
     { href: '/demo', label: 'Demo' },
     { href: '/pricing', label: 'Principal' },
-    { href: '/about', label: 'About' },
+    { href: '/about', label: 'Team' },
 ];
 
 export default function Footer() {
     return (
         <footer>
             <div className="max-w-6xl mx-auto px-4 sm:px-6">
-                {/* Top area: Blocks */}
-                <div className="grid sm:grid-cols-12 gap-10 py-8 md:py-12">
-                    {/* 1st block */}
-                    <div className="sm:col-span-12 lg:col-span-4 space-y-2">
+                {/* Footer content */}
+                <div className="py-8 md:py-12">
+                    {/* Logo, copyright, and navigation in one row */}
+                    <div className="flex flex-wrap items-center justify-between gap-4">
+                        {/* Logo and copyright */}
                         <div className="flex items-center gap-[10px]">
                             {/* Logo */}
                             <Link className="inline-flex" href="/" aria-label="Prompt Piper">
@@ -27,23 +28,19 @@ export default function Footer() {
                                 &copy; promptpiper.xyz - All rights reserved.
                             </div>
                         </div>
-                    </div>
 
-                    {/* 3rd block */}
-                    <div className="sm:col-span-6 md:col-span-3 lg:col-span-2 space-y-2">
-                        <h3 className="text-sm font-medium font-title">Company</h3>
-                        <ul className="text-sm space-y-2">
-                            {companyLinks.map((link, index) => (
-                                <li key={index}>
-                                    <Link
-                                        className="text-gray-600 hover:text-gray-900 transition"
-                                        href={link.href}
-                                    >
-                                        {link.label}
-                                    </Link>
-                                </li>
+                        {/* Main navigation links */}
+                        <div className="flex flex-wrap gap-6">
+                            {mainLinks.map((link, index) => (
+                                <Link
+                                    key={index}
+                                    className="text-sm font-bold text-gray-900 hover:text-gray-600 transition"
+                                    href={link.href}
+                                >
+                                    {link.label}
+                                </Link>
                             ))}
-                        </ul>
+                        </div>
                     </div>
                 </div>
             </div>

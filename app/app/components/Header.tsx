@@ -24,7 +24,7 @@ export default function Header() {
                     {/* Desktop navigation */}
                     <nav className="hidden md:flex md:grow">
                         <ul className="text-sm flex grow justify-center flex-wrap items-center gap-4 lg:gap-8">
-                        <li className="px-3 py-1">
+                            <li className="px-3 py-1">
                                 <Link className="text-gray-700 hover:text-gray-900 flex items-center transition" href="/">
                                     Home
                                 </Link>
@@ -32,6 +32,16 @@ export default function Header() {
                             <li className="px-3 py-1">
                                 <Link className="text-gray-700 hover:text-gray-900 flex items-center transition" href="/demo">
                                     Demo
+                                </Link>
+                            </li>
+                            <li className="px-3 py-1">
+                                <Link className="text-gray-700 hover:text-gray-900 flex items-center transition" href="/pricing">
+                                    Principal
+                                </Link>
+                            </li>
+                            <li className="px-3 py-1">
+                                <Link className="text-gray-700 hover:text-gray-900 flex items-center transition" href="/about">
+                                    Team
                                 </Link>
                             </li>
                         </ul>
@@ -95,8 +105,23 @@ export default function Header() {
                             >
                                 <ul className="text-sm p-2">
                                     <li>
+                                        <Link className="flex text-gray-700 hover:bg-gray-100 rounded-lg py-1.5 px-2" href="/">
+                                            Home
+                                        </Link>
+                                    </li>
+                                    <li>
                                         <Link className="flex text-gray-700 hover:bg-gray-100 rounded-lg py-1.5 px-2" href="/demo">
                                             Demo
+                                        </Link>
+                                    </li>
+                                    <li>
+                                        <Link className="flex text-gray-700 hover:bg-gray-100 rounded-lg py-1.5 px-2" href="/pricing">
+                                            Principal
+                                        </Link>
+                                    </li>
+                                    <li>
+                                        <Link className="flex text-gray-700 hover:bg-gray-100 rounded-lg py-1.5 px-2" href="/about">
+                                            Team
                                         </Link>
                                     </li>
                                 </ul>

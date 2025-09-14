@@ -25,7 +25,10 @@ export default function CallToAction() {
                     </div>
 
                     <div className="py-12 md:py-20 px-4 md:px-12">
-                        <h2 className="text-3xl md:text-4xl text-gray-200 font-bold mb-6 md:mb-12 border-y [border-image:linear-gradient(to_right,transparent,var(--color-slate-700/.7),transparent)1] font-title">
+                        <h2 
+                            className="text-3xl md:text-4xl text-gray-200 font-bold mb-6 md:mb-12 border-y [border-image:linear-gradient(to_right,transparent,var(--color-slate-700/.7),transparent)1] font-title"
+                            style={{ padding: '20px', borderColor: 'darkslategray' }}
+                        >
                             Start Saving with Prompt Piper
                         </h2>
 
