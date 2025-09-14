@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { Copy, Zap, BarChart3, Settings, Database, Brain } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { Copy, Zap, BarChart3, Settings, Database, Brain, ChevronDown, ChevronRight } from 'lucide-react';
 import { PromptCompressor } from '../../lib/compression';
 import { LLMLinguaCompressor, LLMLinguaCompressionResult, LLMLinguaCompressorOptions } from '../../lib/llmlingua-compressor';
 import { configureONNXRuntime } from '../../lib/onnx-runtime-config';
@@ -32,11 +32,20 @@ export default function PromptComparison() {
     const [isClient, setIsClient] = useState(false);
     const [copiedOriginal, setCopiedOriginal] = useState(false);
     const [copiedCompressed, setCopiedCompressed] = useState(false);
+    const [isResultsExpanded, setIsResultsExpanded] = useState(false);
+    const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
     useEffect(() => {
         setIsClient(true);
         // Configure ONNX Runtime early to suppress warnings
         configureONNXRuntime();
+
+        // Cleanup timeout on unmount
+        return () => {
+            if (debounceTimeoutRef.current) {
+                clearTimeout(debounceTimeoutRef.current);
+            }
+        };
     }, []);
 
     if (!isClient) {
@@ -50,10 +59,8 @@ export default function PromptComparison() {
         );
     }
 
-    const handleCompress = async () => {
-        if (!inputPrompt.trim()) return;
-
-        setIsProcessing(true);
+    const performCompression = async (prompt: string, options: any) => {
+        if (!prompt.trim()) return null;
 
         try {
             let compressionResult: AnyCompressionResult;
@@ -61,11 +68,11 @@ export default function PromptComparison() {
             if (compressionMode === 'regular') {
                 // Use advanced IPFS rule-based compression
                 const compressor = new PromptCompressor();
-                const compressedPrompt = await compressor.compress(inputPrompt);
-                const stats = compressor.getCompressionStats(inputPrompt, compressedPrompt);
+                const compressedPrompt = await compressor.compress(prompt);
+                const stats = compressor.getCompressionStats(prompt, compressedPrompt);
 
                 compressionResult = {
-                    originalPrompt: inputPrompt,
+                    originalPrompt: prompt,
                     compressedPrompt,
                     originalTokens: stats.originalTokens,
                     compressedTokens: stats.compressedTokens,
@@ -76,10 +83,30 @@ export default function PromptComparison() {
             } else {
                 // LLMLingua-2 real AI compression
                 const llmlinguaCompressor = LLMLinguaCompressor.getInstance();
-                compressionResult = await llmlinguaCompressor.compress(inputPrompt, llmlinguaOptions);
+                compressionResult = await llmlinguaCompressor.compress(prompt, options);
             }
 
-            setResult(compressionResult);
+            return compressionResult;
+        } catch (error) {
+            console.error('Compression error:', error);
+            return null;
+        }
+    };
+
+    const handleCompress = async () => {
+        if (!inputPrompt.trim()) return;
+
+        setIsProcessing(true);
+
+        try {
+            const compressionResult = await performCompression(inputPrompt, llmlinguaOptions);
+            if (compressionResult) {
+                setResult(compressionResult);
+            } else {
+                // Provide more specific error messages
+                let errorMessage = 'Error during compression. Please check the console for details.';
+                alert(errorMessage);
+            }
         } catch (error) {
             console.error('Compression error:', error);
 
@@ -100,6 +127,31 @@ export default function PromptComparison() {
         } finally {
             setIsProcessing(false);
         }
+    };
+
+    const handleSliderChange = async (newRate: number) => {
+        if (!inputPrompt.trim() || !result) return;
+
+        // Update the options immediately for UI responsiveness
+        setLlmlinguaOptions(prev => ({ ...prev, rate: newRate }));
+
+        // Clear existing timeout
+        if (debounceTimeoutRef.current) {
+            clearTimeout(debounceTimeoutRef.current);
+        }
+
+        // Set new timeout for debounced compression
+        debounceTimeoutRef.current = setTimeout(async () => {
+            try {
+                const newOptions = { ...llmlinguaOptions, rate: newRate };
+                const compressionResult = await performCompression(inputPrompt, newOptions);
+                if (compressionResult) {
+                    setResult(compressionResult);
+                }
+            } catch (error) {
+                console.error('Real-time compression error:', error);
+            }
+        }, 300); // 300ms debounce delay
     };
 
     const copyToClipboard = async (text: string, type: 'original' | 'compressed') => {
@@ -209,7 +261,7 @@ export default function PromptComparison() {
                                     max="0.9"
                                     step="0.1"
                                     value={llmlinguaOptions.rate}
-                                    onChange={(e) => setLlmlinguaOptions(prev => ({ ...prev, rate: parseFloat(e.target.value) }))}
+                                    onChange={(e) => handleSliderChange(parseFloat(e.target.value))}
                                     className="w-full"
                                 />
                             </div>
@@ -320,42 +372,58 @@ export default function PromptComparison() {
 
             {/* Stats Section */}
             {result && (
-                <div className="mt-8 bg-gradient-to-r from-green-50 to-blue-50 p-6 rounded-lg border border-green-200">
-                    <div className="flex items-center justify-between mb-4">
-                        <div className="flex items-center gap-2">
-                            <BarChart3 className="text-green-600" size={24} />
-                            <h3 className="text-xl font-semibold text-gray-800 font-title">Compression Results</h3>
-                        </div>
-                        <span className="text-sm text-gray-600 bg-white px-3 py-1 rounded-full border border-gray-300">
-                            {compressionMode === 'regular' ? 'Regular IPFS' : 'LLMLingua-2 AI'} Compression
-                        </span>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                        <div className="text-center">
-                            <div className="text-2xl font-bold text-gray-900">{result.originalTokens}</div>
-                            <div className="text-sm text-gray-600">Original Tokens</div>
-                        </div>
-                        <div className="text-center">
-                            <div className="text-2xl font-bold text-green-600">{result.compressedTokens}</div>
-                            <div className="text-sm text-gray-600">Compressed Tokens</div>
-                        </div>
-                        <div className="text-center">
-                            <div className="text-2xl font-bold text-red-600">{result.savedTokens}</div>
-                            <div className="text-sm text-gray-600">Tokens Saved</div>
-                        </div>
-                        <div className="text-center">
-                            <div className="text-2xl font-bold text-blue-600">{result.compressionRatio.toFixed(1)}%</div>
-                            <div className="text-sm text-gray-600">Reduction</div>
+                <div className="mt-8 bg-gradient-to-r from-green-50 to-blue-50 rounded-lg border border-green-200 overflow-hidden">
+                    <div 
+                        className="p-6 cursor-pointer hover:bg-green-100/50 transition-colors"
+                        onClick={() => setIsResultsExpanded(!isResultsExpanded)}
+                    >
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                                <BarChart3 className="text-green-600" size={24} />
+                                <h3 className="text-xl font-semibold text-gray-800 font-title">Compression Results</h3>
+                            </div>
+                            <div className="flex items-center gap-3">
+                                <span className="text-sm text-gray-600 bg-white px-3 py-1 rounded-full border border-gray-300">
+                                    {compressionMode === 'regular' ? 'Regular IPFS' : 'LLMLingua-2 AI'} Compression
+                                </span>
+                                {isResultsExpanded ? (
+                                    <ChevronDown className="w-5 h-5 text-gray-600" />
+                                ) : (
+                                    <ChevronRight className="w-5 h-5 text-gray-600" />
+                                )}
+                            </div>
                         </div>
                     </div>
 
-                    <div className="mt-4 p-4 bg-white rounded border border-green-200">
-                        <div className="text-sm text-gray-700">
-                            <strong>Cost Savings:</strong> At $0.003/1K tokens (Claude-3), you'd save approximately
-                            <span className="text-green-600 font-semibold"> ${(result.savedTokens * 0.003 / 1000).toFixed(4)}</span> per request
+                    {isResultsExpanded && (
+                        <div className="px-6 pb-6">
+                            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                                <div className="text-center">
+                                    <div className="text-2xl font-bold text-gray-900">{result.originalTokens}</div>
+                                    <div className="text-sm text-gray-600">Original Tokens</div>
+                                </div>
+                                <div className="text-center">
+                                    <div className="text-2xl font-bold text-green-600">{result.compressedTokens}</div>
+                                    <div className="text-sm text-gray-600">Compressed Tokens</div>
+                                </div>
+                                <div className="text-center">
+                                    <div className="text-2xl font-bold text-red-600">{result.savedTokens}</div>
+                                    <div className="text-sm text-gray-600">Tokens Saved</div>
+                                </div>
+                                <div className="text-center">
+                                    <div className="text-2xl font-bold text-blue-600">{result.compressionRatio.toFixed(1)}%</div>
+                                    <div className="text-sm text-gray-600">Reduction</div>
+                                </div>
+                            </div>
+
+                            <div className="mt-4 p-4 bg-white rounded border border-green-200">
+                                <div className="text-sm text-gray-700">
+                                    <strong>Cost Savings:</strong> At $0.003/1K tokens (Claude-3), you'd save approximately
+                                    <span className="text-green-600 font-semibold"> ${(result.savedTokens * 0.003 / 1000).toFixed(4)}</span> per request
+                                </div>
+                            </div>
                         </div>
-                    </div>
+                    )}
                 </div>
             )}
 
@@ -368,7 +436,7 @@ export default function PromptComparison() {
             )}
 
             {/* Features Section */}
-            <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="hidden mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="text-center p-6 bg-white rounded-lg border border-gray-200 shadow-sm">
                     <div className="text-3xl mb-3">🚀</div>
                     <h3 className="text-lg font-semibold mb-2 font-title">Intelligent Compression</h3>
