@@ -77,14 +77,6 @@ export default function Header() {
                             </li>
                             <li className="px-3 py-1">
                                 <button
-                                    onClick={() => openModal('principal')}
-                                    className="text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white flex items-center transition font-semibold"
-                                >
-                                    Principal
-                                </button>
-                            </li>
-                            <li className="px-3 py-1">
-                                <button
                                     onClick={() => openModal('team')}
                                     className="text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white flex items-center transition font-semibold"
                                 >
@@ -97,6 +89,14 @@ export default function Header() {
                                     className="text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white flex items-center transition font-semibold"
                                 >
                                     Stats
+                                </button>
+                            </li>
+                            <li className="px-3 py-1">
+                                <button
+                                    onClick={() => openModal('principal')}
+                                    className="text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white flex items-center transition font-semibold"
+                                >
+                                    Principal
                                 </button>
                             </li>
                         </ul>
@@ -181,14 +181,6 @@ export default function Header() {
                                     </li>
                                     <li>
                                         <button
-                                            onClick={() => openModal('principal')}
-                                            className="flex text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800 rounded-lg py-1.5 px-2 font-semibold w-full text-left"
-                                        >
-                                            Principal
-                                        </button>
-                                    </li>
-                                    <li>
-                                        <button
                                             onClick={() => openModal('team')}
                                             className="flex text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800 rounded-lg py-1.5 px-2 font-semibold w-full text-left"
                                         >
@@ -201,6 +193,14 @@ export default function Header() {
                                             className="flex text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800 rounded-lg py-1.5 px-2 font-semibold w-full text-left"
                                         >
                                             Stats
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <button
+                                            onClick={() => openModal('principal')}
+                                            className="flex text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800 rounded-lg py-1.5 px-2 font-semibold w-full text-left"
+                                        >
+                                            Principal
                                         </button>
                                     </li>
                                 </ul>
@@ -232,9 +232,7 @@ export default function Header() {
             <Modal
                 isOpen={modalOpen === 'stats'}
                 onClose={closeModal}
-                title="Statistics"
-                image="/images/stats.png"
-                imageAlt="Statistics"
+                title="Hackathon Stats"
             >
                 <StatsModalContent />
             </Modal>

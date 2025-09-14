@@ -9,9 +9,9 @@ import { PrincipalModalContent, TeamModalContent, StatsModalContent } from './Mo
 const mainLinks = [
     { href: '/', label: 'Home' },
     { href: '/demo', label: 'Demo' },
-    { href: null, label: 'Principal', modal: 'principal' },
     { href: null, label: 'Team', modal: 'team' },
     { href: null, label: 'Stats', modal: 'stats' },
+    { href: null, label: 'Principal', modal: 'principal' },
 ];
 
 export default function Footer() {
@@ -91,9 +91,7 @@ export default function Footer() {
             <Modal
                 isOpen={modalOpen === 'stats'}
                 onClose={closeModal}
-                title="Statistics"
-                image="/images/stats.png"
-                imageAlt="Statistics"
+                title="Hackathon Stats"
             >
                 <StatsModalContent />
             </Modal>
