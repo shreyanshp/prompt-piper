@@ -3,14 +3,11 @@
 import Link from 'next/link'
 import Image from 'next/image'
 
-const companyLinks = [
-    { href: '/about', label: 'About us' },
-];
-
-const resourceLinks = [
-    { href: '/community', label: 'Community' },
-    { href: '/terms', label: 'Terms of service' },
-    { href: '/vulnerability', label: 'Report a vulnerability' }
+const mainLinks = [
+    { href: '/', label: 'Home' },
+    { href: '/demo', label: 'Demo' },
+    { href: '/pricing', label: 'Principal' },
+    { href: '/about', label: 'About' },
 ];
 
 export default function Footer() {
@@ -21,14 +18,14 @@ export default function Footer() {
                 <div className="grid sm:grid-cols-12 gap-10 py-8 md:py-12">
                     {/* 1st block */}
                     <div className="sm:col-span-12 lg:col-span-4 space-y-2">
-                        <div>
+                        <div className="flex items-center gap-[10px]">
                             {/* Logo */}
                             <Link className="inline-flex" href="/" aria-label="Prompt Piper">
                                 <Image src="/images/logo.svg" width={28} height={28} alt="Prompt Piper Logo" />
                             </Link>
-                        </div>
-                        <div className="text-sm text-gray-600">
-                            &copy; promptpiper.xyz - All rights reserved.
+                            <div className="text-sm text-gray-600">
+                                &copy; promptpiper.xyz - All rights reserved.
+                            </div>
                         </div>
                     </div>
 
