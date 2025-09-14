@@ -1,50 +1,5 @@
+# This is all you need!
 name = "prompt-piper-app"
 compatibility_date = "2024-01-01"
 pages_build_output_dir = ".vercel/output/static"
-
-# Enable Node.js compatibility for Next.js
 compatibility_flags = ["nodejs_compat"]
-
-# Account and project settings
-[env.production]
-vars = { NODE_ENV = "production" }
-
-[env.preview]
-vars = { NODE_ENV = "preview" }
-
-# Build configuration
-[build]
-command = "bun run build && bunx @cloudflare/next-on-pages"
-
-[build.upload]
-format = "service-worker"
-
-# Optional: Define routes and redirects
-[[redirects]]
-from = "/old-path"
-to = "/new-path"
-status = 301
-
-# Optional: Headers for security and caching
-[[headers]]
-for = "/*"
-[headers.values]
-X-Frame-Options = "DENY"
-X-Content-Type-Options = "nosniff"
-X-XSS-Protection = "1; mode=block"
-Referrer-Policy = "strict-origin-when-cross-origin"
-
-[[headers]]
-for = "/*.js"
-[headers.values]
-Cache-Control = "public, max-age=31536000, immutable"
-
-[[headers]]
-for = "/*.css"
-[headers.values]
-Cache-Control = "public, max-age=31536000, immutable"
-
-[[headers]]
-for = "/*.woff2"
-[headers.values]
-Cache-Control = "public, max-age=31536000, immutable"

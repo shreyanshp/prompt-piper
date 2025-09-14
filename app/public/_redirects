@@ -1,0 +1,14 @@
+# Cloudflare Pages Redirects
+# Format: [source] [destination] [status code]
+
+# Example redirects (uncomment and modify as needed):
+# /old-path /new-path 301
+# /legacy/* /modern/:splat 301
+# /api/* https://api.example.com/:splat 200
+
+# Redirect www to non-www (if using custom domain)
+# https://www.prompt-piper-app.pages.dev/* https://prompt-piper-app.pages.dev/:splat 301
+
+# Handle trailing slashes consistently
+# /about/ /about 301
+# /contact/ /contact 301
