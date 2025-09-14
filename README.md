@@ -12,7 +12,7 @@ Prompt Piper is an intelligent prompt compression platform that helps developers
 
 ## Project Architecture
 
-### 🖥️ CLI Tool (`/cli`)
+### 🖥️ CLI Tool (`/cli`) コマンドラインインターフェース
 Command-line interface for developers and power users.
 
 **Key Features:**
@@ -47,7 +47,7 @@ bun run ipfs:publish rules.json        # Share your rule set
 
 📖 **[Full CLI Documentation →](./cli/README.md)**
 
-### 🌐 Web Application (`/app`) ✅ **LIVE & FUNCTIONAL**
+### 🌐 Web Application (`/app`) ウェブアプリケーション
 Modern web interface with live compression demo and AI integration.
 
 **Built Features:**
