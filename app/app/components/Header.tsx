@@ -88,7 +88,7 @@ export default function Header() {
                             </button>
                         </li>
                         <li>
-                            <Link className="btn-sm text-gray-200 bg-gray-800 hover:bg-gray-900 shadow-sm font-semibold flex items-center gap-2" href="https://github.com/vm06007/prompt-piper">
+                            <Link className="btn-sm text-gray-200 bg-gray-800 hover:bg-gray-900 shadow-sm font-semibold flex items-center gap-2" href="https://github.com/vm06007/prompt-piper" target="_blank" rel="noopener noreferrer">
                                 <Image src="/images/github.png" width={16} height={16} alt="GitHub" className="invert" />
                                 GitHub
                             </Link>
