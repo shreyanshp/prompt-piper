@@ -5,12 +5,12 @@ import Image from 'next/image'
 
 export default function CallToAction() {
     return (
-        <section className="mb-25">
-            <div className="max-w-6xl mx-auto px-4 sm:px-6 mb-25">
+        <section className="mb-20">
+            <div className="max-w-6xl mx-auto px-4 sm:px-6">
                 <div className="rounded-2xl text-center relative overflow-hidden shadow-xl before:absolute before:inset-0 before:rounded-2xl before:bg-gray-900 before:pointer-events-none before:-z-10">
                     {/* Glow */}
                     <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 -z-10" aria-hidden="true">
-                        <div className="w-[480px] h-56 rounded-full border-[20px] border-blue-500 blur-3xl will-change-[filter]"></div>
+                        <div className="w-[480px] h-56 rounded-full border-[20px] border-green-500 blur-3xl will-change-[filter]"></div>
                     </div>
 
                     {/* Stripes illustration */}
