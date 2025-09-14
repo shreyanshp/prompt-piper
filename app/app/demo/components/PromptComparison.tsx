@@ -282,7 +282,7 @@ export default function PromptComparison() {
                                     </span>
                                 )}
                             </div>
-                            <span className="text-lg font-bold text-blue-600">
+                            <span className="text-md font-bold text-blue-600">
                                 {Math.round((1 - llmlinguaOptions.rate!) * 100)}% reduction
                             </span>
                         </div>
