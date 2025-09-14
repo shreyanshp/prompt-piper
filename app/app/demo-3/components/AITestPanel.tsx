@@ -87,7 +87,7 @@ export default function AITestPanel({ originalPrompt, compressedPrompt }: AITest
                                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                         }`}
                     >
-                        Claude
+                        Claude (OpenRouter)
                     </button>
                     <button
                         onClick={() => setProvider('chatgpt')}
@@ -97,7 +97,7 @@ export default function AITestPanel({ originalPrompt, compressedPrompt }: AITest
                                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                         }`}
                     >
-                        ChatGPT
+                        ChatGPT (Bitcoin.com AI)
                     </button>
                 </div>
 
@@ -116,7 +116,7 @@ export default function AITestPanel({ originalPrompt, compressedPrompt }: AITest
                     <strong>Error:</strong> {error}
                     <br />
                     <span className="text-xs text-red-600">
-                        Make sure to set your API keys in environment variables: ANTHROPIC_API_KEY or OPENAI_API_KEY
+                        Make sure to set your API keys in environment variables: OPENROUTER_API_KEY or BITCOINCOM_API_KEY
                     </span>
                 </div>
             )}

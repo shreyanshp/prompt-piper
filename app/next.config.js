@@ -71,6 +71,34 @@ const nextConfig = {
     // Suppress ONNX runtime warnings
     ORT_LOGGING_LEVEL: '3', // Error level only
   },
+  
+  // Load environment variables from CLI config
+  async env() {
+    const fs = require('fs');
+    const path = require('path');
+    
+    // Try to load from CLI config.env
+    const cliConfigPath = path.join(__dirname, '../cli/config.env');
+    let envVars = {};
+    
+    if (fs.existsSync(cliConfigPath)) {
+      const configContent = fs.readFileSync(cliConfigPath, 'utf8');
+      configContent.split('\n').forEach(line => {
+        const [key, value] = line.split('=');
+        if (key && value) {
+          envVars[key.trim()] = value.trim();
+        }
+      });
+    }
+    
+    return {
+      ...envVars,
+      // Fallback API keys (replace with your actual keys)
+      ANTHROPIC_API_KEY: process.env.ANTHROPIC_API_KEY || envVars.ANTHROPIC_API_KEY || '',
+      OPENAI_API_KEY: process.env.OPENAI_API_KEY || envVars.OPENAI_API_KEY || '',
+      OPENROUTER_API_KEY: process.env.OPENROUTER_API_KEY || envVars.OPENROUTER_API_KEY || '',
+    };
+  },
 }
 
 module.exports = nextConfig

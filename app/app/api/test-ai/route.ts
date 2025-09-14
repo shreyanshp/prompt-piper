@@ -1,8 +1,92 @@
 import { NextRequest, NextResponse } from 'next/server';
-import Anthropic from '@anthropic-ai/sdk';
-import OpenAI from 'openai';
 import { PromptCompressor } from '../../lib/compression';
 import { LLMLinguaCompressor } from '../../lib/llmlingua-compressor';
+
+// OpenRouter API integration
+class OpenRouterAPI {
+    private apiKey: string;
+    private baseURL = 'https://openrouter.ai/api/v1';
+
+    constructor(apiKey?: string) {
+        this.apiKey = apiKey || process.env.OPENROUTER_API_KEY || '';
+        if (!this.apiKey) {
+            throw new Error('OpenRouter API key required. Set OPENROUTER_API_KEY environment variable.');
+        }
+    }
+
+    async executePrompt(prompt: string, isCompressed: boolean = false): Promise<string> {
+        const response = await fetch(`${this.baseURL}/chat/completions`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${this.apiKey}`,
+                'Content-Type': 'application/json',
+                'HTTP-Referer': 'https://github.com/prompt-piper/app',
+                'X-Title': 'Prompt Piper App'
+            },
+            body: JSON.stringify({
+                model: 'anthropic/claude-3.5-sonnet',
+                messages: [
+                    {
+                        role: 'user',
+                        content: prompt
+                    }
+                ],
+                max_tokens: isCompressed ? 790 : 960,
+                temperature: 0.1
+            })
+        });
+
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(`OpenRouter API error: ${error.error?.message || response.statusText}`);
+        }
+
+        const data = await response.json();
+        return data.choices[0]?.message?.content?.trim() || prompt;
+    }
+}
+
+// Bitcoin.com AI API integration
+class BitcoinComAPI {
+    private apiKey: string;
+    private baseURL = 'https://ai.bitcoin.com/api/v1';
+
+    constructor(apiKey?: string) {
+        this.apiKey = apiKey || process.env.BITCOINCOM_API_KEY || '';
+        if (!this.apiKey) {
+            throw new Error('Bitcoin.com AI API key required. Set BITCOINCOM_API_KEY environment variable.');
+        }
+    }
+
+    async executePrompt(prompt: string, isCompressed: boolean = false): Promise<string> {
+        const response = await fetch(`${this.baseURL}/chat/completions`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${this.apiKey}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                model: 'chatgpt-4o-latest',
+                messages: [
+                    {
+                        role: 'user',
+                        content: prompt
+                    }
+                ],
+                max_tokens: isCompressed ? 790 : 960,
+                temperature: 0.1
+            })
+        });
+
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(`Bitcoin.com AI API error: ${error.error?.message || response.statusText}`);
+        }
+
+        const data = await response.json();
+        return data.choices[0]?.message?.content?.trim() || prompt;
+    }
+}
 
 export async function POST(request: NextRequest) {
     try {
@@ -48,51 +132,28 @@ export async function POST(request: NextRequest) {
         }
 
         if (provider === 'claude') {
-            if (!process.env.ANTHROPIC_API_KEY) {
-                return NextResponse.json({ error: 'ANTHROPIC_API_KEY not configured' }, { status: 500 });
+            try {
+                const openRouterApi = new OpenRouterAPI();
+                response = await openRouterApi.executePrompt(processedPrompt, !!compressionResult);
+                model = 'claude-3.5-sonnet (via OpenRouter)';
+            } catch (error: any) {
+                return NextResponse.json({ 
+                    error: `OpenRouter API error: ${error.message}`,
+                    details: 'Make sure OPENROUTER_API_KEY is set in your environment variables'
+                }, { status: 500 });
             }
-
-            const anthropic = new Anthropic({
-                apiKey: process.env.ANTHROPIC_API_KEY,
-            });
-
-            const message = await anthropic.messages.create({
-                model: 'claude-3-haiku-20240307',
-                max_tokens: 1000,
-                messages: [
-                    {
-                        role: 'user',
-                        content: processedPrompt
-                    }
-                ]
-            });
-
-
-            response = message.content[0].type === 'text' ? message.content[0].text : 'No text response';
-            model = 'claude-3-haiku';
 
         } else if (provider === 'chatgpt') {
-            if (!process.env.OPENAI_API_KEY) {
-                return NextResponse.json({ error: 'OPENAI_API_KEY not configured' }, { status: 500 });
+            try {
+                const bitcoinComApi = new BitcoinComAPI();
+                response = await bitcoinComApi.executePrompt(processedPrompt, !!compressionResult);
+                model = 'chatgpt-4o-latest (via Bitcoin.com AI)';
+            } catch (error: any) {
+                return NextResponse.json({ 
+                    error: `Bitcoin.com AI API error: ${error.message}`,
+                    details: 'Make sure BITCOINCOM_API_KEY is set in your environment variables'
+                }, { status: 500 });
             }
-
-            const openai = new OpenAI({
-                apiKey: process.env.OPENAI_API_KEY,
-            });
-
-            const completion = await openai.chat.completions.create({
-                model: 'gpt-3.5-turbo',
-                messages: [
-                    {
-                        role: 'user',
-                        content: processedPrompt
-                    }
-                ],
-                max_tokens: 1000,
-            });
-
-            response = completion.choices[0]?.message?.content || 'No response';
-            model = 'gpt-3.5-turbo';
 
         } else {
             return NextResponse.json({ error: 'Invalid provider. Use "claude" or "chatgpt"' }, { status: 400 });

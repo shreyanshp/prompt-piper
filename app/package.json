@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "setup-env": "node setup-env.js",
     "pages:build": "bunx @cloudflare/next-on-pages",
     "pages:dev": "bunx wrangler pages dev .vercel/output/static",
     "pages:deploy": "bun run build && bun run pages:build && bunx wrangler pages deploy .vercel/output/static --project-name=prompt-piper-app",
