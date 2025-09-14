@@ -8,8 +8,8 @@ interface ModalProps {
     isOpen: boolean
     onClose: () => void
     title: string
-    image: string
-    imageAlt: string
+    image?: string
+    imageAlt?: string
     children: React.ReactNode
 }
 
@@ -61,16 +61,18 @@ export default function Modal({ isOpen, onClose, title, image, imageAlt, childre
 
                 {/* Content */}
                 <div className="p-6 overflow-y-auto max-h-[calc(90vh-120px)]">
-                    {/* Image */}
-                    <div className="mb-6 text-center">
-                        <Image
-                            src={image}
-                            alt={imageAlt}
-                            width={400}
-                            height={300}
-                            className="mx-auto rounded-lg shadow-lg"
-                        />
-                    </div>
+                    {/* Image - only show if provided */}
+                    {image && (
+                        <div className="mb-6 text-center">
+                            <Image
+                                src={image}
+                                alt={imageAlt || 'Modal image'}
+                                width={400}
+                                height={300}
+                                className="mx-auto rounded-lg shadow-lg"
+                            />
+                        </div>
+                    )}
 
                     {/* Text content */}
                     <div className="prose prose-gray dark:prose-invert max-w-none">
