@@ -7,14 +7,14 @@ const logoSets = [
     {
         id: 1,
         logos: [
-            { src: '/images/logo-02.svg', size: { width: 23, height: 22 }, position: 'absolute -translate-x-[136px]' },
-            { src: '/images/logo-03.svg', size: { width: 22, height: 22 }, position: 'absolute translate-x-[136px]' },
-            { src: '/images/logo-04.svg', size: { width: 24, height: 22 }, position: 'absolute -translate-x-[216px] -translate-y-[82px]' },
-            { src: '/images/logo-05.svg', size: { width: 25, height: 25 }, position: 'absolute translate-x-[216px] -translate-y-[82px]' },
-            { src: '/images/logo-06.svg', size: { width: 20, height: 18 }, position: 'absolute translate-x-[216px] translate-y-[82px]' },
-            { src: '/images/logo-07.svg', size: { width: 25, height: 25 }, position: 'absolute -translate-x-[216px] translate-y-[82px]' },
-            { src: '/images/logo-08.svg', size: { width: 20, height: 20 }, position: 'absolute -translate-x-[292px] opacity-40' },
-            { src: '/images/logo-09.svg', size: { width: 21, height: 13 }, position: 'absolute translate-x-[292px] opacity-40' }
+            { src: '/images/openai.svg', size: { width: 23, height: 22 }, position: 'absolute -translate-x-[136px]' },
+            { src: '/images/claude.png', size: { width: 22, height: 22 }, position: 'absolute translate-x-[136px]' },
+            { src: '/images/gemini.svg', size: { width: 24, height: 22 }, position: 'absolute -translate-x-[216px] -translate-y-[82px]' },
+            { src: '/images/grok.svg', size: { width: 25, height: 25 }, position: 'absolute translate-x-[216px] -translate-y-[82px]' },
+            { src: '/images/eliza-os.svg', size: { width: 20, height: 18 }, position: 'absolute translate-x-[216px] translate-y-[82px]' },
+            { src: '/images/bitcoin.png', size: { width: 25, height: 25 }, position: 'absolute -translate-x-[216px] translate-y-[82px]' },
+            { src: '/images/claude.webp', size: { width: 20, height: 20 }, position: 'absolute -translate-x-[292px] opacity-40' },
+            { src: '/images/llama.png', size: { width: 21, height: 13 }, position: 'absolute translate-x-[292px] opacity-40' }
         ]
     },
     // Add more logo sets for different tabs if needed
@@ -122,6 +122,7 @@ export default function LogoShowcase() {
                                                 <Image
                                                     className="relative"
                                                     src={logo.src}
+                                                    style={{ borderRadius: '25%' }}
                                                     width={logo.size.width}
                                                     height={logo.size.height}
                                                     alt={`Logo ${index + 1}`}

@@ -9,13 +9,13 @@ const companyLinks = [
     { href: '/blog', label: 'Blog' },
     { href: '/careers', label: 'Careers' },
     { href: '/financial', label: 'Financial statements' }
-]
+];
 
 const resourceLinks = [
     { href: '/community', label: 'Community' },
     { href: '/terms', label: 'Terms of service' },
     { href: '/vulnerability', label: 'Report a vulnerability' }
-]
+];
 
 export default function Footer() {
     return (
