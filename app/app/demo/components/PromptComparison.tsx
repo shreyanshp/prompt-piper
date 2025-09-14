@@ -27,7 +27,7 @@ export default function PromptComparison() {
     const [compressionMode, setCompressionMode] = useState<CompressionMode>('llmlingua-downloaded');
     const [llmlinguaOptions, setLlmlinguaOptions] = useState<LLMLinguaCompressorOptions>({
         modelName: 'TINYBERT',
-        rate: 0.7,
+        rate: 0.3, // Slider value: 30% compression (will be converted to 0.7 for LLMLingua)
     });
     const [isClient, setIsClient] = useState(false);
     const [copiedOriginal, setCopiedOriginal] = useState(false);
@@ -117,7 +117,12 @@ export default function PromptComparison() {
             } else {
                 // LLMLingua-2 real AI compression
                 const llmlinguaCompressor = LLMLinguaCompressor.getInstance();
-                compressionResult = await llmlinguaCompressor.compress(prompt, options);
+                // Convert slider value to LLMLingua rate (invert: slider 0.3 = LLMLingua 0.7)
+                const llmlinguaOptions = {
+                    ...options,
+                    rate: 1 - options.rate
+                };
+                compressionResult = await llmlinguaCompressor.compress(prompt, llmlinguaOptions);
             }
 
             return compressionResult;
@@ -164,7 +169,7 @@ export default function PromptComparison() {
     };
 
     const handleSliderChange = async (newRate: number) => {
-        // Update the options immediately for UI responsiveness
+        // Update the slider value directly (conversion to LLMLingua rate happens in performCompression)
         setLlmlinguaOptions(prev => ({ ...prev, rate: newRate }));
 
         // Only auto-compress if auto-compress is enabled and there's input text
@@ -269,39 +274,6 @@ export default function PromptComparison() {
 
                 {/* Advanced Settings - Always Visible */}
                 <div className="border-t pt-6 space-y-4">
-                    {/* Compression Rate - Always Visible */}
-                    <div>
-                        <div className="flex items-center justify-between mb-2">
-                            <div className="flex items-center gap-2">
-                                <label className="block text-sm font-medium text-gray-700">
-                                    Compression Rate
-                                </label>
-                                {autoCompress && (
-                                    <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">
-                                        Auto
-                                    </span>
-                                )}
-                            </div>
-                            <span className="text-md font-bold text-green-600">
-                                {Math.round((1 - llmlinguaOptions.rate!) * 100)}% reduction
-                            </span>
-                        </div>
-                        <input
-                            type="range"
-                            min="0.1"
-                            max="0.9"
-                            step="0.1"
-                            value={llmlinguaOptions.rate}
-                            onChange={(e) => handleSliderChange(parseFloat(e.target.value))}
-                            className="w-full"
-                        />
-                        {compressionMode === 'regular' && (
-                            <p className="text-xs text-gray-500 mt-1">
-                                Note: Compression rate applies to LLMLingua mode. Regular mode uses rule-based compression.
-                            </p>
-                        )}
-                    </div>
-
                     {/* Model Selection - Only for LLMLingua */}
                     {compressionMode === 'llmlingua-downloaded' && (
                         <div>
@@ -327,6 +299,39 @@ export default function PromptComparison() {
                             </div>
                         </div>
                     )}
+
+                    {/* Compression Rate - Always Visible */}
+                    <div>
+                        <div className="flex items-center justify-between mb-2">
+                            <div className="flex items-center gap-2">
+                                <label className="block text-sm font-medium text-gray-700">
+                                    Compression Rate
+                                </label>
+                                {autoCompress && (
+                                    <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">
+                                        Auto
+                                    </span>
+                                )}
+                            </div>
+                            <span className="text-md font-bold text-green-600">
+                                {Math.round(llmlinguaOptions.rate! * 100)}% reduction
+                            </span>
+                        </div>
+                        <input
+                            type="range"
+                            min="0.1"
+                            max="0.9"
+                            step="0.1"
+                            value={llmlinguaOptions.rate}
+                            onChange={(e) => handleSliderChange(parseFloat(e.target.value))}
+                            className="w-full"
+                        />
+                        {compressionMode === 'regular' && (
+                            <p className="text-xs text-gray-500 mt-1">
+                                Note: Compression rate applies to LLMLingua mode. Regular mode uses rule-based compression.
+                            </p>
+                        )}
+                    </div>
                 </div>
             </div>
 
