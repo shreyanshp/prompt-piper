@@ -22,9 +22,34 @@ const nextConfig = {
   // Optional: Add trailing slashes for better static site compatibility
   trailingSlash: true,
   
-  // Optional: Custom webpack configuration
+  // Custom webpack configuration for Hugging Face Transformers
   webpack: (config, { dev, isServer }) => {
-    // Add any custom webpack configs here
+    if (!isServer) {
+      // Resolve fallbacks for browser builds
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        fs: false,
+        path: false,
+        crypto: false,
+        stream: false,
+        buffer: false,
+        util: false,
+        assert: false,
+        http: false,
+        https: false,
+        os: false,
+        url: false,
+        zlib: false,
+      };
+
+      // Ignore node-specific modules from @huggingface/transformers
+      config.externals = config.externals || [];
+      config.externals.push({
+        'sharp': 'commonjs sharp',
+        'onnxruntime-node': 'commonjs onnxruntime-node',
+      });
+    }
+
     return config;
   },
   

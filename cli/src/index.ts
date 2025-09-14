@@ -152,7 +152,7 @@ program
             const programOptions = program.opts();
             const apiOptions = [programOptions.openrouter, programOptions.bitcoincom, programOptions.claude];
             const enabledCount = apiOptions.filter(Boolean).length;
-            
+
             if (enabledCount > 1) {
                 console.error(chalk.red('[!] Cannot use multiple API options at the same time. Choose one: --openrouter, --bitcoincom, or --claude'));
                 process.exit(1);
@@ -190,34 +190,34 @@ program
             }
 
             let result: ApiCompressionResult;
-            
+
             if (programOptions.openrouter || programOptions.bitcoincom) {
                 const apiName = programOptions.openrouter ? 'OpenRouter' : 'Bitcoin.com AI';
                 const spinnerText = options.bypass ? `Sending original prompt to ${apiName}...` : `Compressing and sending to ${apiName}...`;
                 const spinner = ora(spinnerText).start();
-                
+
                 try {
-                    const apiInstance = programOptions.openrouter 
+                    const apiInstance = programOptions.openrouter
                         ? new OpenRouterAPI(programOptions.key)
                         : new BitcoinComAPI(programOptions.key);
-                    
+
                     let promptToSend = prompt;
-                    
+
                     if (!options.bypass) {
                         // Apply rule-based compression first
                         const ruleBasedResult = PromptCompressor.analyze(prompt);
                         promptToSend = ruleBasedResult.compressedPrompt;
                     }
-                    
+
                     const apiResponse = await apiInstance.executePrompt(promptToSend, !options.bypass);
-                    
+
                     // Create result object showing what was sent vs original
                     const originalTokens = PromptCompressor.getTokenCount(prompt);
                     const sentTokens = PromptCompressor.getTokenCount(promptToSend);
                     const savedTokens = originalTokens - sentTokens;
                     const compressionRatio = savedTokens > 0 ? (savedTokens / originalTokens) * 100 : 0;
                     const savedCost = (savedTokens / 1000) * 0.003;
-                    
+
                     const baseResult = PromptCompressor.analyze(prompt);
                     result = {
                         ...baseResult,
@@ -228,7 +228,7 @@ program
                         savedCost,
                         apiResponse
                     };
-                    
+
                     const successText = options.bypass ? `Original prompt sent to ${apiName}!` : `Compressed prompt sent to ${apiName}!`;
                     spinner.succeed(successText);
                 } catch (error: any) {
@@ -237,7 +237,6 @@ program
                     process.exit(1);
                 }
             } else if (programOptions.claude) {
-                // Handle Claude mode like the original implementation
                 const spinner = ora('Compressing prompt...').start();
                 await new Promise(resolve => setTimeout(resolve, 300));
                 result = PromptCompressor.analyze(prompt);
@@ -286,7 +285,7 @@ program
                     console.log(chalk.cyan(result.apiResponse));
                     console.log(chalk.gray('─'.repeat(50)));
                 }
-                
+
                 // Launch Claude CLI if --claude option was used
                 if (programOptions.claude) {
                     console.log('\n' + chalk.cyan('─'.repeat(60)));
@@ -408,12 +407,12 @@ program
         // Check for conflicting API options
         const apiOptions = [options.openrouter, options.bitcoincom, options.claude];
         const enabledCount = apiOptions.filter(Boolean).length;
-        
+
         if (enabledCount > 1) {
             console.error(chalk.red('[!] Cannot use multiple API options at the same time. Choose one: --openrouter, --bitcoincom, or --claude'));
             process.exit(1);
         }
-        
+
         // Set global API configuration for interactive mode
         if (options.openrouter) {
             process.env.INTERACTIVE_API = 'openrouter';
@@ -424,7 +423,7 @@ program
         } else if (options.claude) {
             process.env.INTERACTIVE_API = 'claude';
         }
-        
+
         startInteractive();
     });
 
