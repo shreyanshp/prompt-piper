@@ -40,7 +40,7 @@ export default function CallToAction() {
                             </Link>
                             <Link
                                 className="btn text-gray-800 bg-white hover:bg-gray-50 shadow-sm w-full sm:w-auto sm:ml-4"
-                                href="/cli"
+                                href="https://www.npmjs.com/package/prompt-piper-cli"
                             >
                                 Download CLI
                             </Link>
