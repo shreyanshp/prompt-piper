@@ -15,7 +15,7 @@ export default function Demo3Page() {
                             Compression Demo
                         </h1>
                         <p className="text-lg text-gray-700 max-w-3xl mx-auto">
-                            Try our prompt compression engine live. See how much you can reduce token usage and save costs and also expanding maximum context window
+                            Try our prompt compression engine live. See how much you can reduce token usage and save costs and also expanding maximum context window.
                         </p>
                     </div>
                     <PromptComparison />

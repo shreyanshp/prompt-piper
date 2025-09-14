@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { Copy, Zap, BarChart3, Settings, Database, Brain, ChevronDown, ChevronRight } from 'lucide-react';
+import { Copy, Zap, BarChart3, Settings, Database, Brain, ChevronDown, ChevronRight, ToggleLeft, ToggleRight } from 'lucide-react';
 import { PromptCompressor } from '../../lib/compression';
 import { LLMLinguaCompressor, LLMLinguaCompressionResult, LLMLinguaCompressorOptions } from '../../lib/llmlingua-compressor';
 import { configureONNXRuntime } from '../../lib/onnx-runtime-config';
@@ -33,6 +33,7 @@ export default function PromptComparison() {
     const [copiedOriginal, setCopiedOriginal] = useState(false);
     const [copiedCompressed, setCopiedCompressed] = useState(false);
     const [isResultsExpanded, setIsResultsExpanded] = useState(false);
+    const [autoCompress, setAutoCompress] = useState(false);
     const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
     useEffect(() => {
@@ -130,10 +131,13 @@ export default function PromptComparison() {
     };
 
     const handleSliderChange = async (newRate: number) => {
-        if (!inputPrompt.trim() || !result) return;
+        if (!inputPrompt.trim()) return;
 
         // Update the options immediately for UI responsiveness
         setLlmlinguaOptions(prev => ({ ...prev, rate: newRate }));
+
+        // Only auto-compress if auto-compress is enabled
+        if (!autoCompress) return;
 
         // Clear existing timeout
         if (debounceTimeoutRef.current) {
@@ -245,16 +249,36 @@ export default function PromptComparison() {
                                     onChange={(e) => setLlmlinguaOptions(prev => ({ ...prev, modelName: e.target.value as any }))}
                                     className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                 >
-                                    <option value="TINYBERT">TinyBERT</option>
-                                    <option value="BERT">BERT</option>
-                                    <option value="XLM_ROBERTA">XLM-RoBERTa</option>
+                                    <option value="TINYBERT">TinyBERT (57MB - Fastest)</option>
+                                    <option value="BERT">BERT (710MB - Better accuracy)</option>
+                                    <option value="XLM_ROBERTA">XLM-RoBERTa (2.2GB - Best accuracy)</option>
                                 </select>
+                                <div className="mt-2 text-sm text-gray-600">
+                                    <p className="mb-1">
+                                        Note: First compression with a model will download it (
+                                        {llmlinguaOptions.modelName === 'TINYBERT' ? '~57MB' : 
+                                         llmlinguaOptions.modelName === 'BERT' ? '~710MB' : '~2.2GB'}
+                                        ). Subsequent compressions will be faster.
+                                    </p>
+                                </div>
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">
-                                    Compression Rate: {Math.round((1 - llmlinguaOptions.rate!) * 100)}%
-                                </label>
+                                <div className="flex items-center justify-between mb-2">
+                                    <div className="flex items-center gap-2">
+                                        <label className="block text-sm font-medium text-gray-700">
+                                            Compression Rate
+                                        </label>
+                                        {autoCompress && (
+                                            <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full">
+                                                Auto
+                                            </span>
+                                        )}
+                                    </div>
+                                    <span className="text-lg font-bold text-blue-600">
+                                        {Math.round((1 - llmlinguaOptions.rate!) * 100)}% reduction
+                                    </span>
+                                </div>
                                 <input
                                     type="range"
                                     min="0.1"
@@ -281,12 +305,25 @@ export default function PromptComparison() {
                             <h3 className="font-bold text-lg font-title">Original Prompt</h3>
                             <p className="text-sm text-gray-600">{PromptCompressor.getTokenCount(inputPrompt)} tokens</p>
                         </div>
-                        <button
-                            onClick={() => copyToClipboard(inputPrompt, 'original')}
-                            className="btn-sm bg-gray-800 text-white hover:bg-gray-900 px-3 py-1 rounded text-sm"
-                        >
-                            {copiedOriginal ? 'Copied!' : 'Copy'}
-                        </button>
+                        <div className="flex items-center gap-2">
+                            <button
+                                onClick={() => setAutoCompress(!autoCompress)}
+                                className={`flex items-center gap-1 px-3 py-1 rounded text-sm transition-colors ${
+                                    autoCompress 
+                                        ? 'bg-blue-600 text-white hover:bg-blue-700' 
+                                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                                }`}
+                            >
+                                {autoCompress ? <ToggleRight size={16} /> : <ToggleLeft size={16} />}
+                                Auto-compress
+                            </button>
+                            <button
+                                onClick={() => copyToClipboard(inputPrompt, 'original')}
+                                className="btn-sm bg-gray-800 text-white hover:bg-gray-900 px-3 py-1 rounded text-sm"
+                            >
+                                {copiedOriginal ? 'Copied!' : 'Copy'}
+                            </button>
+                        </div>
                     </div>
                     <div className="p-4">
                         {result && (

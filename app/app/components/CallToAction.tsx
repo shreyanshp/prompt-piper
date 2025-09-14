@@ -32,7 +32,7 @@ export default function CallToAction() {
                         <div className="max-w-xs mx-auto sm:max-w-none sm:flex sm:justify-center">
                             <Link
                                 className="btn text-white bg-linear-to-t from-blue-600 to-blue-500 bg-[length:100%_100%] hover:bg-[length:100%_150%] bg-[bottom] shadow-sm w-full mb-4 sm:w-auto sm:mb-0 group"
-                                href="/demo-3"
+                                href="/demo"
                             >
                                 <span className="relative inline-flex items-center">
                                     Try Demo
