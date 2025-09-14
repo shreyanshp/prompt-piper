@@ -71,7 +71,7 @@ export default function Hero() {
                     <div
                         className="max-w-3xl mx-auto animate-zoom-y-out animation-delay-600ms"
                     >
-                        <div className="relative aspect-video bg-gray-900 rounded-2xl px-5 py-3 shadow-xl before:absolute before:-inset-5 before:border-y before:[border-image:linear-gradient(to_right,transparent,var(--color-slate-300/.8),transparent)1] before:pointer-events-none after:absolute after:-inset-5 after:border-x after:[border-image:linear-gradient(to_bottom,transparent,var(--color-slate-300/.8),transparent)1] after:-z-10">
+                        <div className="relative aspect-video bg-gray-900 rounded-2xl px-5 py-3 shadow-xl ">
                             <div className="relative flex items-center justify-between before:block before:w-[41px] before:h-[9px] before:[background-image:radial-gradient(circle_at_4.5px_4.5px,var(--color-gray-600)_4.5px,transparent_0)] before:bg-[length:16px_9px] after:w-[41px] mb-8">
                                 <span className="text-white font-medium text-[13px]">prompt-piper</span>
                             </div>
