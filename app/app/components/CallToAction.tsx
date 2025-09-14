@@ -5,8 +5,8 @@ import Image from 'next/image'
 
 export default function CallToAction() {
     return (
-        <section>
-            <div className="max-w-6xl mx-auto px-4 sm:px-6">
+        <section className="mb-25">
+            <div className="max-w-6xl mx-auto px-4 sm:px-6 mb-25">
                 <div className="rounded-2xl text-center relative overflow-hidden shadow-xl before:absolute before:inset-0 before:rounded-2xl before:bg-gray-900 before:pointer-events-none before:-z-10">
                     {/* Glow */}
                     <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 -z-10" aria-hidden="true">
@@ -25,8 +25,8 @@ export default function CallToAction() {
                     </div>
 
                     <div className="py-12 md:py-20 px-4 md:px-12">
-                        <h2 
-                            className="text-3xl md:text-4xl text-gray-200 font-bold mb-6 md:mb-12 border-y [border-image:linear-gradient(to_right,transparent,var(--color-slate-700/.7),transparent)1] font-title"
+                        <h2
+                            className="text-3xl md:text-4xl text-gray-200 font-bold mb-6 md:mb-12 [border-image:linear-gradient(to_right,transparent,var(--color-slate-700/.7),transparent)1] font-title"
                             style={{ padding: '20px', borderColor: 'darkslategray' }}
                         >
                             Start Saving with Prompt Piper

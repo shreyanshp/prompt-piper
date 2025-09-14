@@ -2,15 +2,37 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
+import { useState, useEffect } from 'react'
 
 export default function Hero() {
+    const [isDarkMode, setIsDarkMode] = useState(false)
+
+    // Check for dark mode
+    useEffect(() => {
+        const checkDarkMode = () => {
+            const isDark = document.documentElement.classList.contains('dark')
+            setIsDarkMode(isDark)
+        }
+
+        // Check initially
+        checkDarkMode()
+
+        // Watch for changes
+        const observer = new MutationObserver(checkDarkMode)
+        observer.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ['class']
+        })
+
+        return () => observer.disconnect()
+    }, [])
     return (
         <section className="relative">
             {/* Stripes illustration */}
             <div className="absolute left-1/2 transform -translate-x-1/2 top-0 pointer-events-none -z-10" aria-hidden="true">
                 <Image
                     className="max-w-none"
-                    src="/images/stripes.svg"
+                    src={isDarkMode ? "/images/stripes-dark.svg" : "/images/stripes.svg"}
                     width={768}
                     height={432}
                     alt="Stripes"
@@ -19,13 +41,13 @@ export default function Hero() {
 
             {/* Background circles */}
             <div className="absolute left-1/2 -translate-x-1/2 -top-32 ml-[580px] pointer-events-none" aria-hidden="true">
-                <div className="w-80 h-80 rounded-full bg-linear-to-tr from-blue-500 opacity-50 blur-[160px] will-change-[filter]"></div>
+                <div className="w-80 h-80 rounded-full bg-linear-to-tr from-green-500 opacity-50 blur-[160px] will-change-[filter]"></div>
             </div>
             <div className="absolute left-1/2 -translate-x-1/2 top-[420px] ml-[380px] pointer-events-none" aria-hidden="true">
-                <div className="w-80 h-80 rounded-full bg-linear-to-tr from-blue-500 to-gray-900 opacity-50 blur-[160px] will-change-[filter]"></div>
+                <div className="w-80 h-80 rounded-full bg-linear-to-tr from-green-500 to-gray-900 opacity-50 blur-[160px] will-change-[filter]"></div>
             </div>
             <div className="absolute left-1/2 -translate-x-1/2 top-[640px] -ml-[300px] pointer-events-none" aria-hidden="true">
-                <div className="w-80 h-80 rounded-full bg-linear-to-tr from-blue-500 to-gray-900 opacity-50 blur-[160px] will-change-[filter]"></div>
+                <div className="w-80 h-80 rounded-full bg-linear-to-tr from-green-500 to-gray-900 opacity-50 blur-[160px] will-change-[filter]"></div>
             </div>
 
             <div className="max-w-6xl mx-auto px-4 sm:px-6">
@@ -34,7 +56,7 @@ export default function Hero() {
                     {/* Section header */}
                     <div className="text-center pb-12 md:pb-16">
                         <h1
-                            className="text-5xl md:text-6xl font-bold mb-6 border-y [border-image:linear-gradient(to_right,transparent,var(--color-slate-300/.8),transparent)1] animate-zoom-y-out animation-delay-150ms font-title"
+                            className="text-5xl md:text-6xl font-bold mb-6 [border-image:linear-gradient(to_right,transparent,var(--color-slate-300/.8),transparent)1] animate-zoom-y-out animation-delay-150ms font-title"
                         >
                             Prompt Compression
                         </h1>
@@ -44,7 +66,7 @@ export default function Hero() {
                             >
                                 Prompt Compression for LLMs, Reduce Token Usage, Save Costs, Build Faster
                             </p>
-                            <div className="relative before:absolute before:inset-0 before:border-y before:[border-image:linear-gradient(to_right,transparent,var(--color-slate-300/.8),transparent)1]">
+                            <div className="relative before:absolute before:inset-0 before:[border-image:linear-gradient(to_right,transparent,var(--color-slate-300/.8),transparent)1]">
                                 <div
                                     className="relative max-w-xs mx-auto sm:max-w-none sm:flex sm:justify-center animate-zoom-y-out animation-delay-450ms"
                                 >

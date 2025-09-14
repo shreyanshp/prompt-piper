@@ -71,9 +71,8 @@ export default function FeaturesTwo() {
                             </div>
                         </div>
                     </div>
-
                     {/* Features Grid */}
-                    <div className="grid lg:grid-cols-3 overflow-hidden border-y [border-image:linear-gradient(to_right,transparent,var(--color-slate-200),transparent)1] *:p-6 md:*:px-10 md:*:py-12 *:relative *:before:absolute *:before:bg-linear-to-b *:before:from-transparent *:before:via-gray-200 *:before:[block-size:100%] *:before:[inline-size:1px] *:before:[inset-inline-start:-1px] *:before:[inset-block-start:0]">
+                    <div className="grid lg:grid-cols-3 overflow-hidden border-y [border-image:linear-gradient(to_right,transparent,var(--color-slate-200),transparent)1] dark:[border-image:linear-gradient(to_right,transparent,var(--color-gray-600),transparent)1] *:p-6 md:*:px-10 md:*:py-12 *:relative *:before:absolute *:before:bg-linear-to-b *:before:from-transparent *:before:via-gray-200 dark:*:before:via-gray-900 *:before:[block-size:100%] *:before:[inline-size:1px] *:before:[inset-inline-start:-1px] *:before:[inset-block-start:0]">
                         {features.map((feature, index) => (
                             <article key={index}>
                                 <h3 className="font-medium flex items-center space-x-2 mb-2 font-title">
