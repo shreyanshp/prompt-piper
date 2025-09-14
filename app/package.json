@@ -16,7 +16,7 @@
   "dependencies": {
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "next": "^14.2.5",
+    "next": "15.0.0",
     "@tailwindcss/typography": "^0.5.13",
     "lucide-react": "^0.396.0",
     "clsx": "^2.1.1",
@@ -33,7 +33,7 @@
     "autoprefixer": "^10.4.19",
     "postcss": "^8.4.39",
     "eslint": "^8.57.0",
-    "eslint-config-next": "^14.2.5",
+    "eslint-config-next": "15.0.0",
     "@cloudflare/next-on-pages": "^1.13.5",
     "wrangler": "^3.57.0",
     "vercel": "^34.2.0"
