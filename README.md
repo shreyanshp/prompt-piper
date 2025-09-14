@@ -203,6 +203,20 @@ vulnerabilities, code style improvements, and best practices recommendations?"
 # Cost Savings: ~$0.002 per request with GPT-4
 ```
 
+## Compression Results
+
+Here are real-world examples of Prompt Piper's compression effectiveness:
+
+### Claude 3.5 Sonnet Usage Statistics
+![Claude 3.5 Sonnet Compression Results](stats1.jpg)
+
+*Example showing token compression from 20→960 and 71→960 tokens with Claude 3.5 Sonnet, demonstrating significant cost savings and improved efficiency.*
+
+### ChatGPT 4o Usage Statistics  
+![ChatGPT 4o Compression Results](stats2.jpg)
+
+*Real-world compression results with ChatGPT 4o, showing token transformations from 54→825 and 104→960 tokens, with corresponding cost reductions.*
+
 ## Use Cases
 
 - **Software Development**: Compress code snippets, documentation, and technical requests
