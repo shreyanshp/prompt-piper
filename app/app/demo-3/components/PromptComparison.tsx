@@ -3,19 +3,18 @@
 import { useState, useEffect } from 'react';
 import { Copy, Zap, BarChart3, Settings } from 'lucide-react';
 import { PromptCompressor, CompressionResult } from '../../lib/prompt-compressor';
-import { LLMLinguaCompressor, LLMLinguaCompressionResult, LLMLinguaCompressorOptions } from '../../lib/llmlingua-compressor-simple';
-import { LLMLinguaCompressor as LLMLinguaCompressorReal } from '../../lib/llmlingua-compressor';
+import { LLMLinguaCompressor, LLMLinguaCompressionResult, LLMLinguaCompressorOptions } from '../../lib/llmlingua-compressor';
 import { configureONNXRuntime } from '../../lib/onnx-runtime-config';
 import AITestPanel from './AITestPanel';
 
-type CompressionMode = 'regular' | 'llmlingua-2-simulated' | 'llmlingua-2-real';
+type CompressionMode = 'regular' | 'llmlingua-2-real';
 type AnyCompressionResult = CompressionResult | LLMLinguaCompressionResult;
 
 export default function PromptComparison() {
     const [inputPrompt, setInputPrompt] = useState('');
     const [result, setResult] = useState<AnyCompressionResult | null>(null);
     const [isProcessing, setIsProcessing] = useState(false);
-    const [compressionMode, setCompressionMode] = useState<CompressionMode>('regular');
+    const [compressionMode, setCompressionMode] = useState<CompressionMode>('llmlingua-2-real');
     const [llmlinguaOptions, setLlmlinguaOptions] = useState<LLMLinguaCompressorOptions>({
         modelName: 'TINYBERT',
         rate: 0.7,
@@ -51,14 +50,10 @@ export default function PromptComparison() {
                 // Simulate processing time for demo effect
                 await new Promise(resolve => setTimeout(resolve, 500));
                 compressionResult = PromptCompressor.analyze(inputPrompt);
-            } else if (compressionMode === 'llmlingua-2-simulated') {
-                // LLMLingua-2 simulated compression
-                const llmlinguaCompressor = LLMLinguaCompressor.getInstance();
-                compressionResult = await llmlinguaCompressor.compress(inputPrompt, llmlinguaOptions);
             } else {
                 // LLMLingua-2 real AI compression
-                const llmlinguaCompressorReal = LLMLinguaCompressorReal.getInstance();
-                compressionResult = await llmlinguaCompressorReal.compress(inputPrompt, llmlinguaOptions);
+                const llmlinguaCompressor = LLMLinguaCompressor.getInstance();
+                compressionResult = await llmlinguaCompressor.compress(inputPrompt, llmlinguaOptions);
             }
 
             setResult(compressionResult);
@@ -135,28 +130,17 @@ export default function PromptComparison() {
                                 <input
                                     type="radio"
                                     name="compressionMode"
-                                    value="llmlingua-2-simulated"
-                                    checked={compressionMode === 'llmlingua-2-simulated'}
-                                    onChange={(e) => setCompressionMode(e.target.value as CompressionMode)}
-                                    className="mr-2"
-                                />
-                                <span className="text-sm">LLMLingua-2 (AI-powered) Simulated</span>
-                            </label>
-                            <label className="flex items-center">
-                                <input
-                                    type="radio"
-                                    name="compressionMode"
                                     value="llmlingua-2-real"
                                     checked={compressionMode === 'llmlingua-2-real'}
                                     onChange={(e) => setCompressionMode(e.target.value as CompressionMode)}
                                     className="mr-2"
                                 />
-                                <span className="text-sm">LLMLingua-2 (AI-powered) Downloaded</span>
+                                <span className="text-sm">LLMLingua-2 (AI-powered)</span>
                             </label>
                         </div>
                     </div>
 
-                    {(compressionMode === 'llmlingua-2-simulated' || compressionMode === 'llmlingua-2-real') && (
+                    {compressionMode === 'llmlingua-2-real' && (
                         <div className="mt-4 p-4 bg-gray-50 rounded-lg space-y-3">
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -289,9 +273,7 @@ export default function PromptComparison() {
                             <h3 className="text-xl font-semibold text-gray-800">Compression Results</h3>
                         </div>
                         <span className="text-sm text-gray-600 bg-white px-3 py-1 rounded-full border border-gray-300">
-                            {compressionMode === 'regular' ? 'Regular IPFS' : 
-                             compressionMode === 'llmlingua-2-simulated' ? 'LLMLingua-2 Simulated' : 
-                             'LLMLingua-2 Downloaded'} Compression
+                            {compressionMode === 'regular' ? 'Regular IPFS' : 'LLMLingua-2 AI'} Compression
                         </span>
                     </div>
 

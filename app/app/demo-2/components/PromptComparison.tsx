@@ -3,11 +3,9 @@
 import { useState, useEffect } from 'react'
 import { Copy, Settings, Zap, Database, Brain, ArrowRight, CheckCircle } from 'lucide-react'
 import { PromptCompressor } from '../../lib/compression'
-import LLMLinguaCompressor from './LLMLinguaCompressor'
-// import { LLMLingua2Real } from '../../lib/llmlingua2-real' // Commented out to avoid Sharp issues
 import AITestPanel from './AITestPanel'
 
-type CompressionMode = 'regular' | 'llmlingua-simple' | 'llmlingua-downloaded'
+type CompressionMode = 'regular' | 'llmlingua-downloaded'
 
 interface CompressionResult {
     originalPrompt: string
@@ -20,26 +18,26 @@ interface CompressionResult {
 }
 
 const MODELS = [
-    { 
-        id: 'tinybert', 
-        name: 'TinyBERT', 
-        size: '57MB', 
+    {
+        id: 'tinybert',
+        name: 'TinyBERT',
+        size: '57MB',
         description: 'Fastest processing, good for quick compression',
         modelName: 'atjsh/llmlingua-2-js-tinybert-meetingbank',
         factory: 'WithBERTMultilingual'
     },
-    { 
-        id: 'bert', 
-        name: 'BERT', 
-        size: '710MB', 
+    {
+        id: 'bert',
+        name: 'BERT',
+        size: '710MB',
         description: 'Better accuracy, balanced performance',
         modelName: 'Arcoldd/llmlingua4j-bert-base-onnx',
         factory: 'WithBERTMultilingual'
     },
-    { 
-        id: 'xlm-roberta', 
-        name: 'XLM-RoBERTa', 
-        size: '2.2GB', 
+    {
+        id: 'xlm-roberta',
+        name: 'XLM-RoBERTa',
+        size: '2.2GB',
         description: 'Best accuracy, highest resource usage',
         modelName: 'atjsh/llmlingua-2-js-xlm-roberta-large-meetingbank',
         factory: 'WithXLMRoBERTa'
@@ -48,18 +46,18 @@ const MODELS = [
 
 const EXAMPLE_PROMPTS = [
     "Please help me write a comprehensive and detailed summary of the main key points and important aspects of machine learning, including but not limited to the various different types and categories of machine learning algorithms, their practical applications in real-world scenarios, and the benefits they provide.",
-    
+
     "I would really appreciate if you could take a look at this Python code and provide detailed feedback on improvements, best practices, and potential issues:\n\ndef calculate_factorial(n):\n    if n < 0:\n        return 'Error: Cannot calculate factorial of negative number'\n    elif n == 0:\n        return 1\n    else:\n        result = 1\n        for i in range(1, n + 1):\n            result = result * i\n        return result",
-    
+
     "Could you please help me create a comprehensive business plan for a new startup company? The business plan should include all the necessary components that are typically found in professional business plans, including executive summary, market analysis, competitive analysis, marketing strategy, operations plan, and financial projections.",
-    
+
     "Please help me create comprehensive technical documentation for a REST API. The documentation should include detailed information about all endpoints, request/response formats, authentication methods, error handling, rate limiting, and best practices for integration."
 ]
 
 export default function PromptComparison() {
     const [originalPrompt, setOriginalPrompt] = useState('')
     const [compressedPrompt, setCompressedPrompt] = useState('')
-    const [compressionMode, setCompressionMode] = useState<CompressionMode>('regular')
+    const [compressionMode, setCompressionMode] = useState<CompressionMode>('llmlingua-downloaded')
     const [selectedModel, setSelectedModel] = useState('tinybert')
     const [compressionRate, setCompressionRate] = useState(50)
     const [isCompressing, setIsCompressing] = useState(false)
@@ -71,8 +69,7 @@ export default function PromptComparison() {
     const [modelSizes, setModelSizes] = useState<{[key: string]: string}>({})
 
     const promptCompressor = new PromptCompressor()
-    const llmlinguaCompressor = new LLMLinguaCompressor()
-    
+
     // Function to get LLMLingua2Browser instance (browser-safe version)
     const getLLMLingua2Browser = async () => {
         const { LLMLingua2Browser } = await import('../../lib/llmlingua2-browser')
@@ -92,10 +89,6 @@ export default function PromptComparison() {
                 case 'regular':
                     compressed = await promptCompressor.compress(originalPrompt)
                     method = 'IPFS Rule-based'
-                    break
-                case 'llmlingua-simple':
-                    compressed = await llmlinguaCompressor.compressSimple(originalPrompt, compressionRate / 100)
-                    method = 'LLMLingua-2 (Simulated)'
                     break
                 case 'llmlingua-downloaded':
                     // Set up progress callback for model loading
@@ -118,8 +111,8 @@ export default function PromptComparison() {
                     }
 
                     compressed = await llmlinguaBrowser.compress(
-                        originalPrompt, 
-                        selectedModel, 
+                        originalPrompt,
+                        selectedModel,
                         compressionRate / 100,
                         []
                     )
@@ -222,9 +215,9 @@ export default function PromptComparison() {
                     </div>
 
                     <div
-                        onClick={() => setCompressionMode('llmlingua-simple')}
+                        onClick={() => setCompressionMode('llmlingua-downloaded')}
                         className={`p-4 rounded-xl border-2 cursor-pointer transition-all ${
-                            compressionMode === 'llmlingua-simple'
+                            compressionMode === 'llmlingua-downloaded'
                                 ? 'border-green-500 bg-green-50'
                                 : 'border-gray-200 hover:border-gray-300'
                         }`}
@@ -232,8 +225,8 @@ export default function PromptComparison() {
                         <div className="flex items-center space-x-3">
                             <Zap className="w-6 h-6 text-green-600" />
                             <div>
-                                <h3 className="font-semibold">LLMLingua-2 (Simulated)</h3>
-                                <p className="text-sm text-gray-600">AI-powered, no download needed</p>
+                                <h3 className="font-semibold">LLMLingua-2 (AI-powered)</h3>
+                                <p className="text-sm text-gray-600">Real AI models for intelligent compression</p>
                             </div>
                         </div>
                     </div>
@@ -258,7 +251,7 @@ export default function PromptComparison() {
 
                 {/* Advanced Settings - Always Visible */}
                 <div className="border-t pt-6 space-y-4">
-                    {(compressionMode === 'llmlingua-simple' || compressionMode === 'llmlingua-downloaded') && (
+                    {compressionMode === 'llmlingua-downloaded' && (
                         <>
                             {/* Model Selection */}
                             {compressionMode === 'llmlingua-downloaded' && (
@@ -280,8 +273,8 @@ export default function PromptComparison() {
                                     <div className="text-xs text-gray-500 mt-1">
                                         <span className="font-medium">Selected model:</span> {selectedModel}
                                         <br />
-                                        <span className="font-medium">HuggingFace:</span> 
-                                        <a 
+                                        <span className="font-medium">HuggingFace:</span>
+                                        <a
                                             href={`https://huggingface.co/${MODELS.find(m => m.id === selectedModel)?.modelName}`}
                                             target="_blank"
                                             rel="noopener noreferrer"
@@ -450,7 +443,7 @@ export default function PromptComparison() {
             {result && (
                 <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
                     <h2 className="text-2xl font-bold mb-6 font-title">Compression Statistics</h2>
-                    
+
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
                         <div className="bg-blue-50 rounded-xl p-4 text-center">
                             <div className="text-2xl font-bold text-blue-600">{result.originalTokens}</div>
@@ -502,7 +495,7 @@ export default function PromptComparison() {
 
             {/* AI Testing Panel */}
             {result && (
-                <AITestPanel 
+                <AITestPanel
                     originalPrompt={result.originalPrompt}
                     compressedPrompt={result.compressedPrompt}
                 />

@@ -139,3 +139,6 @@ dist
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 cli/config.env
+
+old_app/*
+llmlingua-2-js-main/*
