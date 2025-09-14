@@ -208,12 +208,12 @@ vulnerabilities, code style improvements, and best practices recommendations?"
 Here are real-world examples of Prompt Piper's compression effectiveness:
 
 ### Claude 3.5 Sonnet Usage Statistics
-![Claude 3.5 Sonnet Compression Results](app/public/images/stats1.jpg)
+![Claude 3.5 Sonnet Compression Results](app/public/images/stats2.jpg)
 
 *Example showing token compression from 20→960 and 71→960 tokens with Claude 3.5 Sonnet, demonstrating significant cost savings and improved efficiency.*
 
-### ChatGPT 4o Usage Statistics  
-![ChatGPT 4o Compression Results](app/public/images/stats2.jpg)
+### ChatGPT 4o Usage Statistics
+![ChatGPT 4o Compression Results](app/public/images/stats1.jpg)
 
 *Real-world compression results with ChatGPT 4o, showing token transformations from 54→825 and 104→960 tokens, with corresponding cost reductions.*
 
