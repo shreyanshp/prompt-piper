@@ -3,7 +3,9 @@
 const path = require('path');
 
 // Check if we're in development or production
-const isDev = require('fs').existsSync(path.join(__dirname, '../src'));
+const isDev = require('fs').existsSync(
+  path.join(__dirname, '../src')
+);
 
 if (isDev) {
   // Development: use ts-node

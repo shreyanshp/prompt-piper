@@ -7,10 +7,10 @@ const logoSets = [
     {
         id: 1,
         logos: [
-            { src: '/images/logo-02.svg', size: { width: 23, height: 22 }, position: 'absolute -translate-x-[136px]' },
-            { src: '/images/logo-03.svg', size: { width: 22, height: 22 }, position: 'absolute translate-x-[136px]' },
-            { src: '/images/logo-04.svg', size: { width: 24, height: 22 }, position: 'absolute -translate-x-[216px] -translate-y-[82px]' },
-            { src: '/images/logo-05.svg', size: { width: 25, height: 25 }, position: 'absolute translate-x-[216px] -translate-y-[82px]' },
+            { src: '/images/openai.svg', size: { width: 23, height: 22 }, position: 'absolute -translate-x-[136px]' },
+            { src: '/images/claude.png', size: { width: 22, height: 22 }, position: 'absolute translate-x-[136px]' },
+            { src: '/images/gemini.svg', size: { width: 24, height: 22 }, position: 'absolute -translate-x-[216px] -translate-y-[82px]' },
+            { src: '/images/grok.svg', size: { width: 25, height: 25 }, position: 'absolute translate-x-[216px] -translate-y-[82px]' },
             { src: '/images/logo-06.svg', size: { width: 20, height: 18 }, position: 'absolute translate-x-[216px] translate-y-[82px]' },
             { src: '/images/logo-07.svg', size: { width: 25, height: 25 }, position: 'absolute -translate-x-[216px] translate-y-[82px]' },
             { src: '/images/logo-08.svg', size: { width: 20, height: 20 }, position: 'absolute -translate-x-[292px] opacity-40' },
