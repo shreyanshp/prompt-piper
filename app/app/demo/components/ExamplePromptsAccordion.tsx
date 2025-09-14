@@ -108,20 +108,20 @@ export default function ExamplePromptsAccordion({ onSelectExample }: ExampleProm
     const [isExpanded, setIsExpanded] = useState(false)
 
     return (
-        <div className="bg-white rounded-2xl shadow-lg border border-gray-100 mb-8">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 mb-8">
             <button
                 onClick={() => setIsExpanded(!isExpanded)}
-                className="w-full p-6 text-left flex items-center justify-between hover:bg-gray-50 transition-colors rounded-2xl"
+                className="w-full p-6 text-left flex items-center justify-between hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors rounded-2xl"
             >
                 <div>
-                    <h2 className="text-2xl font-bold font-title">Try Example Prompts</h2>
-                    <p className="text-sm text-gray-600 mt-1">Click to expand and select from pre-made examples</p>
+                    <h2 className="text-2xl font-bold font-title text-gray-900 dark:text-white">Try Example Prompts</h2>
+                    <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">Click to expand and select from pre-made examples</p>
                 </div>
                 <div className="flex items-center">
                     {isExpanded ? (
-                        <ChevronDown className="w-6 h-6 text-gray-500" />
+                        <ChevronDown className="w-6 h-6 text-gray-500 dark:text-gray-400" />
                     ) : (
-                        <ChevronRight className="w-6 h-6 text-gray-500" />
+                        <ChevronRight className="w-6 h-6 text-gray-500 dark:text-gray-400" />
                     )}
                 </div>
             </button>
@@ -134,15 +134,15 @@ export default function ExamplePromptsAccordion({ onSelectExample }: ExampleProm
                                 <button
                                     key={example.id}
                                     onClick={() => onSelectExample(example.prompt)}
-                                    className="text-left p-4 border border-gray-200 rounded-xl hover:border-blue-300 hover:bg-blue-50/50 transition-colors group h-fit"
+                                    className="text-left p-4 border border-gray-200 dark:border-gray-600 rounded-xl hover:border-blue-300 dark:hover:border-blue-500 hover:bg-blue-50/50 dark:hover:bg-blue-900/20 transition-colors group h-fit"
                                 >
-                                    <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-blue-700 text-sm">
+                                    <h3 className="font-semibold text-gray-900 dark:text-white mb-2 group-hover:text-blue-700 dark:group-hover:text-blue-400 text-sm">
                                         {example.title}
                                     </h3>
-                                    <p className="text-xs text-gray-600 mb-3">
+                                    <p className="text-xs text-gray-600 dark:text-gray-300 mb-3">
                                         {example.description}
                                     </p>
-                                    <div className="text-xs text-gray-500 bg-gray-50 rounded-lg p-2 font-mono line-clamp-2">
+                                    <div className="text-xs text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-700 rounded-lg p-2 font-mono line-clamp-2">
                                         {example.prompt.substring(0, 80)}...
                                     </div>
                                 </button>

@@ -100,26 +100,26 @@ bun run pages:deploy          # Deploy to Cloudflare Pages
 
 ## Core Technology
 
-### 🎯 Advanced Compression Engine 高度な圧縮エンジン
+### 🎯 Advanced Compression Engine アドバンスド圧縮エンジン
 - **LLMLingua2.js Integration** - State-of-the-art prompt compression using transformer models
 - **Multiple Model Support** - Choose between speed (TinyBERT) and accuracy (XLM-RoBERTa)
 - **Client-side Processing** - No data leaves your browser, ensuring privacy
 - **Real-time Token Counting** - Accurate token analysis using Tiktoken
 - **Semantic Preservation** - Maintains meaning while reducing token count
 
-### 🌐 Decentralized Rule Sharing (IPFS) 分散型ルール共有
+### 🌐 Decentralized Rule Sharing (IPFS) 分散型ルールシェアリング
 - Publish and discover compression rule sets
 - Community-driven optimization patterns
 - Version control for rule sets
 - No central authority or vendor lock-in
 
-### 📊 Analytics & Insights 分析とインサイト
+### 📊 Analytics & Insights アナリティクス＆インサイト
 - **Real-time Token Metrics** - Live token counting and compression ratios
 - **Cost Savings Calculator** - Estimate API cost reductions
 - **Visual Comparisons** - Side-by-side before/after analysis
 - **Performance Analytics** - Compression speed and effectiveness metrics
 
-### 🤖 Compression Models 圧縮モデル
+### 🤖 Compression Models コンプレッションモデル
 
 | Model | Size | Speed | Accuracy | Use Case |
 |-------|------|-------|----------|----------|

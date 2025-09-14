@@ -218,9 +218,9 @@ export default function PromptComparison() {
     return (
         <div className="max-w-6xl mx-auto">
             {/* Compression Mode Selection */}
-            <div className="mb-6 bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
+            <div className="mb-6 bg-white dark:bg-gray-800 p-6 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm">
                 <div className="mb-6">
-                    <h2 className="text-2xl font-bold font-title">Compression Settings</h2>
+                    <h2 className="text-2xl font-bold font-title text-gray-900 dark:text-white">Compression Settings</h2>
                 </div>
 
                 {/* Mode Selection */}
@@ -229,15 +229,15 @@ export default function PromptComparison() {
                         onClick={() => setCompressionMode('regular')}
                         className={`p-4 rounded-xl border-2 cursor-pointer transition-all ${
                             compressionMode === 'regular'
-                                ? 'border-green-500 bg-green-50'
-                                : 'border-gray-200 hover:border-gray-300'
+                                ? 'border-green-500 bg-green-50 dark:bg-green-900/20'
+                                : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500'
                         }`}
                     >
                         <div className="flex items-center space-x-3">
                             <Database className="w-6 h-6 text-green-600" />
                             <div>
-                                <h3 className="font-semibold">Regular (IPFS Rules)</h3>
-                                <p className="text-sm text-gray-600">Instant, rule-based compression</p>
+                                <h3 className="font-semibold text-gray-900 dark:text-white">Regular (IPFS Rules)</h3>
+                                <p className="text-sm text-gray-600 dark:text-gray-300">Instant, rule-based compression</p>
                             </div>
                         </div>
                     </div>
@@ -246,50 +246,50 @@ export default function PromptComparison() {
                         onClick={() => setCompressionMode('llmlingua-downloaded')}
                         className={`p-4 rounded-xl border-2 cursor-pointer transition-all ${
                             compressionMode === 'llmlingua-downloaded'
-                                ? 'border-purple-500 bg-purple-50'
-                                : 'border-gray-200 hover:border-gray-300'
+                                ? 'border-purple-500 bg-purple-50 dark:bg-purple-900/20'
+                                : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500'
                         }`}
                     >
                         <div className="flex items-center space-x-3">
                             <Brain className="w-6 h-6 text-purple-600" />
                             <div>
-                                <h3 className="font-semibold">LLMLingua (Hugging Face)</h3>
-                                <p className="text-sm text-gray-600">Real AI models from Hugging Face</p>
+                                <h3 className="font-semibold text-gray-900 dark:text-white">LLMLingua (Hugging Face)</h3>
+                                <p className="text-sm text-gray-600 dark:text-gray-300">Real AI models from Hugging Face</p>
                             </div>
                         </div>
                     </div>
 
                     <div
-                        className="p-4 rounded-xl border-2 border-gray-200 bg-gray-50 opacity-60 cursor-not-allowed"
+                        className="p-4 rounded-xl border-2 border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 opacity-60 cursor-not-allowed"
                     >
                         <div className="flex items-center space-x-3">
                             <Zap className="w-6 h-6 text-gray-400" />
                             <div>
-                                <h3 className="font-semibold text-gray-500">LLMLingua (IPFS)</h3>
-                                <p className="text-sm text-gray-500">Coming Soon</p>
+                                <h3 className="font-semibold text-gray-500 dark:text-gray-400">LLMLingua (IPFS)</h3>
+                                <p className="text-sm text-gray-500 dark:text-gray-400">Coming Soon</p>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 {/* Advanced Settings - Always Visible */}
-                <div className="border-t pt-6 space-y-4">
+                <div className="border-t border-gray-200 dark:border-gray-700 pt-6 space-y-4">
                     {/* Model Selection - Only for LLMLingua */}
                     {compressionMode === 'llmlingua-downloaded' && (
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                 Model
                             </label>
                             <select
                                 value={llmlinguaOptions.modelName}
                                 onChange={(e) => setLlmlinguaOptions(prev => ({ ...prev, modelName: e.target.value as any }))}
-                                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                                className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                             >
                                 <option value="TINYBERT">TinyBERT (57MB - Fastest)</option>
                                 <option value="BERT">BERT (710MB - Better accuracy)</option>
                                 <option value="XLM_ROBERTA">XLM-RoBERTa (2.2GB - Best accuracy)</option>
                             </select>
-                            <div className="mt-2 text-sm text-gray-600">
+                            <div className="mt-2 text-sm text-gray-600 dark:text-gray-400">
                                 <p className="mb-1">
                                     Note: First compression with a model will download it (
                                     {llmlinguaOptions.modelName === 'TINYBERT' ? '~57MB' :
@@ -304,16 +304,16 @@ export default function PromptComparison() {
                     <div>
                         <div className="flex items-center justify-between mb-2">
                             <div className="flex items-center gap-2">
-                                <label className="block text-sm font-medium text-gray-700">
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                                     Compression Rate
                                 </label>
                                 {autoCompress && (
-                                    <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">
+                                    <span className="text-xs bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 px-2 py-1 rounded-full">
                                         Auto
                                     </span>
                                 )}
                             </div>
-                            <span className="text-md font-bold text-green-600">
+                            <span className="text-md font-bold text-green-600 dark:text-green-400">
                                 {Math.round(llmlinguaOptions.rate! * 100)}% reduction
                             </span>
                         </div>
@@ -327,7 +327,7 @@ export default function PromptComparison() {
                             className="w-full"
                         />
                         {compressionMode === 'regular' && (
-                            <p className="text-xs text-gray-500 mt-1">
+                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                                 Note: Compression rate applies to LLMLingua mode. Regular mode uses rule-based compression.
                             </p>
                         )}
@@ -340,11 +340,11 @@ export default function PromptComparison() {
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 {/* Input Section */}
-                <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
-                    <div className="p-4 bg-gray-50 border-b border-gray-100 flex items-center justify-between">
+                <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 overflow-hidden">
+                    <div className="p-4 bg-gray-50 dark:bg-gray-700 border-b border-gray-100 dark:border-gray-600 flex items-center justify-between">
                         <div>
-                            <h3 className="font-bold text-lg font-title">Original Prompt</h3>
-                            <p className="text-sm text-gray-600">{PromptCompressor.getTokenCount(inputPrompt)} tokens</p>
+                            <h3 className="font-bold text-lg font-title text-gray-900 dark:text-white">Original Prompt</h3>
+                            <p className="text-sm text-gray-600 dark:text-gray-300">{PromptCompressor.getTokenCount(inputPrompt)} tokens</p>
                         </div>
                         <div className="flex items-center gap-2">
                             <button
@@ -360,7 +360,7 @@ export default function PromptComparison() {
                             </button>
                             <button
                                 onClick={() => copyToClipboard(inputPrompt, 'original')}
-                                className="btn-sm bg-gray-800 text-white hover:bg-gray-900 px-3 py-1 rounded text-sm"
+                                className="btn-sm bg-gray-800 dark:bg-gray-600 text-white hover:bg-gray-900 dark:hover:bg-gray-500 px-3 py-1 rounded text-sm"
                             >
                                 {copiedOriginal ? 'Copied!' : 'Copy'}
                             </button>
@@ -379,7 +379,7 @@ export default function PromptComparison() {
                                 value={inputPrompt}
                                 onChange={(e) => setInputPrompt(e.target.value)}
                                 placeholder="Paste your verbose prompt here..."
-                                className="w-full h-64 p-4 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-green-500 focus:border-transparent mt-0"
+                                className="w-full h-64 p-4 border border-gray-300 dark:border-gray-600 rounded-lg resize-none focus:ring-2 focus:ring-green-500 focus:border-transparent mt-0 bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
                             />
                         </div>
                         <div className="flex flex-col gap-2 mt-4">
@@ -396,7 +396,7 @@ export default function PromptComparison() {
                                 )}
                             </button>
 
-                            <div className="text-sm text-gray-500 text-center">
+                            <div className="text-sm text-gray-500 dark:text-gray-400 text-center">
                                 Or try an example:
                             </div>
                             <div className="flex gap-2">
@@ -404,7 +404,7 @@ export default function PromptComparison() {
                                     <button
                                         key={idx}
                                         onClick={() => setInputPrompt(example)}
-                                        className="flex-1 px-3 py-2 text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors"
+                                        className="flex-1 px-3 py-2 text-sm bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg transition-colors"
                                     >
                                         Example {idx + 1}
                                     </button>
@@ -415,11 +415,11 @@ export default function PromptComparison() {
                 </div>
 
                 {/* Output Section */}
-                <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
-                    <div className="p-4 bg-green-50 border-b border-green-100 flex items-center justify-between">
+                <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 overflow-hidden">
+                    <div className="p-4 bg-green-50 dark:bg-green-900/20 border-b border-green-100 dark:border-green-800 flex items-center justify-between">
                         <div>
-                            <h3 className="font-bold text-lg font-title">Compressed Prompt</h3>
-                            <p className="text-sm text-green-600">{result?.compressedTokens || 0} tokens</p>
+                            <h3 className="font-bold text-lg font-title text-gray-900 dark:text-white">Compressed Prompt</h3>
+                            <p className="text-sm text-green-600 dark:text-green-400">{result?.compressedTokens || 0} tokens</p>
                         </div>
                         <button
                             onClick={() => result && copyToClipboard(result.compressedPrompt, 'compressed')}
@@ -441,7 +441,7 @@ export default function PromptComparison() {
                                 value={result?.compressedPrompt || ''}
                                 readOnly
                                 placeholder="Compressed prompt will appear here..."
-                                className="w-full h-64 p-4 border border-gray-300 rounded-lg resize-none bg-green-50"
+                                className="w-full h-64 p-4 border border-gray-300 dark:border-gray-600 rounded-lg resize-none bg-green-50 dark:bg-green-900/10 text-gray-900 dark:text-white"
                             />
                         </div>
                     </div>
@@ -450,24 +450,24 @@ export default function PromptComparison() {
 
             {/* Stats Section */}
             {result && (
-                <div className="mt-8 bg-gradient-to-r from-green-50 to-green-100 rounded-lg border border-green-200 overflow-hidden">
+                <div className="mt-8 bg-gradient-to-r from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 rounded-lg border border-green-200 dark:border-green-800 overflow-hidden">
                     <div
-                        className="p-6 cursor-pointer hover:bg-green-100/50 transition-colors"
+                        className="p-6 cursor-pointer hover:bg-green-100/50 dark:hover:bg-green-900/30 transition-colors"
                         onClick={() => setIsResultsExpanded(!isResultsExpanded)}
                     >
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2">
-                                <BarChart3 className="text-green-600" size={24} />
-                                <h3 className="text-xl font-semibold text-gray-800 font-title">Compression Results</h3>
+                                <BarChart3 className="text-green-600 dark:text-green-400" size={24} />
+                                <h3 className="text-xl font-semibold text-gray-800 dark:text-white font-title">Compression Results</h3>
                             </div>
                             <div className="flex items-center gap-3">
-                                <span className="text-sm text-gray-600 bg-white px-3 py-1 rounded-full border border-gray-300">
+                                <span className="text-sm text-gray-600 dark:text-gray-300 bg-white dark:bg-gray-800 px-3 py-1 rounded-full border border-gray-300 dark:border-gray-600">
                                     {compressionMode === 'regular' ? 'Regular IPFS' : 'LLMLingua-2 AI'} Compression
                                 </span>
                                 {isResultsExpanded ? (
-                                    <ChevronDown className="w-5 h-5 text-gray-600" />
+                                    <ChevronDown className="w-5 h-5 text-gray-600 dark:text-gray-400" />
                                 ) : (
-                                    <ChevronRight className="w-5 h-5 text-gray-600" />
+                                    <ChevronRight className="w-5 h-5 text-gray-600 dark:text-gray-400" />
                                 )}
                             </div>
                         </div>
@@ -477,27 +477,27 @@ export default function PromptComparison() {
                         <div className="px-6 pb-6">
                             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                                 <div className="text-center">
-                                    <div className="text-2xl font-bold text-gray-900">{result.originalTokens}</div>
-                                    <div className="text-sm text-gray-600">Original Tokens</div>
+                                    <div className="text-2xl font-bold text-gray-900 dark:text-white">{result.originalTokens}</div>
+                                    <div className="text-sm text-gray-600 dark:text-gray-300">Original Tokens</div>
                                 </div>
                                 <div className="text-center">
-                                    <div className="text-2xl font-bold text-green-600">{result.compressedTokens}</div>
-                                    <div className="text-sm text-gray-600">Compressed Tokens</div>
+                                    <div className="text-2xl font-bold text-green-600 dark:text-green-400">{result.compressedTokens}</div>
+                                    <div className="text-sm text-gray-600 dark:text-gray-300">Compressed Tokens</div>
                                 </div>
                                 <div className="text-center">
-                                    <div className="text-2xl font-bold text-red-600">{result.savedTokens}</div>
-                                    <div className="text-sm text-gray-600">Tokens Saved</div>
+                                    <div className="text-2xl font-bold text-red-600 dark:text-red-400">{result.savedTokens}</div>
+                                    <div className="text-sm text-gray-600 dark:text-gray-300">Tokens Saved</div>
                                 </div>
                                 <div className="text-center">
-                                    <div className="text-2xl font-bold text-green-600">{result.compressionRatio.toFixed(1)}%</div>
-                                    <div className="text-sm text-gray-600">Reduction</div>
+                                    <div className="text-2xl font-bold text-green-600 dark:text-green-400">{result.compressionRatio.toFixed(1)}%</div>
+                                    <div className="text-sm text-gray-600 dark:text-gray-300">Reduction</div>
                                 </div>
                             </div>
 
-                            <div className="mt-4 p-4 bg-white rounded border border-green-200">
-                                <div className="text-sm text-gray-700">
+                            <div className="mt-4 p-4 bg-white dark:bg-gray-800 rounded border border-green-200 dark:border-green-800">
+                                <div className="text-sm text-gray-700 dark:text-gray-300">
                                     <strong>Cost Savings:</strong> At $0.003/1K tokens (Claude-3), you'd save approximately
-                                    <span className="text-green-600 font-semibold"> ${(result.savedTokens * 0.003 / 1000).toFixed(4)}</span> per request
+                                    <span className="text-green-600 dark:text-green-400 font-semibold"> ${(result.savedTokens * 0.003 / 1000).toFixed(4)}</span> per request
                                 </div>
                             </div>
                         </div>
@@ -515,20 +515,20 @@ export default function PromptComparison() {
 
             {/* Features Section */}
             <div className="hidden mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="text-center p-6 bg-white rounded-lg border border-gray-200 shadow-sm">
+                <div className="text-center p-6 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm">
                     <div className="text-3xl mb-3">🚀</div>
-                    <h3 className="text-lg font-semibold mb-2 font-title">Intelligent Compression</h3>
-                    <p className="text-gray-600 text-sm">Removes redundancy while preserving meaning and intent</p>
+                    <h3 className="text-lg font-semibold mb-2 font-title text-gray-900 dark:text-white">Intelligent Compression</h3>
+                    <p className="text-gray-600 dark:text-gray-300 text-sm">Removes redundancy while preserving meaning and intent</p>
                 </div>
-                <div className="text-center p-6 bg-white rounded-lg border border-gray-200 shadow-sm">
+                <div className="text-center p-6 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm">
                     <div className="text-3xl mb-3">💰</div>
-                    <h3 className="text-lg font-semibold mb-2 font-title">Cost Reduction</h3>
-                    <p className="text-gray-600 text-sm">Save money on API calls by reducing input token count</p>
+                    <h3 className="text-lg font-semibold mb-2 font-title text-gray-900 dark:text-white">Cost Reduction</h3>
+                    <p className="text-gray-600 dark:text-gray-300 text-sm">Save money on API calls by reducing input token count</p>
                 </div>
-                <div className="text-center p-6 bg-white rounded-lg border border-gray-200 shadow-sm">
+                <div className="text-center p-6 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm">
                     <div className="text-3xl mb-3">⚡</div>
-                    <h3 className="text-lg font-semibold mb-2 font-title">Faster Processing</h3>
-                    <p className="text-gray-600 text-sm">Shorter prompts mean faster AI response times</p>
+                    <h3 className="text-lg font-semibold mb-2 font-title text-gray-900 dark:text-white">Faster Processing</h3>
+                    <p className="text-gray-600 dark:text-gray-300 text-sm">Shorter prompts mean faster AI response times</p>
                 </div>
             </div>
         </div>
