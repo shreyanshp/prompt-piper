@@ -10,6 +10,12 @@ Prompt Piper is an intelligent prompt compression platform that helps developers
 - **Decrease latency** - Shorter prompts mean faster responses
 - **Share compression expertise** - Leverage community-optimized rule sets
 
+**Available as:**
+- 🌐 **Web Application** - Interactive browser-based compression tool
+- 🖥️ **CLI Tool** - Command-line interface for developers
+- 📦 **NPM Package** - `prompt-piper-cli` for global installation
+- 🤖 **ElizaOS Plugin** - Integration with AI agent frameworks
+
 ## Project Architecture
 
 ### 🖥️ CLI Tool (`/cli`) コマンドラインインターフェース
@@ -22,6 +28,20 @@ Command-line interface for developers and power users.
 - Language-specific compression rules (Solidity, Go, Rust, Python, etc.)
 - Integration with Claude AI and other LLMs
 - Real-time compression analytics
+
+**📦 NPM Package Available:**
+The CLI tool is also available as a standalone NPM package for easy installation and global usage:
+```bash
+npm install -g prompt-piper-cli
+# or
+bun add -g prompt-piper-cli
+
+# Quick usage
+prompt-piper compress "your prompt here"
+prompt-piper interactive
+```
+
+🔗 **[Install from NPM →](https://www.npmjs.com/package/prompt-piper-cli)**
 
 **Claude Integration:**
 The interactive mode supports direct Claude AI integration when run with the `--claude` flag. If Claude is available in your command line environment, compressed prompts will be automatically forwarded to Claude for processing, allowing you to see the AI's response to both original and compressed prompts side-by-side.
@@ -159,6 +179,15 @@ Both CLI and web interfaces support:
 - **OpenAI/OpenRouter** - Multiple LLM provider support
 - **Custom endpoints** - Use with any LLM API
 - **IPFS rule sets** - Community-driven compression patterns
+
+**🤖 ElizaOS Plugin:**
+Prompt Piper is also available as a plugin for the ElizaOS framework, enabling seamless integration with AI agent workflows:
+- **Automated prompt compression** - Built into ElizaOS agent interactions
+- **Cost optimization** - Reduce token usage across all agent conversations
+- **Custom compression rules** - Tailored for specific agent use cases
+- **Real-time processing** - Compress prompts on-the-fly during agent operations
+
+🔗 **[ElizaOS Plugin →](https://github.com/shreyanshp/plugin-prompt-piper-openai)**
 
 ## Example Compression
 
