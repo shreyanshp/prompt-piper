@@ -24,19 +24,24 @@ export default function Header() {
                     {/* Desktop navigation */}
                     <nav className="hidden md:flex md:grow">
                         <ul className="text-sm flex grow justify-center flex-wrap items-center gap-4 lg:gap-8">
+                        <li className="px-3 py-1">
+                                <Link className="text-gray-700 hover:text-gray-900 flex items-center transition" href="/pricing">
+                                    Home
+                                </Link>
+                            </li>
                             <li className="px-3 py-1">
                                 <Link className="text-gray-700 hover:text-gray-900 flex items-center transition" href="/demo">
                                     Demo
                                 </Link>
                             </li>
                             <li className="px-3 py-1">
-                                <Link className="text-gray-700 hover:text-gray-900 flex items-center transition" href="/pricing">
-                                    Principal
+                                <Link className="text-gray-700 hover:text-gray-900 flex items-center transition" href="/demo-2">
+                                    Demo 2
                                 </Link>
                             </li>
                             <li className="px-3 py-1">
-                                <Link className="text-gray-700 hover:text-gray-900 flex items-center transition" href="/customers">
-                                    Customers
+                                <Link className="text-gray-700 hover:text-gray-900 flex items-center transition" href="/pricing">
+                                    Principal
                                 </Link>
                             </li>
                             <li className="px-3 py-1">
@@ -143,6 +148,11 @@ export default function Header() {
                                     <li>
                                         <Link className="flex text-gray-700 hover:bg-gray-100 rounded-lg py-1.5 px-2" href="/demo">
                                             Demo
+                                        </Link>
+                                    </li>
+                                    <li>
+                                        <Link className="flex text-gray-700 hover:bg-gray-100 rounded-lg py-1.5 px-2" href="/demo-2">
+                                            Demo 2
                                         </Link>
                                     </li>
                                     <li>

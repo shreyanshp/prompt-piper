@@ -32,7 +32,7 @@ export default function Footer() {
                             </Link>
                         </div>
                         <div className="text-sm text-gray-600">
-                            &copy; prompt-piper.com - All rights reserved.
+                            &copy; promptpiper.xyz - All rights reserved.
                         </div>
                     </div>
 
