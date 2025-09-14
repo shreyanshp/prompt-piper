@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { Copy, Settings, Zap, Database, Brain, ArrowRight, CheckCircle } from 'lucide-react'
 import { PromptCompressor } from '../../lib/compression'
 import LLMLinguaCompressor from './LLMLinguaCompressor'
+// import { LLMLingua2Real } from '../../lib/llmlingua2-real' // Commented out to avoid Sharp issues
 import AITestPanel from './AITestPanel'
 
 type CompressionMode = 'regular' | 'llmlingua-simple' | 'llmlingua-downloaded'
@@ -24,6 +25,7 @@ const MODELS = [
         name: 'TinyBERT', 
         size: '57MB', 
         description: 'Fastest processing, good for quick compression',
+        modelName: 'atjsh/llmlingua-2-js-tinybert-meetingbank',
         factory: 'WithBERTMultilingual'
     },
     { 
@@ -31,6 +33,7 @@ const MODELS = [
         name: 'BERT', 
         size: '710MB', 
         description: 'Better accuracy, balanced performance',
+        modelName: 'Arcoldd/llmlingua4j-bert-base-onnx',
         factory: 'WithBERTMultilingual'
     },
     { 
@@ -38,6 +41,7 @@ const MODELS = [
         name: 'XLM-RoBERTa', 
         size: '2.2GB', 
         description: 'Best accuracy, highest resource usage',
+        modelName: 'atjsh/llmlingua-2-js-xlm-roberta-large-meetingbank',
         factory: 'WithXLMRoBERTa'
     }
 ]
@@ -60,12 +64,20 @@ export default function PromptComparison() {
     const [compressionRate, setCompressionRate] = useState(50)
     const [isCompressing, setIsCompressing] = useState(false)
     const [result, setResult] = useState<CompressionResult | null>(null)
-    const [showSettings, setShowSettings] = useState(false)
+    const [showSettings, setShowSettings] = useState(true) // Always visible
     const [copiedOriginal, setCopiedOriginal] = useState(false)
     const [copiedCompressed, setCopiedCompressed] = useState(false)
+    const [modelProgress, setModelProgress] = useState<{[key: string]: number}>({})
+    const [modelSizes, setModelSizes] = useState<{[key: string]: string}>({})
 
     const promptCompressor = new PromptCompressor()
     const llmlinguaCompressor = new LLMLinguaCompressor()
+    
+    // Function to get LLMLingua2Browser instance (browser-safe version)
+    const getLLMLingua2Browser = async () => {
+        const { LLMLingua2Browser } = await import('../../lib/llmlingua2-browser')
+        return LLMLingua2Browser.getInstance()
+    }
 
     const handleCompress = async () => {
         if (!originalPrompt.trim()) return
@@ -86,7 +98,31 @@ export default function PromptComparison() {
                     method = 'LLMLingua-2 (Simulated)'
                     break
                 case 'llmlingua-downloaded':
-                    compressed = await llmlinguaCompressor.compress(originalPrompt, selectedModel, compressionRate / 100)
+                    // Set up progress callback for model loading
+                    const progressCallback = (progress: number) => {
+                        setModelProgress(prev => ({
+                            ...prev,
+                            [selectedModel]: progress
+                        }))
+                    }
+
+                    // Load model with progress tracking if needed
+                    const llmlinguaBrowser = await getLLMLingua2Browser()
+                    if (llmlinguaBrowser.getModelStatus(selectedModel) === 'not-loaded') {
+                        // Set model size for display
+                        setModelSizes(prev => ({
+                            ...prev,
+                            [selectedModel]: llmlinguaBrowser.getModelSize(selectedModel)
+                        }))
+                        await llmlinguaBrowser.loadModel(selectedModel, progressCallback)
+                    }
+
+                    compressed = await llmlinguaBrowser.compress(
+                        originalPrompt, 
+                        selectedModel, 
+                        compressionRate / 100,
+                        []
+                    )
                     method = `LLMLingua-2 (${MODELS.find(m => m.id === selectedModel)?.name})`
                     break
             }
@@ -133,6 +169,16 @@ export default function PromptComparison() {
         setCompressedPrompt('')
     }
 
+    // Auto-recompress when compression rate changes
+    useEffect(() => {
+        if (originalPrompt && result && compressionMode !== 'regular') {
+            const timer = setTimeout(() => {
+                handleCompress()
+            }, 500) // Debounce for smooth dragging
+            return () => clearTimeout(timer)
+        }
+    }, [compressionRate])
+
     const getCostSavings = (savedTokens: number) => {
         // Based on Claude-3 pricing: ~$0.003 per 1k tokens
         const costPer1k = 0.003
@@ -150,13 +196,10 @@ export default function PromptComparison() {
             <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
                 <div className="flex items-center justify-between mb-6">
                     <h2 className="text-2xl font-bold font-title">Compression Settings</h2>
-                    <button
-                        onClick={() => setShowSettings(!showSettings)}
-                        className="btn-sm bg-gray-100 text-gray-700 hover:bg-gray-200"
-                    >
-                        <Settings className="w-4 h-4 mr-2" />
-                        {showSettings ? 'Hide Settings' : 'Show Settings'}
-                    </button>
+                    <div className="flex items-center space-x-2 text-sm text-gray-600">
+                        <Settings className="w-4 h-4" />
+                        <span>Settings Always Visible</span>
+                    </div>
                 </div>
 
                 {/* Mode Selection */}
@@ -213,54 +256,96 @@ export default function PromptComparison() {
                     </div>
                 </div>
 
-                {/* Advanced Settings */}
-                {showSettings && (
-                    <div className="border-t pt-6 space-y-4">
-                        {(compressionMode === 'llmlingua-simple' || compressionMode === 'llmlingua-downloaded') && (
-                            <>
-                                {/* Model Selection */}
-                                {compressionMode === 'llmlingua-downloaded' && (
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                                            Model Selection
-                                        </label>
-                                        <select
-                                            value={selectedModel}
-                                            onChange={(e) => setSelectedModel(e.target.value)}
-                                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                        >
-                                            {MODELS.map((model) => (
-                                                <option key={model.id} value={model.id}>
-                                                    {model.name} ({model.size}) - {model.description}
-                                                </option>
-                                            ))}
-                                        </select>
-                                    </div>
-                                )}
-
-                                {/* Compression Rate Slider */}
+                {/* Advanced Settings - Always Visible */}
+                <div className="border-t pt-6 space-y-4">
+                    {(compressionMode === 'llmlingua-simple' || compressionMode === 'llmlingua-downloaded') && (
+                        <>
+                            {/* Model Selection */}
+                            {compressionMode === 'llmlingua-downloaded' && (
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                                        Target Compression Rate: {compressionRate}%
+                                        Model Selection
                                     </label>
-                                    <input
-                                        type="range"
-                                        min="10"
-                                        max="90"
-                                        value={compressionRate}
-                                        onChange={(e) => setCompressionRate(Number(e.target.value))}
-                                        className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
-                                    />
-                                    <div className="flex justify-between text-xs text-gray-500 mt-1">
-                                        <span>10% (Light)</span>
-                                        <span>50% (Balanced)</span>
-                                        <span>90% (Aggressive)</span>
+                                    <select
+                                        value={selectedModel}
+                                        onChange={(e) => setSelectedModel(e.target.value)}
+                                        className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                    >
+                                        {MODELS.map((model) => (
+                                            <option key={model.id} value={model.id}>
+                                                {model.name} ({model.size}) - {model.description}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    <div className="text-xs text-gray-500 mt-1">
+                                        <span className="font-medium">Selected model:</span> {selectedModel}
+                                        <br />
+                                        <span className="font-medium">HuggingFace:</span> 
+                                        <a 
+                                            href={`https://huggingface.co/${MODELS.find(m => m.id === selectedModel)?.modelName}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="text-blue-600 hover:text-blue-800 ml-1"
+                                        >
+                                            {MODELS.find(m => m.id === selectedModel)?.modelName}
+                                        </a>
                                     </div>
+                                    {modelProgress[selectedModel] && modelProgress[selectedModel] < 100 && (
+                                        <div className="mt-2">
+                                            <div className="flex items-center space-x-2">
+                                                <div className="flex-1 bg-gray-200 rounded-full h-2">
+                                                    <div
+                                                        className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                                                        style={{ width: `${modelProgress[selectedModel]}%` }}
+                                                    ></div>
+                                                </div>
+                                                <span className="text-sm text-gray-600">
+                                                    {modelProgress[selectedModel].toFixed(0)}%
+                                                </span>
+                                            </div>
+                                            <p className="text-xs text-gray-500 mt-1">
+                                                Downloading model... ({modelSizes[selectedModel] || 'Loading...'})
+                                            </p>
+                                        </div>
+                                    )}
                                 </div>
-                            </>
-                        )}
-                    </div>
-                )}
+                            )}
+
+                            {/* Compression Rate Slider */}
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    Target Compression Rate: {compressionRate}%
+                                    {result && (
+                                        <span className="ml-2 text-xs text-blue-600">(Auto-recompressing...)</span>
+                                    )}
+                                </label>
+                                <input
+                                    type="range"
+                                    min="10"
+                                    max="90"
+                                    step="10"
+                                    value={compressionRate}
+                                    onChange={(e) => setCompressionRate(Number(e.target.value))}
+                                    className="w-full h-3 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
+                                />
+                                <div className="flex justify-between text-xs text-gray-500 mt-1">
+                                    <span>10%</span>
+                                    <span>20%</span>
+                                    <span>30%</span>
+                                    <span>40%</span>
+                                    <span>50%</span>
+                                    <span>60%</span>
+                                    <span>70%</span>
+                                    <span>80%</span>
+                                    <span>90%</span>
+                                </div>
+                                <div className="text-xs text-gray-400 mt-1 text-center">
+                                    10% steps • Drag to auto-recompress
+                                </div>
+                            </div>
+                        </>
+                    )}
+                </div>
             </div>
 
             {/* Example Prompts */}
