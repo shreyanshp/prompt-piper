@@ -56,7 +56,7 @@ export default function Header() {
 
                     {/* Site branding */}
                     <div className="flex-1 flex items-center">
-                        <Link className="inline-flex items-center gap-2" href="/" aria-label="Prompt Piper">
+                        <Link style={{ whiteSpace: "nowrap" }} className="inline-flex items-center gap-2" href="/" aria-label="Prompt Piper">
                             <Image src="/images/logo.svg" width={28} height={28} alt="Prompt Piper Logo" />
                             <span className="text-xl font-semibold text-gray-900 dark:text-white font-title">Prompt Piper</span>
                         </Link>
