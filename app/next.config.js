@@ -4,9 +4,11 @@ const nextConfig = {
 
   // Option 1: For @cloudflare/next-on-pages (supports API routes, SSR)
   // Comment this out if using static export
+  /*
   experimental: {
     runtime: 'edge', // Use edge runtime for better Cloudflare compatibility
   },
+  */
 
   // Option 2: For static export (no API routes, client-side only)
   // Uncomment this for simple static site deployment
