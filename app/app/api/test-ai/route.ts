@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { PromptCompressor } from '../../lib/compression';
 import { LLMLinguaCompressor } from '../../lib/llmlingua-compressor';
 
+// Add this line to specify Edge Runtime
+export const runtime = 'edge';
+
 // OpenRouter API integration
 class OpenRouterAPI {
     private apiKey: string;
