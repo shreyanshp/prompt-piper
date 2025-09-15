@@ -99,6 +99,14 @@ export default function Header() {
                                     Principal
                                 </button>
                             </li>
+                            <li className="px-3 py-1">
+                                <button
+                                    onClick={() => window.open('https://www.npmjs.com/package/plugin-prompt-piper-openai', '_blank')}
+                                    className="text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white flex items-center transition font-semibold"
+                                >
+                                    ElizaOS Plugin
+                                </button>
+                            </li>
                         </ul>
                     </nav>
 
